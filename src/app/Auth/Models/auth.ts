@@ -10,3 +10,9 @@ export interface Userlogin {
   [key: string]: any;
   exp: number;
 }
+  export interface RegisterUserDto {
+    fullName: string;
+    email: string;
+    password: string;
+    projectId: number;
+  }
