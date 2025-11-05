@@ -1,0 +1,11 @@
+<div class="project-list-container">
+  <h2>Projects</h2>
+
+  <button mat-raised-button color="primary" (click)="openCreateModal()">
+    <mat-icon>add</mat-icon> New Project
+  </button>
+
+  <ul>
+    <li *ngFor="let project of [1, 2, 3]">Project {{ project }}</li>
+  </ul>
+</div>

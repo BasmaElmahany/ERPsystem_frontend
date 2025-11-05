@@ -1,29 +1,30 @@
 import { bootstrapApplication } from '@angular/platform-browser';
-import { appConfig } from './app/app.config';
 import { AppComponent } from './app/app.component';
 import { provideHttpClient } from '@angular/common/http';
 import { provideRouter } from '@angular/router';
 import { importProvidersFrom } from '@angular/core';
-import { routes } from './app/app.routes';
 import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 import { ToastrModule } from 'ngx-toastr';
+import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
+import { routes } from './app/app.routes';
+import { ProjectModule } from './app/Project/project.module';
 
-
-  bootstrapApplication(AppComponent, {
+bootstrapApplication(AppComponent, {
   providers: [
     provideRouter(routes),
-    importProvidersFrom(BrowserAnimationsModule),
     provideHttpClient(),
+
     importProvidersFrom(
-      BrowserAnimationsModule,     // required for toastr animations
+      BrowserAnimationsModule,
+      ProjectModule, // ✅ import the module *inside* importProvidersFrom
       ToastrModule.forRoot({
         positionClass: 'toast-bottom-right',
         timeOut: 3000,
         closeButton: true,
         progressBar: true
       })
-    )
+    ),
+
+    provideAnimationsAsync()
   ]
-})
-  .catch((err) => console.error(err));
-;
+}).catch(err => console.error(err));

@@ -1,0 +1,34 @@
+<div class="erp-layout" [class.sidebar-closed]="!isSidebarOpen">
+  <app-sidebar
+    [isOpen]="isSidebarOpen"
+    [navItems]="navItems"
+    (languageToggle)="toggleLanguage()">
+  </app-sidebar>
+
+  <div class="main-content-area">
+    <header class="top-navbar">
+      <div class="nav-left">
+        <button class="menu-toggle" (click)="toggleSidebar()">
+          <i class="material-icons">menu</i>
+        </button>
+        <h1 class="page-title">{{ 'DASHBOARD_OVERVIEW' | translate | async }}</h1>
+      </div>
+
+      <div class="nav-right">
+        <button class="lang-toggle" (click)="toggleLanguage()">
+          {{ (currentLang$ | async) === 'en' ? 'عربي' : 'EN' }}
+        </button>
+
+        <i class="material-icons nav-icon">notifications</i>
+        <i class="material-icons nav-icon">account_circle</i>
+        <span class="user-name">Jane Doe</span>
+      </div>
+    </header>
+
+    <!-- 2.2. Dashboard Content -->
+    <main class="dashboard-content">
+
+    <router-outlet></router-outlet>
+    </main>
+  </div>
+</div>
