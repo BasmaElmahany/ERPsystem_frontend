@@ -1,0 +1,1 @@
+export const baseUrl="https://e65a06802f75.ngrok-free.app/api/"
