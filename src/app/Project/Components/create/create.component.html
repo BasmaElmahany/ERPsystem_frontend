@@ -1,4 +1,4 @@
-<h2 mat-dialog-title>Create New Project</h2>
+<h2 mat-dialog-title>{{ isEditMode ? 'Edit Project' : 'Create New Project' }}</h2>
 
 <form [formGroup]="projectForm" (ngSubmit)="save()">
   <mat-dialog-content>

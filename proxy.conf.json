@@ -1,0 +1,14 @@
+{
+  "/api": {
+    "target": "http://172.36.1.128:83",
+    "secure": false,
+    "changeOrigin": true,
+    "logLevel": "debug",
+    "pathRewrite": {
+      "^/api": "/api"
+    },
+    "headers": {
+      "Connection": "keep-alive"
+    }
+  }
+}

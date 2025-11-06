@@ -1,11 +1,29 @@
 <div class="project-list-container">
-  <h2>Projects</h2>
+  <div class="header">
+    <h2>Projects</h2>
+    <button mat-raised-button color="primary" (click)="openCreateModal()">
+      <mat-icon>add</mat-icon>
+      New Project
+    </button>
+  </div>
 
-  <button mat-raised-button color="primary" (click)="openCreateModal()">
-    <mat-icon>add</mat-icon> New Project
-  </button>
+  <div *ngIf="isLoading" class="loading">Loading projects...</div>
 
-  <ul>
-    <li *ngFor="let project of [1, 2, 3]">Project {{ project }}</li>
-  </ul>
+  <div *ngIf="!isLoading && projects.length === 0" class="empty">No projects found.</div>
+
+  <mat-list *ngIf="!isLoading && projects.length">
+    <mat-list-item *ngFor="let project of projects">
+      <div class="project-info">
+        <h3>{{ project.name }}</h3>
+        <p class="desc">{{ project.description }}</p>
+        <small class="meta">Created: {{ project.createdAt | date:'medium' }}</small>
+      </div>
+      <div class="actions">
+        <button mat-stroked-button color="primary" (click)="joinProject(project)">Join</button>
+        <button mat-icon-button color="accent" (click)="openEditModal(project)" matTooltip="Edit project">
+          <mat-icon>edit</mat-icon>
+        </button>
+      </div>
+    </mat-list-item>
+  </mat-list>
 </div>
