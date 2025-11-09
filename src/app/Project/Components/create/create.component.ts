@@ -13,21 +13,28 @@ export class CreateComponent {
  @Output() close = new EventEmitter<void>();
  projectForm: FormGroup;
 
+  isEditMode = false;
+
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<CreateComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {
+    this.isEditMode = !!data;
     this.projectForm = this.fb.group({
-      name: ['', Validators.required],
-      description: ['']
+      name: [data?.name || '', Validators.required],
+      description: [data?.description || '']
     });
   }
 
   save() {
     if (this.projectForm.valid) {
-      console.log('Project saved', this.projectForm.value);
-      this.dialogRef.close('saved'); // ✅ notify parent
+      const projectData = this.projectForm.value;
+      console.log(this.isEditMode ? 'Updating project:' : 'Creating new project:', {
+        name: projectData.name,
+        description: projectData.description || 'No description'
+      });
+      this.dialogRef.close(projectData);
     }
   }
 
