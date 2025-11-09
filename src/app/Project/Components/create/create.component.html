@@ -1,25 +1,32 @@
-<h2 mat-dialog-title>{{ isEditMode ? 'Edit Project' : 'Create New Project' }}</h2>
+<div class="project-dialog-container">
+  <h2 mat-dialog-title class="dialog-title">
+    <mat-icon class="title-icon">{{ isEditMode ? 'folder_open' : 'create_new_folder' }}</mat-icon>
+    {{ isEditMode ? 'Edit Project' : 'Create New Project' }}
+  </h2>
 
-<form [formGroup]="projectForm" (ngSubmit)="save()">
-  <mat-dialog-content>
-    <mat-form-field appearance="outline" class="w-100">
-      <mat-label>Project Name</mat-label>
-      <input matInput formControlName="name" />
-      <mat-error *ngIf="projectForm.get('name')?.hasError('required')">
-        Project name is required.
-      </mat-error>
-    </mat-form-field>
+  <form [formGroup]="projectForm" (ngSubmit)="save()">
+    <mat-dialog-content class="dialog-content">
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Project Name</mat-label>
+        <input matInput formControlName="name" />
+        <mat-error *ngIf="projectForm.get('name')?.hasError('required')">
+          Project name is required.
+        </mat-error>
+      </mat-form-field>
 
-    <mat-form-field appearance="outline" class="w-100">
-      <mat-label>Description</mat-label>
-      <textarea matInput formControlName="description"></textarea>
-    </mat-form-field>
-  </mat-dialog-content>
+      <mat-form-field appearance="outline" class="w-100">
+        <mat-label>Description</mat-label>
+        <textarea matInput formControlName="description" rows="4"></textarea>
+      </mat-form-field>
+    </mat-dialog-content>
 
-  <mat-dialog-actions align="end">
-    <button mat-stroked-button type="button" (click)="cancel()">Cancel</button>
-    <button mat-flat-button color="primary" type="submit" [disabled]="projectForm.invalid">
-      <mat-icon>save</mat-icon> Save
-    </button>
-  </mat-dialog-actions>
-</form>
+    <mat-dialog-actions align="end" class="dialog-actions">
+      <button mat-stroked-button type="button" (click)="cancel()" class="cancel-button">
+        <mat-icon>close</mat-icon> Cancel
+      </button>
+      <button mat-flat-button color="primary" type="submit" [disabled]="projectForm.invalid" class="save-button">
+        <mat-icon>save</mat-icon> Save
+      </button>
+    </mat-dialog-actions>
+  </form>
+</div>
