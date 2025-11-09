@@ -10,5 +10,6 @@
     "headers": {
       "Connection": "keep-alive"
     }
+    "changeOrigin": true
   }
 }

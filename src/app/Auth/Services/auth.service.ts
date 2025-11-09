@@ -1,22 +1,28 @@
 import { HttpClient } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { Observable } from 'rxjs';
-import { TokenPayload, Userlogin } from '../Models/auth';
+import { TokenPayload, Userlogin, RegisterUserDto } from '../Models/auth';
 import { jwtDecode } from 'jwt-decode';
 
 @Injectable({
   providedIn: 'root'
 })
 export class AuthService {
-private readonly apiUrl = 'https://localhost:44326/api/auth';
+private readonly apiUrl = 'http://172.36.1.128:83/api/auth';
   private readonly tokenKey = 'jwt';
   private readonly userInfoKey = 'user-info';
+  private readonly httpOptions = {
+    headers: {
+      'Content-Type': 'application/json',
+      'Accept': 'application/json'
+    }
+  };
 
   constructor(private http: HttpClient) {}
 
   // ✅ Send login request
   login(data: Userlogin): Observable<{ token: string }> {
-    return this.http.post<{ token: string }>(`${this.apiUrl}/login`, data);
+    return this.http.post<{ token: string }>(`${this.apiUrl}/login`, data, this.httpOptions);
   }
 
 
@@ -27,6 +33,12 @@ private readonly apiUrl = 'https://localhost:44326/api/auth';
     });
   }*/
 
+
+
+
+  register(data: RegisterUserDto): Observable<{ message: string }> {
+    return this.http.post<{ message: string }>(`${this.apiUrl}/register`, data, this.httpOptions);
+  }
 
   // ✅ Save token and decoded user info
   storeToken(token: string): void {
