@@ -1,1 +1,72 @@
-<p>register works!</p>
+<div class="register-wrapper">
+  <div class="register-card animated-card">
+    <div class="card-header animated-item">
+      <h1 class="title">Create Account</h1>
+      <p class="subtitle">Join our ERP system to get started.</p>
+    </div>
+
+    <form [formGroup]="registerForm" (ngSubmit)="onSubmit()" class="register-form">
+
+      <div class="form-group animated-item">
+        <label for="fullName">Full Name</label>
+        <input id="fullName" type="text" formControlName="fullName" placeholder="Your Full Name"
+               [class.is-invalid]="f['fullName'].invalid && f['fullName'].touched">
+        <div *ngIf="f['fullName'].invalid && f['fullName'].touched" class="validation-error">
+          <div *ngIf="f['fullName'].errors?.['required']">Full Name is required.</div>
+          <div *ngIf="f['fullName'].errors?.['minlength']">Name must be at least 3 characters.</div>
+        </div>
+      </div>
+
+      <div class="form-group animated-item">
+        <label for="email">Email Address</label>
+        <input id="email" type="email" formControlName="email" placeholder="you@example.com"
+               [class.is-invalid]="f['email'].invalid && f['email'].touched">
+        <div *ngIf="f['email'].invalid && f['email'].touched" class="validation-error">
+          <div *ngIf="f['email'].errors?.['required']">Email is required.</div>
+          <div *ngIf="f['email'].errors?.['email']">Please enter a valid email address.</div>
+        </div>
+      </div>
+
+      <div class="form-group animated-item">
+        <label for="password">Password</label>
+        <input id="password" type="password" formControlName="password" placeholder="••••••••"
+               [class.is-invalid]="f['password'].invalid && f['password'].touched">
+        <div *ngIf="f['password'].invalid && f['password'].touched" class="validation-error">
+          <div *ngIf="f['password'].errors?.['required']">Password is required.</div>
+          <div *ngIf="f['password'].errors?.['minlength']">Password must be at least 8 characters.</div>
+          <div *ngIf="f['password'].errors?.['pattern']">Must contain 1 uppercase, 1 lowercase, 1 number, and 1 special character.</div>
+        </div>
+      </div>
+
+      <div class="form-group animated-item">
+        <label for="confirmPassword">Confirm Password</label>
+        <input id="confirmPassword" type="password" formControlName="confirmPassword" placeholder="••••••••"
+               [class.is-invalid]="f['confirmPassword'].invalid && f['confirmPassword'].touched || registerForm.errors?.['passwordMismatch']">
+        <div *ngIf="f['confirmPassword'].invalid && f['confirmPassword'].touched" class="validation-error">
+          <div *ngIf="f['confirmPassword'].errors?.['required']">Confirmation is required.</div>
+        </div>
+        <div *ngIf="registerForm.errors?.['passwordMismatch'] && f['confirmPassword'].touched" class="validation-error">
+          Passwords must match.
+        </div>
+      </div>
+
+      <div class="form-group checkbox-group animated-item">
+        <input id="terms" type="checkbox" formControlName="terms"
+               [class.is-invalid]="f['terms'].invalid && f['terms'].touched">
+        <label for="terms">I agree to the <a href="#">Terms and Conditions</a></label>
+        <div *ngIf="f['terms'].invalid && f['terms'].touched" class="validation-error">
+          You must agree to the terms.
+        </div>
+      </div>
+
+      <button type="submit" [disabled]="registerForm.invalid || loading" class="register-button animated-item">
+        <span *ngIf="!loading">Register</span>
+        <span *ngIf="loading" class="spinner"></span>
+      </button>
+    </form>
+
+    <div class="card-footer animated-item">
+      <p>Already have an account? <a routerLink="/login">Sign In</a></p>
+    </div>
+  </div>
+</div>
