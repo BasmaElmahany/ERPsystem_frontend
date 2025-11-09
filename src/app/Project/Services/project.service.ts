@@ -1,23 +1,10 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable } from 'rxjs';
+import { Observable, throwError } from 'rxjs';
+import { CreateProjectDto, Project, UpdateProjectDto } from '../Models/project';
+import { AuthService } from '../../Auth/Services/auth.service';
 
-export interface CreateProjectDto {
-  name: string;
-  description?: string;
-}
 
-export interface UpdateProjectDto {
-  name?: string;
-  description?: string;
-}
-
-export interface Project {
-  id: number;
-  name: string;
-  description?: string;
-  createdAt?: string;
-}
 
 @Injectable({
   providedIn: 'root'
@@ -27,38 +14,51 @@ export class ProjectService {
   private readonly projectsUrl = '/api/Projects';
   private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient, private authService: AuthService) { }
 
-  /** Create a new project */
-  createProject(payload: CreateProjectDto): Observable<Project> {
-    return this.http.post<Project>(this.projectsUrl, payload, { headers: this.jsonHeaders });
+
+  private getAuthHeaders(): HttpHeaders {
+    const token = this.authService.getToken();
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    if (token) {
+      headers = headers.set('Authorization', `Bearer ${token}`);
+    }
+    return headers;
+  }
+  /** Ensure Admin before performing restricted actions */
+  private ensureAdmin(): boolean {
+    if (!this.authService.isAdmin()) {
+      console.warn('Access denied: Admin privileges required.');
+      return false;
+    }
+    return true;
   }
 
-  /** Get all projects */
-  getProjects(): Observable<Project[]> {
-    return this.http.get<Project[]>(this.projectsUrl);
-  }
+ /** Get all projects (requires token) */
+getProjects(): Observable<Project[]> {
+  return this.http.get<Project[]>(this.projectsUrl, { headers: this.getAuthHeaders() });
+}
 
-  /** Get single project by id */
-  getProject(id: number): Observable<Project> {
-    return this.http.get<Project>(`${this.projectsUrl}/${id}`);
+/** Create project (Admin only) */
+createProject(payload: CreateProjectDto): Observable<Project> {
+  if (!this.ensureAdmin()) {
+    return throwError(() => new Error('Unauthorized: Admin privileges required.'));
   }
+  return this.http.post<Project>(this.projectsUrl, payload, { headers: this.getAuthHeaders() });
+}
 
-  /** Update a project */
-  updateProject(id: number, payload: UpdateProjectDto): Observable<Project> {
-    return this.http.put<Project>(
-      `${this.projectsUrl}/${id}`,
-      payload,
-      { headers: this.jsonHeaders }
-    );
+/** Update project (Admin only) */
+updateProject(id: number, payload: UpdateProjectDto): Observable<Project> {
+  if (!this.ensureAdmin()) {
+    return throwError(() => new Error('Unauthorized: Admin privileges required.'));
   }
+  return this.http.put<Project>(`${this.projectsUrl}/${id}`, payload, { headers: this.getAuthHeaders() });
+}
 
-  /**
-   * Join a project. Assumes backend exposes a POST /api/Projects/{id}/join endpoint.
-   * If your API uses a different path/payload, update accordingly.
-   */
-  joinProject(id: number): Observable<any> {
-    const url = `${this.projectsUrl}/${id}/join`;
-    return this.http.post(url, {}, { headers: this.jsonHeaders });
-  }
+/** Join project (logged-in users) */
+joinProject(id: number): Observable<any> {
+  const url = `${this.projectsUrl}/${id}/join`;
+  return this.http.post(url, {}, { headers: this.getAuthHeaders() });
+}
+
 }

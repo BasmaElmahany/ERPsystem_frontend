@@ -1,7 +1,8 @@
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
 import { CreateComponent } from '../create/create.component';
-import { ProjectService, Project } from '../../Services/project.service';
+import { ProjectService } from '../../Services/project.service';
+import { Project } from '../../Models/project';
 
 @Component({
   selector: 'app-list',
@@ -56,6 +57,7 @@ export class ListComponent implements OnInit {
   }
 
   loadProjects(): void {
+    console.log("load");
     this.isLoading = true;
     this.projectService.getProjects().subscribe({
       next: (res) => {
