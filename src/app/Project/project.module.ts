@@ -17,6 +17,8 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AppRouteModule } from '../app-route.module';
+import { HTTP_INTERCEPTORS } from '@angular/common/http';
+import { AuthInterceptor } from '../Auth/interceptors/auth.interceptor';
 @NgModule({
   declarations: [
     ListComponent,
@@ -42,6 +44,9 @@ AppRouteModule,
   ],
   exports: [
     ListComponent
+  ],
+   providers: [
+    { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ]
 })
 export class ProjectModule { }
