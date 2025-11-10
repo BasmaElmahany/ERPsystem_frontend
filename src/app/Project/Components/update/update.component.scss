@@ -1,0 +1,137 @@
+/* Update Form Styles - dark themed, horizontal layout */
+$primary-color: #007bff;
+$accent-color: #6610f2;
+$card-bg: #1a1c1e;
+$card-hover-bg: #22252a;
+$text-light: #e9ecef;
+$text-secondary: #adb5bd;
+$border-color: rgba(255,255,255,0.08);
+
+.form-container {
+	max-width: 900px;
+	margin: 16px auto;
+	background: linear-gradient(135deg, $card-bg 0%, $card-hover-bg 100%);
+	padding: 22px;
+	border-radius: 12px;
+	box-shadow: 0 8px 24px rgba(0,0,0,0.35);
+	border: 1px solid $border-color;
+	color: $text-light;
+	animation: fadeInScale 0.35s ease-out;
+}
+
+.form-header {
+	margin-bottom: 18px;
+	h2 {
+		margin: 0 0 6px 0;
+		font-size: 1.5rem;
+		font-weight: 700;
+		background: linear-gradient(135deg, $primary-color, $accent-color);
+		-webkit-background-clip: text;
+		background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+
+	.subtitle {
+		margin: 0;
+		color: $text-secondary;
+		font-size: 0.95rem;
+	}
+}
+
+.employee-form {
+	display: flex;
+	flex-direction: column;
+	gap: 18px;
+}
+
+.form-section {
+	border: 1px solid $border-color;
+	border-radius: 8px;
+	padding: 16px;
+	background: rgba(255,255,255,0.01);
+}
+
+.form-row {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 16px;
+	align-items: start;
+}
+
+.form-group {
+	margin-bottom: 10px;
+
+	label {
+		display: block;
+		margin-bottom: 8px;
+		color: $text-light;
+		font-weight: 600;
+		font-size: 0.95rem;
+	}
+
+	input, textarea {
+		width: 100%;
+		padding: 10px 12px;
+		border-radius: 8px;
+		border: 1px solid $border-color;
+		background: transparent;
+		color: $text-light;
+		font-size: 0.95rem;
+		transition: box-shadow 0.2s ease, border-color 0.2s ease;
+	}
+
+	input:focus, textarea:focus {
+		outline: none;
+		box-shadow: 0 6px 18px rgba($primary-color, 0.08);
+		border-color: $primary-color;
+	}
+
+	.validation-error {
+		margin-top: 6px;
+		color: #ff6b6b;
+		font-size: 0.85rem;
+	}
+}
+
+.form-actions {
+	display: flex;
+	justify-content: flex-end;
+	gap: 12px;
+
+	.btn {
+		padding: 10px 18px;
+		border-radius: 8px;
+		border: none;
+		cursor: pointer;
+		font-weight: 700;
+		font-size: 0.95rem;
+		transition: transform 0.12s ease, box-shadow 0.12s ease;
+	}
+
+	.btn.primary {
+		background: linear-gradient(135deg, $primary-color, $accent-color);
+		color: #fff;
+		box-shadow: 0 8px 20px rgba($primary-color, 0.12);
+	}
+
+	.btn.secondary {
+		background: transparent;
+		color: $text-secondary;
+		border: 1px solid rgba(255,255,255,0.04);
+	}
+
+	.btn:active { transform: translateY(1px); }
+}
+
+/* small screens: stack fields */
+@media (max-width: 720px) {
+	.form-row { grid-template-columns: 1fr; }
+	.form-actions { justify-content: stretch; }
+}
+
+/* reuse animations if present globally */
+@keyframes fadeInScale {
+	from { opacity: 0; transform: scale(0.98); }
+	to { opacity: 1; transform: scale(1); }
+}
+

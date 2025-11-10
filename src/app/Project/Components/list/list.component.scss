@@ -1,24 +1,534 @@
-.modal {
-  display: none;
-  position: fixed;
-  z-index: 1000;
-  left: 0;
-  top: 0;
-  width: 100%;
-  height: 100%;
-  background-color: rgba(0,0,0,0.5);
+/* Variables */
+$primary-color: #007bff;
+$accent-color: #6610f2;
+$primary-light: lighten($primary-color, 10%);
+$accent-warm: #fd7e14;
+$accent-danger: #dc3545;
+$success-color: #28a745;
+$warning-color: #ffc107;
+$danger-color: #dc3545;
+
+$card-bg: #1a1c1e;
+$card-hover-bg: #22252a;
+$text-light: #e9ecef;
+$text-secondary: #adb5bd;
+$border-color: rgba(255, 255, 255, 0.1);
+
+$transition-speed: 0.25s;
+$transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+/* Animations */
+@keyframes spin {
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
-.modal-content {
-  background: white;
-  padding: 1.5rem;
-  margin: 10% auto;
-  width: 400px;
-  border-radius: 8px;
-  animation: fadeIn 0.3s ease;
+@keyframes slideInUp {
+  from {
+    transform: translateY(20px);
+    opacity: 0;
+  }
+  to {
+    transform: translateY(0);
+    opacity: 1;
+  }
 }
 
 @keyframes fadeIn {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@keyframes scaleIn {
+  from {
+    transform: scale(0.9);
+    opacity: 0;
+  }
+  to {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+
+@keyframes bounce {
+  0%, 100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-3px);
+  }
+}
+
+@keyframes staggerFadeIn {
+  from {
+    opacity: 0;
+    transform: translateX(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Loading and Empty States */
+.loading-state {
+  text-align: center;
+  padding: 40px;
+  color: $text-secondary;
+
+  .loader {
+    border: 3px solid rgba($primary-color, 0.1);
+    border-radius: 50%;
+    border-top: 3px solid $primary-color;
+    width: 40px;
+    height: 40px;
+    animation: spin 1s linear infinite;
+    margin: 0 auto 16px;
+  }
+
+  p {
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+.empty-state {
+  text-align: center;
+  padding: 40px;
+  color: $text-secondary;
+
+  i {
+    font-size: 48px;
+    margin-bottom: 16px;
+    opacity: 0.5;
+  }
+
+  p {
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+/* Table Container */
+.table-container {
+  background: linear-gradient(135deg, $card-bg 0%, $card-hover-bg 100%);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  padding: 24px;
+  border: 1px solid $border-color;
+  animation: slideInUp 0.5s ease-out 0.3s both;
+}
+
+/* Table Header */
+.table-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  animation: fadeIn 0.5s ease-out;
+
+  h2 {
+    color: $text-light;
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin: 0;
+    background: linear-gradient(135deg, $primary-color, $accent-color);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .header-actions {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+  }
+
+  .project-count {
+    background: linear-gradient(135deg, rgba($primary-color, 0.2), rgba($accent-color, 0.1));
+    color: $primary-color;
+    padding: 8px 16px;
+    border-radius: 20px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    border: 1px solid rgba($primary-color, 0.3);
+    animation: scaleIn 0.5s ease-out;
+  }
+
+  .create-button {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    background: $primary-color;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all $transition-smooth;
+
+    &:hover {
+      background: lighten($primary-color, 5%);
+      transform: translateY(-2px);
+      box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+    }
+
+    i {
+      font-size: 20px;
+    }
+  }
+}
+
+/* Table Wrapper */
+.table-wrapper {
+  overflow-x: auto;
+  border-radius: 8px;
+  animation: fadeIn 0.5s ease-out 0.1s both;
+
+  &::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba($primary-color, 0.05);
+    border-radius: 10px;
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba($primary-color, 0.3);
+    border-radius: 10px;
+
+    &:hover {
+      background: rgba($primary-color, 0.5);
+    }
+  }
+}
+
+/* Table Styles */
+.styled-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  color: $text-light;
+  font-size: 0.95rem;
+
+  thead {
+    th {
+      text-align: left;
+      padding: 16px 20px;
+      background: linear-gradient(90deg, rgba($primary-color, 0.1) 0%, rgba($accent-color, 0.05) 100%);
+      color: $primary-color;
+      font-weight: 700;
+      text-transform: uppercase;
+      letter-spacing: 0.8px;
+      border-bottom: 2px solid rgba($primary-color, 0.2);
+      cursor: default;
+      transition: all $transition-speed;
+      position: relative;
+
+      &.sortable {
+        cursor: pointer;
+        user-select: none;
+
+        &:hover {
+          background: linear-gradient(90deg, rgba($primary-color, 0.15) 0%, rgba($accent-color, 0.1) 100%);
+          color: $primary-light;
+          padding-left: 22px;
+        }
+      }
+
+      &:first-child {
+        border-top-left-radius: 8px;
+      }
+
+      &:last-child {
+        border-top-right-radius: 8px;
+      }
+
+      .sort-icon {
+        margin-left: 8px;
+        font-size: 0.8rem;
+        color: $primary-light;
+        animation: bounce 0.6s ease-in-out;
+      }
+    }
+  }
+
+  tbody {
+    tr {
+      border-bottom: 1px solid $border-color;
+      transition: all $transition-smooth;
+      animation: staggerFadeIn 0.5s ease-out;
+      animation-delay: calc(var(--row-index, 0) * 0.05s);
+
+      &:last-child {
+        border-bottom: none;
+
+        td {
+          &:first-child {
+            border-bottom-left-radius: 8px;
+          }
+
+          &:last-child {
+            border-bottom-right-radius: 8px;
+          }
+        }
+      }
+
+      &:hover {
+        background-color: rgba($primary-color, 0.08);
+        transform: translateX(4px);
+        box-shadow: inset 4px 0 0 $primary-color;
+
+        td {
+          color: $text-light;
+        }
+
+        .project-avatar {
+          transform: scale(1.1);
+          box-shadow: 0 6px 16px rgba($primary-color, 0.4);
+        }
+      }
+
+      td {
+        padding: 16px 20px;
+        vertical-align: middle;
+        color: $text-secondary;
+        transition: all $transition-speed;
+      }
+    }
+  }
+}
+
+/* Table Cells */
+.id-cell {
+  font-weight: 600;
+  color: $primary-color;
+  font-size: 0.9rem;
+}
+
+.project-name-cell {
+  display: flex;
+  align-items: center;
+  font-weight: 600;
+  color: $text-light;
+
+  .project-avatar {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, $primary-color, $accent-color);
+    color: $text-light;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.1rem;
+    font-weight: 700;
+    margin-right: 12px;
+    flex-shrink: 0;
+    box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+    transition: all $transition-smooth;
+  }
+}
+
+.description-cell {
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.date-cell {
+  font-size: 0.9rem;
+  color: $text-secondary;
+}
+
+.actions-cell {
+  display: flex;
+  gap: 8px;
+  justify-content: flex-end;
+
+  .action-button {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    font-size: 0.9rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all $transition-smooth;
+
+    i {
+      font-size: 18px;
+    }
+
+    &.join-button {
+      background: rgba($success-color, 0.1);
+      color: $success-color;
+
+      &:hover {
+        background: rgba($success-color, 0.2);
+        transform: translateY(-2px);
+      }
+    }
+
+    &.edit-button {
+      background: rgba($warning-color, 0.1);
+      color: $warning-color;
+
+      &:hover {
+        background: rgba($warning-color, 0.2);
+        transform: translateY(-2px);
+      }
+    }
+  }
+}
+
+/* Table Footer */
+.table-footer {
+  margin-top: 20px;
+  padding-top: 16px;
+  border-top: 1px solid $border-color;
+  text-align: center;
+  animation: fadeIn 0.5s ease-out 0.4s both;
+
+  p {
+    color: $text-secondary;
+    font-size: 0.85rem;
+    margin: 0;
+    font-weight: 500;
+  }
+}
+
+/* Responsive Design */
+@media (max-width: 1024px) {
+  .table-container {
+    padding: 20px;
+  }
+
+  .styled-table {
+    font-size: 0.9rem;
+
+    thead th {
+      padding: 14px 16px;
+    }
+
+    tbody td {
+      padding: 14px 16px;
+    }
+  }
+}
+
+@media (max-width: 768px) {
+  .table-container {
+    padding: 16px;
+    margin-bottom: 20px;
+  }
+
+  .table-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 12px;
+
+    h2 {
+      font-size: 1.5rem;
+    }
+  }
+
+  .styled-table {
+    font-size: 0.85rem;
+
+    thead th {
+      padding: 12px 12px;
+      font-size: 0.75rem;
+      letter-spacing: 0.3px;
+    }
+
+    tbody td {
+      padding: 12px 12px;
+    }
+  }
+
+  .project-name-cell {
+    .project-avatar {
+      width: 36px;
+      height: 36px;
+      font-size: 1rem;
+      margin-right: 8px;
+    }
+  }
+
+  .action-button {
+    padding: 4px 8px;
+    font-size: 0.75rem;
+
+    i {
+      font-size: 16px;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .table-container {
+    padding: 12px;
+  }
+
+  .table-header {
+    h2 {
+      font-size: 1.3rem;
+    }
+
+    .header-actions {
+      flex-direction: column;
+      gap: 8px;
+      width: 100%;
+
+      .project-count {
+        width: 100%;
+        text-align: center;
+      }
+
+      .create-button {
+        width: 100%;
+        justify-content: center;
+      }
+    }
+  }
+
+  .styled-table {
+    font-size: 0.8rem;
+
+    thead th {
+      padding: 10px 8px;
+      font-size: 0.7rem;
+    }
+
+    tbody td {
+      padding: 10px 8px;
+    }
+  }
+
+  .project-name-cell {
+    .project-avatar {
+      width: 32px;
+      height: 32px;
+      font-size: 0.9rem;
+      margin-right: 6px;
+    }
+  }
+
+  .description-cell {
+    max-width: 150px;
+  }
 }

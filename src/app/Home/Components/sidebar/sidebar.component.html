@@ -1,22 +1,29 @@
 
 
-<aside class="sidebar">
-  <div class="logo-section">
-    <span class="logo-icon">ERP</span>
-    <span class="logo-text">{{ 'APP_NAME' | translate | async }}</span>
-  </div>
+<div class="erp-layout" [class.sidebar-closed]="!isOpen" [dir]="(isRTL$ | async) ? 'rtl' : 'ltr'">
+  <aside class="sidebar">
+    <div class="logo-section">
+      <span class="logo-icon">ERP</span>
+      <span class="logo-text">{{ 'APP_NAME' | translate | async }}</span>
+    </div>
 
-  <nav class="sidebar-nav">
-    <a *ngFor="let item of navItems" [routerLink]="item.route" class="nav-item">
-      <i class="material-icons">{{ item.icon }}</i>
-      <span class="nav-label">{{ item.key | translate | async }}</span>
-    </a>
-  </nav>
+    <nav class="sidebar-nav">
+      <a *ngFor="let item of navItems" [routerLink]="item.route" class="nav-item" routerLinkActive="active">
+        <i class="material-icons">{{ item.icon }}</i>
+        <span class="nav-label">{{ item.key | translate | async }}</span>
+      </a>
+    </nav>
 
-  <div class="sidebar-footer">
-    <a href="#" class="nav-item">
-      <i class="material-icons">logout</i>
-      <span class="nav-label">{{ 'LOGOUT' | translate | async }}</span>
-    </a>
-  </div>
-</aside>
+    <div class="sidebar-footer">
+      <button class="nav-item" (click)="toggleLanguage()">
+        <i class="material-icons">translate</i>
+        <span class="nav-label">{{ (currentLang$ | async) === 'en' ? 'عربي' : 'EN' }}</span>
+      </button>
+      
+      <a href="#" class="nav-item" (click)="logout()">
+        <i class="material-icons">logout</i>
+        <span class="nav-label">{{ 'LOGOUT' | translate | async }}</span>
+      </a>
+    </div>
+  </aside>
+</div>

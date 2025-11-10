@@ -1,29 +1,83 @@
-<div class="project-list-container">
-  <div class="header">
-    <h2>Projects</h2>
-    <button mat-raised-button color="primary" (click)="openCreateModal()">
-      <mat-icon>add</mat-icon>
-      New Project
-    </button>
+<div class="table-container">
+  <div class="table-header">
+    <h2>Projects Directory</h2>
+    <div class="header-actions">
+      <span class="project-count">{{ projects.length }} Projects</span>
+      <button class="create-button" (click)="openCreateModal()">
+        <i class="material-icons">add</i>
+        New Project
+      </button>
+    </div>
   </div>
 
-  <div *ngIf="isLoading" class="loading">Loading projects...</div>
+  <div *ngIf="isLoading" class="loading-state">
+    <div class="loader"></div>
+    <p>Loading projects...</p>
+  </div>
 
-  <div *ngIf="!isLoading && projects.length === 0" class="empty">No projects found.</div>
+  <div *ngIf="!isLoading && projects.length === 0" class="empty-state">
+    <i class="material-icons">folder_off</i>
+    <p>No projects found.</p>
+  </div>
 
-  <mat-list *ngIf="!isLoading && projects.length">
-    <mat-list-item *ngFor="let project of projects">
-      <div class="project-info">
-        <h3>{{ project.name }}</h3>
-        <p class="desc">{{ project.description }}</p>
-        <small class="meta">Created: {{ project.createdAt | date:'medium' }}</small>
-      </div>
-      <div class="actions">
-        <button mat-stroked-button color="primary" (click)="joinProject(project)">Join</button>
-        <button mat-icon-button color="accent" (click)="openEditModal(project)" matTooltip="Edit project">
-          <mat-icon>edit</mat-icon>
-        </button>
-      </div>
-    </mat-list-item>
-  </mat-list>
+  <div class="table-wrapper" *ngIf="!isLoading && projects.length > 0">
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th (click)="sortData('id')" class="sortable">
+            ID
+            <span class="sort-icon" *ngIf="sortKey === 'id'">
+              {{ sortDirection === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+          <th (click)="sortData('name')" class="sortable">
+            Name
+            <span class="sort-icon" *ngIf="sortKey === 'name'">
+              {{ sortDirection === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+          <th (click)="sortData('description')" class="sortable">
+            Description
+            <span class="sort-icon" *ngIf="sortKey === 'description'">
+              {{ sortDirection === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+          <th (click)="sortData('createdAt')" class="sortable">
+            Created At
+            <span class="sort-icon" *ngIf="sortKey === 'createdAt'">
+              {{ sortDirection === 'asc' ? '▲' : '▼' }}
+            </span>
+          </th>
+          <th>Actions</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr *ngFor="let project of sortedProjects; let i = index" class="table-row" [style]="'--row-index: ' + i">
+          <td class="id-cell">{{ project.id }}</td>
+          <td class="project-name-cell">
+            <div class="project-avatar">
+              {{ project.name.charAt(0) }}
+            </div>
+            {{ project.name }}
+          </td>
+          <td class="description-cell">{{ project.description }}</td>
+          <td class="date-cell">{{ project.createdAt | date:'medium' }}</td>
+          <td class="actions-cell">
+            <button class="action-button join-button" (click)="joinProject(project)">
+              <i class="material-icons">group_add</i>
+              Join
+            </button>
+            <button class="action-button edit-button" (click)="openEditModal(project)">
+              <i class="material-icons">edit</i>
+              Edit
+            </button>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div class="table-footer">
+    <p>Showing {{ projects.length }} projects</p>
+  </div>
 </div>
