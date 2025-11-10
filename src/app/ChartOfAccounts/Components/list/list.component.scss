@@ -1,0 +1,16 @@
+@import 'src/styles.scss';
+
+.table-container {
+  margin-top: 20px;
+}
+
+.table-header h2 {
+  font-size: 1.6rem;
+  background: linear-gradient(135deg, #00e676, #29b6f6);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+}
+
+.status-badge {
+  text-transform: capitalize;
+}

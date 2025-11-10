@@ -15,6 +15,11 @@ export const routes: Routes = [
         path: 'projects',
         loadChildren: () =>
           import('./Project/project.module').then(m => m.ProjectModule)
+      }, 
+      {
+        path: 'accounts',
+        loadChildren: () =>
+          import('./ChartOfAccounts/chart-of-accounts.module').then(m => m.ChartOfAccountsModule)
       }
     ]
   },
