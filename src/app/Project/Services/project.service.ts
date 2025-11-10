@@ -12,7 +12,6 @@ import { AuthService } from '../../Auth/Services/auth.service';
 export class ProjectService {
   // Backend endpoint for projects (using proxy)
   private readonly projectsUrl = '/api/Projects';
-  private readonly jsonHeaders = new HttpHeaders({ 'Content-Type': 'application/json' });
 
   constructor(private http: HttpClient, private authService: AuthService) { }
 
