@@ -1,1 +1,36 @@
-<p>update works!</p>
+<div class="form-container">
+	<div class="form-header">
+		<h2>{{ isEditMode ? ('UPDATE_PROJECT' | translate | async) : ('CREATE_PROJECT' | translate | async) }}</h2>
+		<p class="subtitle">{{ isEditMode ? ('UPDATE_PROJECT_DESC' | translate | async) : ('CREATE_PROJECT_DESC' | translate | async) }}</p>
+	</div>
+
+	<form [formGroup]="projectForm" (ngSubmit)="save()" class="employee-form">
+		<fieldset class="form-section">
+			<legend>{{ 'PROJECT_INFORMATION' | translate | async }}</legend>
+
+			<div class="form-row">
+				<div class="form-group">
+					<label for="name">{{ 'PROJECT_NAME' | translate | async }}</label>
+					<input id="name" type="text" formControlName="name" placeholder="{{ 'PROJECT_NAME_PLACEHOLDER' | translate | async }}"
+								 [class.is-invalid]="projectForm.get('name')?.invalid && projectForm.get('name')?.touched">
+					<div *ngIf="projectForm.get('name')?.invalid && projectForm.get('name')?.touched" class="validation-error">
+						<div *ngIf="projectForm.get('name')?.errors?.['required']">{{ 'ERROR_REQUIRED' | translate | async }}</div>
+						<div *ngIf="projectForm.get('name')?.errors?.['minlength']">{{ 'ERROR_MIN_LENGTH' | translate | async }}</div>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label for="description">{{ 'PROJECT_DESCRIPTION' | translate | async }}</label>
+					<textarea id="description" formControlName="description" rows="4"
+										placeholder="{{ 'PROJECT_DESCRIPTION_PLACEHOLDER' | translate | async }}"
+					></textarea>
+				</div>
+			</div>
+		</fieldset>
+
+		<div class="form-actions">
+			<button type="button" class="btn secondary" (click)="cancel()">{{ 'CANCEL' | translate | async }}</button>
+			<button type="submit" class="btn primary" [disabled]="projectForm.invalid">{{ isEditMode ? ('UPDATE' | translate | async) : ('SAVE' | translate | async) }}</button>
+		</div>
+	</form>
+</div>

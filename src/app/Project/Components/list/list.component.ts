@@ -1,5 +1,6 @@
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
 import { MatDialog } from '@angular/material/dialog';
+import { MatSnackBar } from '@angular/material/snack-bar';
 import { CreateComponent } from '../create/create.component';
 import { ProjectService } from '../../Services/project.service';
 import { Project } from '../../Models/project';
@@ -12,10 +13,13 @@ import { Project } from '../../Models/project';
 export class ListComponent implements OnInit {
   @Output() close = new EventEmitter<void>();
   projects: Project[] = [];
+  sortedProjects: Project[] = [];
   isLoading = false;
   selectedProject: Project | null = null;
+  sortKey: 'id' | 'name' | 'description' | 'createdAt' = 'id';
+  sortDirection: 'asc' | 'desc' = 'asc';
 
-  constructor(private dialog: MatDialog, private projectService: ProjectService){}
+  constructor(private dialog: MatDialog, private projectService: ProjectService, private snackBar: MatSnackBar){}
 
   ngOnInit(): void {
     this.loadProjects();
@@ -44,15 +48,54 @@ export class ListComponent implements OnInit {
             this.loadProjects(); // Refresh the list
           },
           error: (error) => {
-            console.error('Error creating project:', {
-              status: error.status,
-              statusText: error.statusText,
-              message: error.message,
-              error: error.error
-            });
+            // Log full error for debugging
+            console.error('Error creating project (full):', error);
+
+            const status = error?.status;
+            const serverMessage = error?.error?.message || error?.message || 'Unknown error';
+
+            // User-friendly snackbar
+            this.snackBar.open(`Failed to create project: ${status || ''} ${serverMessage}`, 'Close', { duration: 6000 });
           }
         });
       }
+    });
+  }
+
+  sortData(key: 'id' | 'name' | 'description' | 'createdAt'): void {
+    if (this.sortKey === key) {
+      // If clicking the same column, toggle direction
+      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
+    } else {
+      // If clicking a new column, set it as the sort key and default to ascending
+      this.sortKey = key;
+      this.sortDirection = 'asc';
+    }
+    this.updateSortedProjects();
+  }
+
+  updateSortedProjects(): void {
+    this.sortedProjects = [...this.projects].sort((a, b) => {
+      let comparison = 0;
+      
+      switch (this.sortKey) {
+        case 'id':
+          comparison = a.id - b.id;
+          break;
+        case 'name':
+          comparison = a.name.localeCompare(b.name);
+          break;
+        case 'description':
+          comparison = (a.description || '').localeCompare(b.description || '');
+          break;
+        case 'createdAt':
+          const dateA = a.createdAt ? new Date(a.createdAt).getTime() : 0;
+          const dateB = b.createdAt ? new Date(b.createdAt).getTime() : 0;
+          comparison = dateA - dateB;
+          break;
+      }
+
+      return this.sortDirection === 'asc' ? comparison : -comparison;
     });
   }
 
@@ -62,6 +105,7 @@ export class ListComponent implements OnInit {
     this.projectService.getProjects().subscribe({
       next: (res) => {
         this.projects = res || [];
+        this.updateSortedProjects(); // Update sorted projects whenever data is loaded
         console.log('Projects loaded:', {
           totalProjects: this.projects.length,
           projects: this.projects.map(p => ({
@@ -122,14 +166,20 @@ export class ListComponent implements OnInit {
               createdAt: updatedProject.createdAt
             });
             this.loadProjects(); // Refresh the list
+            this.snackBar.open('Project updated successfully', 'Close', { duration: 4000 });
           },
           error: (error) => {
-            console.error('Error updating project:', {
-              status: error.status,
-              statusText: error.statusText,
-              message: error.message,
-              error: error.error
-            });
+            // Log full error for debugging
+            console.error('Error updating project (full):', error);
+
+            const status = error?.status;
+            const serverMessage = error?.error?.message || error?.message || 'Unknown error';
+
+            if (status === 401 || status === 403) {
+              this.snackBar.open('You are not authorized to update this project. Please login as an admin.', 'Close', { duration: 6000 });
+            } else {
+              this.snackBar.open(`Failed to update project: ${status || ''} ${serverMessage}`, 'Close', { duration: 6000 });
+            }
           }
         });
       }

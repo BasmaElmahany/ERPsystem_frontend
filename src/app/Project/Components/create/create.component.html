@@ -1,32 +1,45 @@
-<div class="project-dialog-container">
-  <h2 mat-dialog-title class="dialog-title">
-    <mat-icon class="title-icon">{{ isEditMode ? 'folder_open' : 'create_new_folder' }}</mat-icon>
-    {{ isEditMode ? 'Edit Project' : 'Create New Project' }}
-  </h2>
+<div class="form-container">
+  <div class="form-header">
+    <h2>{{ isEditMode ? 'Edit Project' : 'Create New Project' }}</h2>
+    <p>Fill in the details below to {{ isEditMode ? 'update the' : 'create a new' }} project.</p>
+  </div>
 
-  <form [formGroup]="projectForm" (ngSubmit)="save()">
-    <mat-dialog-content class="dialog-content">
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Project Name</mat-label>
-        <input matInput formControlName="name" />
-        <mat-error *ngIf="projectForm.get('name')?.hasError('required')">
-          Project name is required.
-        </mat-error>
-      </mat-form-field>
+  <form [formGroup]="projectForm" (ngSubmit)="save()" class="employee-form">
+    <!-- Project Information Section -->
+    <fieldset class="form-section">
+      <legend>Project Information</legend>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Project Name</label>
+          <input id="name" type="text" formControlName="name" placeholder="e.g., ERP System Enhancement"
+                 [class.is-invalid]="projectForm.get('name')?.invalid && projectForm.get('name')?.touched">
+          <div *ngIf="projectForm.get('name')?.invalid && projectForm.get('name')?.touched" class="validation-error">
+            <div *ngIf="projectForm.get('name')?.errors?.['required']">Project name is required.</div>
+            <div *ngIf="projectForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters long.</div>
+          </div>
+        </div>
 
-      <mat-form-field appearance="outline" class="w-100">
-        <mat-label>Description</mat-label>
-        <textarea matInput formControlName="description" rows="4"></textarea>
-      </mat-form-field>
-    </mat-dialog-content>
+        <div class="form-group">
+          <label for="description">Project Description</label>
+          <textarea id="description" formControlName="description" rows="4" 
+                    placeholder="Enter a detailed description of the project"
+                    [class.is-invalid]="projectForm.get('description')?.invalid && projectForm.get('description')?.touched">
+          </textarea>
+          <div *ngIf="projectForm.get('description')?.invalid && projectForm.get('description')?.touched" class="validation-error">
+            <div *ngIf="projectForm.get('description')?.errors?.['required']">Description is required.</div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
 
-    <mat-dialog-actions align="end" class="dialog-actions">
-      <button mat-stroked-button type="button" (click)="cancel()" class="cancel-button">
-        <mat-icon>close</mat-icon> Cancel
+    <div class="form-actions">
+      <button type="button" (click)="cancel()" class="reset-button">
+        Cancel
       </button>
-      <button mat-flat-button color="primary" type="submit" [disabled]="projectForm.invalid" class="save-button">
-        <mat-icon>save</mat-icon> Save
+      <button type="submit" [disabled]="projectForm.invalid" class="submit-button">
+        {{ isEditMode ? 'Update' : 'Create' }} Project
       </button>
-    </mat-dialog-actions>
+    </div>
   </form>
 </div>
