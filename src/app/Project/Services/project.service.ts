@@ -39,11 +39,7 @@ getProjects(): Observable<Project[]> {
   return this.http.get<Project[]>(this.projectsUrl, { headers: this.getAuthHeaders() });
 }
 
-/** Create project (Admin only) */
 createProject(payload: CreateProjectDto): Observable<Project> {
-  if (!this.ensureAdmin()) {
-    return throwError(() => new Error('Unauthorized: Admin privileges required.'));
-  }
   return this.http.post<Project>(this.projectsUrl, payload, { headers: this.getAuthHeaders() });
 }
 
