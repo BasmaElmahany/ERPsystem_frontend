@@ -19,10 +19,14 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { AppRouteModule } from '../app-route.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../Auth/interceptors/auth.interceptor';
+import { UpdateComponent } from './Components/update/update.component';
+import { DeleteComponent } from './Components/delete/delete.component';
 @NgModule({
   declarations: [
     ListComponent,
-    CreateComponent
+    CreateComponent,
+    UpdateComponent,
+    DeleteComponent
   ],
   imports: [
     CommonModule,

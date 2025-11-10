@@ -1,6 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { ChartOfAccountsService } from '../../Services/chart-of-accounts.service';
 import { ChartOfAccount } from '../../Models/ChartOfAccount';
+import { ActivatedRoute } from '@angular/router';
 
 @Component({
   selector: 'app-list',
@@ -8,16 +9,18 @@ import { ChartOfAccount } from '../../Models/ChartOfAccount';
   templateUrl: './list.component.html',
   styleUrl: './list.component.scss'
 })
-export class ListComponent implements OnInit { projectName = 'shusha';
+export class ListComponent implements OnInit { 
+  projectName = '';
   accounts: ChartOfAccount[] = [];
   loading = false;
   sortKey: keyof ChartOfAccount | '' = '';
   sortDirection: 'asc' | 'desc' = 'asc';
 
-  constructor(private service: ChartOfAccountsService) {}
+  constructor(private service: ChartOfAccountsService,   private route: ActivatedRoute) {}
 
-  ngOnInit(): void {
-    this.projectName = localStorage.getItem('currentProject') || this.projectName;
+   ngOnInit(): void {
+    // 🟢 Read project name from route parameter
+    this.projectName = this.route.snapshot.paramMap.get('project') || '';
     this.loadAccounts();
   }
 

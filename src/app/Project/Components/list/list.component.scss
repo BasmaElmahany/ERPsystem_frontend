@@ -532,3 +532,25 @@ $transition-smooth: 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     max-width: 150px;
   }
 }
+.action-button.accounts-button {
+  background: linear-gradient(135deg, rgba(#00e676, 0.1), rgba(#29b6f6, 0.05));
+  border: 1px solid rgba(#00e676, 0.3);
+  color: #00e676;
+  font-weight: 600;
+  border-radius: 8px;
+  padding: 6px 14px;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: rgba(#00e676, 0.15);
+    box-shadow: 0 0 10px rgba(#00e676, 0.3);
+    transform: translateY(-2px);
+  }
+
+  i.material-icons {
+    font-size: 18px;
+  }
+}

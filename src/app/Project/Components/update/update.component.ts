@@ -6,8 +6,6 @@ import { TranslatePipe } from '../../../Shared/Pipes/translate.pipe';
 
 @Component({
   selector: 'app-update',
-  standalone: true,
-  imports: [ReactiveFormsModule, TranslatePipe, AsyncPipe],
   templateUrl: './update.component.html',
   styleUrls: ['./update.component.scss']
 })

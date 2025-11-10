@@ -24,14 +24,7 @@ export class ProjectService {
     }
     return headers;
   }
-  /** Ensure Admin before performing restricted actions */
-  private ensureAdmin(): boolean {
-    if (!this.authService.isAdmin()) {
-      console.warn('Access denied: Admin privileges required.');
-      return false;
-    }
-    return true;
-  }
+ 
 
  /** Get all projects (requires token) */
 getProjects(): Observable<Project[]> {
@@ -44,11 +37,9 @@ createProject(payload: CreateProjectDto): Observable<Project> {
 
 /** Update project (Admin only) */
 updateProject(id: number, payload: UpdateProjectDto): Observable<Project> {
-  if (!this.ensureAdmin()) {
-    return throwError(() => new Error('Unauthorized: Admin privileges required.'));
-  }
   return this.http.put<Project>(`${this.projectsUrl}/${id}`, payload, { headers: this.getAuthHeaders() });
 }
+
 
 /** Join project (logged-in users) */
 joinProject(id: number): Observable<any> {

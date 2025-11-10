@@ -1,36 +1,45 @@
 <div class="form-container">
-	<div class="form-header">
-		<h2>{{ isEditMode ? ('UPDATE_PROJECT' | translate | async) : ('CREATE_PROJECT' | translate | async) }}</h2>
-		<p class="subtitle">{{ isEditMode ? ('UPDATE_PROJECT_DESC' | translate | async) : ('CREATE_PROJECT_DESC' | translate | async) }}</p>
-	</div>
+  <div class="form-header">
+    <h2>{{ isEditMode ? 'Edit Project' : 'Create New Project' }}</h2>
+    <p>Fill in the details below to {{ isEditMode ? 'update the' : 'create a new' }} project.</p>
+  </div>
 
-	<form [formGroup]="projectForm" (ngSubmit)="save()" class="employee-form">
-		<fieldset class="form-section">
-			<legend>{{ 'PROJECT_INFORMATION' | translate | async }}</legend>
+  <form [formGroup]="projectForm" (ngSubmit)="save()" class="employee-form">
+    <!-- Project Information Section -->
+    <fieldset class="form-section">
+      <legend>Project Information</legend>
+      
+      <div class="form-row">
+        <div class="form-group">
+          <label for="name">Project Name</label>
+          <input id="name" type="text" formControlName="name" placeholder="e.g., ERP System Enhancement"
+                 [class.is-invalid]="projectForm.get('name')?.invalid && projectForm.get('name')?.touched">
+          <div *ngIf="projectForm.get('name')?.invalid && projectForm.get('name')?.touched" class="validation-error">
+            <div *ngIf="projectForm.get('name')?.errors?.['required']">Project name is required.</div>
+            <div *ngIf="projectForm.get('name')?.errors?.['minlength']">Name must be at least 3 characters long.</div>
+          </div>
+        </div>
 
-			<div class="form-row">
-				<div class="form-group">
-					<label for="name">{{ 'PROJECT_NAME' | translate | async }}</label>
-					<input id="name" type="text" formControlName="name" placeholder="{{ 'PROJECT_NAME_PLACEHOLDER' | translate | async }}"
-								 [class.is-invalid]="projectForm.get('name')?.invalid && projectForm.get('name')?.touched">
-					<div *ngIf="projectForm.get('name')?.invalid && projectForm.get('name')?.touched" class="validation-error">
-						<div *ngIf="projectForm.get('name')?.errors?.['required']">{{ 'ERROR_REQUIRED' | translate | async }}</div>
-						<div *ngIf="projectForm.get('name')?.errors?.['minlength']">{{ 'ERROR_MIN_LENGTH' | translate | async }}</div>
-					</div>
-				</div>
+        <div class="form-group">
+          <label for="description">Project Description</label>
+          <textarea id="description" formControlName="description" rows="4" 
+                    placeholder="Enter a detailed description of the project"
+                    [class.is-invalid]="projectForm.get('description')?.invalid && projectForm.get('description')?.touched">
+          </textarea>
+          <div *ngIf="projectForm.get('description')?.invalid && projectForm.get('description')?.touched" class="validation-error">
+            <div *ngIf="projectForm.get('description')?.errors?.['required']">Description is required.</div>
+          </div>
+        </div>
+      </div>
+    </fieldset>
 
-				<div class="form-group">
-					<label for="description">{{ 'PROJECT_DESCRIPTION' | translate | async }}</label>
-					<textarea id="description" formControlName="description" rows="4"
-										placeholder="{{ 'PROJECT_DESCRIPTION_PLACEHOLDER' | translate | async }}"
-					></textarea>
-				</div>
-			</div>
-		</fieldset>
-
-		<div class="form-actions">
-			<button type="button" class="btn secondary" (click)="cancel()">{{ 'CANCEL' | translate | async }}</button>
-			<button type="submit" class="btn primary" [disabled]="projectForm.invalid">{{ isEditMode ? ('UPDATE' | translate | async) : ('SAVE' | translate | async) }}</button>
-		</div>
-	</form>
+    <div class="form-actions">
+      <button type="button" (click)="cancel()" class="reset-button">
+        Cancel
+      </button>
+      <button type="submit" [disabled]="projectForm.invalid" class="submit-button">
+        {{ isEditMode ? 'Update' : 'Create' }} Project
+      </button>
+    </div>
+  </form>
 </div>

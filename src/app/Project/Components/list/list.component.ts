@@ -4,6 +4,8 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { CreateComponent } from '../create/create.component';
 import { ProjectService } from '../../Services/project.service';
 import { Project } from '../../Models/project';
+import { Router } from '@angular/router';
+import { UpdateComponent } from '../update/update.component';
 
 @Component({
   selector: 'app-list',
@@ -19,7 +21,7 @@ export class ListComponent implements OnInit {
   sortKey: 'id' | 'name' | 'description' | 'createdAt' = 'id';
   sortDirection: 'asc' | 'desc' = 'asc';
 
-  constructor(private dialog: MatDialog, private projectService: ProjectService, private snackBar: MatSnackBar){}
+  constructor(private dialog: MatDialog, private projectService: ProjectService, private snackBar: MatSnackBar,private router: Router){}
 
   ngOnInit(): void {
     this.loadProjects();
@@ -141,51 +143,30 @@ export class ListComponent implements OnInit {
     });
   }
 
-  openEditModal(project: Project) {
-    this.selectedProject = { ...project };
-    const dialogRef = this.dialog.open(CreateComponent, {
-      width: '500px',
-      disableClose: true,
-      data: this.selectedProject,
-      panelClass: 'custom-dialog-container'
-    });
+ openEditModal(project: Project) {
+  this.selectedProject = { ...project };
+  const dialogRef = this.dialog.open(UpdateComponent, {
+    width: '500px',
+    disableClose: true,
+    data: this.selectedProject,
+    panelClass: 'custom-dialog-container'
+  });
 
-    dialogRef.afterClosed().subscribe(result => {
-      if (result && this.selectedProject) {
-        console.log('Attempting to update project:', {
-          id: this.selectedProject.id,
-          updates: result
-        });
-        
-        this.projectService.updateProject(this.selectedProject.id, result).subscribe({
-          next: (updatedProject) => {
-            console.log('Project updated successfully:', {
-              id: updatedProject.id,
-              name: updatedProject.name,
-              description: updatedProject.description,
-              createdAt: updatedProject.createdAt
-            });
-            this.loadProjects(); // Refresh the list
-            this.snackBar.open('Project updated successfully', 'Close', { duration: 4000 });
-          },
-          error: (error) => {
-            // Log full error for debugging
-            console.error('Error updating project (full):', error);
-
-            const status = error?.status;
-            const serverMessage = error?.error?.message || error?.message || 'Unknown error';
-
-            if (status === 401 || status === 403) {
-              this.snackBar.open('You are not authorized to update this project. Please login as an admin.', 'Close', { duration: 6000 });
-            } else {
-              this.snackBar.open(`Failed to update project: ${status || ''} ${serverMessage}`, 'Close', { duration: 6000 });
-            }
-          }
-        });
-      }
-      this.selectedProject = null;
-    });
-  }
+  dialogRef.afterClosed().subscribe(result => {
+    if (result && this.selectedProject) {
+      this.projectService.updateProject(this.selectedProject.id, result).subscribe({
+        next: (updatedProject) => {
+          this.loadProjects();
+          this.snackBar.open('Project updated successfully', 'Close', { duration: 4000 });
+        },
+        error: (error) => {
+          console.error('Error updating project:', error);
+          this.snackBar.open(`Failed to update project: ${error?.statusText}`, 'Close', { duration: 6000 });
+        }
+      });
+    }
+  });
+}
 
   closeCreateModal() {
     const modal = document.getElementById('createModal');
@@ -193,4 +174,9 @@ export class ListComponent implements OnInit {
       modal.style.display = 'none';
     }
   }
+
+  openAccounts(project: any): void {
+  // Navigate to /accounts/{project.name}
+  this.router.navigate(['/accounts', project.name]);
+}
 }

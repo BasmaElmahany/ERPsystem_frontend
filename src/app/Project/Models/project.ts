@@ -4,7 +4,7 @@ export interface CreateProjectDto {
 }
 
 export interface UpdateProjectDto {
-  name?: string;
+  name: string;
   description?: string;
 }
 
