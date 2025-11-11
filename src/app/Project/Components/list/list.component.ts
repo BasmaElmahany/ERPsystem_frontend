@@ -6,6 +6,7 @@ import { ProjectService } from '../../Services/project.service';
 import { Project } from '../../Models/project';
 import { Router } from '@angular/router';
 import { UpdateComponent } from '../update/update.component';
+import { DeleteComponent } from '../delete/delete.component';
 
 @Component({
   selector: 'app-list',
@@ -130,18 +131,42 @@ export class ListComponent implements OnInit {
     });
   }
 
-  joinProject(project: Project): void {
+  DeleteProject(project: Project): void {
     // call backend to join project
-    this.projectService.joinProject(project.id).subscribe({
+    this.projectService.DeleteProject(project.id).subscribe({
       next: (res) => {
-        console.log(`Joined project ${project.id}`, res);
+        console.log(`Delete project ${project.id}`, res);
         // Optionally update UI or navigate
       },
       error: (err) => {
-        console.error('Failed to join project', err);
+        console.error('Failed to Delete project', err);
       }
     });
   }
+
+  openDeleteModal(project: Project): void {
+  const dialogRef = this.dialog.open(DeleteComponent, {
+    width: '400px',
+    disableClose: true,
+    data: project,
+    panelClass: 'custom-dialog-container'
+  });
+
+  dialogRef.afterClosed().subscribe(confirmed => {
+    if (confirmed) {
+      this.projectService.DeleteProject(project.id).subscribe({
+        next: () => {
+          this.snackBar.open(`Project "${project.name}" deleted successfully.`, 'Close', { duration: 4000 });
+          this.loadProjects();
+        },
+        error: (err) => {
+          console.error('Failed to delete project', err);
+          this.snackBar.open(`Failed to delete project: ${err?.statusText}`, 'Close', { duration: 6000 });
+        }
+      });
+    }
+  });
+}
 
  openEditModal(project: Project) {
   this.selectedProject = { ...project };
@@ -178,5 +203,9 @@ export class ListComponent implements OnInit {
   openAccounts(project: any): void {
   // Navigate to /accounts/{project.name}
   this.router.navigate(['/accounts', project.name]);
+}
+
+openJournals(project: any): void {
+  this.router.navigate(['/journals', project.name]);
 }
 }

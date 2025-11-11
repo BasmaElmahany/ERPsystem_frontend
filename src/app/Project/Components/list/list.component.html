@@ -63,18 +63,23 @@
           <td class="description-cell">{{ project.description }}</td>
           <td class="date-cell">{{ project.createdAt | date:'medium' }}</td>
           <td class="actions-cell">
-            <button class="action-button join-button" (click)="joinProject(project)">
-              <i class="material-icons">group_add</i>
-              Join
-            </button>
-            <button class="action-button edit-button" (click)="openEditModal(project)">
-              <i class="material-icons">edit</i>
-              Edit
-            </button>
             <button class="action-button accounts-button" (click)="openAccounts(project)">
               <i class="material-icons">account_balance</i>
               Accounts
             </button>
+            <!-- 🟢 NEW: Journals button -->
+            <button class="action-button journals-button" (click)="openJournals(project)">
+              <i class="material-icons">receipt_long</i>
+              Journals
+            </button>
+            <button class="action-button edit-button" (click)="openEditModal(project)">
+              <i class="material-icons">edit</i>
+
+            </button>
+            <button mat-icon-button color="warn" (click)="openDeleteModal(project)">
+              <mat-icon>delete</mat-icon>
+            </button>
+
 
           </td>
         </tr>

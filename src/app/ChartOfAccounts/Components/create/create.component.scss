@@ -1,0 +1,227 @@
+/* Variables */
+$primary-color: #007bff;
+$accent-color: #6610f2;
+$primary-light: lighten($primary-color, 10%);
+$accent-warm: #fd7e14;
+$accent-danger: #dc3545;
+$success-color: #28a745;
+$warning-color: #ffc107;
+$danger-color: #dc3545;
+
+$card-bg: #1a1c1e;
+$card-hover-bg: #22252a;
+$text-light: #e9ecef;
+$text-secondary: #adb5bd;
+$border-color: rgba(255, 255, 255, 0.1);
+
+/* Animation */
+@keyframes fadeInScale {
+  from {
+    opacity: 0;
+    transform: scale(0.97);
+  }
+  to {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+/* Base container styling */
+.form-container {
+  font-family: 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  background: linear-gradient(135deg, $card-bg 0%, $card-hover-bg 100%);
+  border-radius: 12px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+  padding: 30px;
+  margin: 20px auto;
+  max-width: 800px;
+  animation: fadeInScale 0.35s ease-out;
+  border: 1px solid $border-color;
+}
+
+/* Header styling */
+.form-header {
+  margin-bottom: 30px;
+  border-bottom: 1px solid $border-color;
+  padding-bottom: 15px;
+
+  h2 {
+    color: $text-light;
+    font-weight: 700;
+    font-size: 1.8rem;
+    margin: 0;
+    background: linear-gradient(135deg, $primary-color, $accent-color);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  p {
+    color: $text-secondary;
+    font-size: 1rem;
+    margin-top: 5px;
+  }
+}
+
+/* Form structure */
+.employee-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+/* Fieldset/Section styling */
+.form-section {
+  border: 1px solid $border-color;
+  border-radius: 8px;
+  padding: 20px;
+  background: rgba($card-hover-bg, 0.5);
+}
+
+legend {
+  font-size: 1.2rem;
+  font-weight: 600;
+  color: $primary-light;
+  padding: 0 10px;
+  margin-left: -10px;
+  background: linear-gradient(90deg, rgba($primary-color, 0.1) 0%, rgba($accent-color, 0.05) 100%);
+  border-radius: 4px;
+}
+
+/* Form Row for horizontal layout */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 2rem;
+  align-items: start;
+}
+
+/* Form Group (Label + Input) */
+.form-group {
+  margin-bottom: 20px;
+
+  label {
+    display: block;
+    margin-bottom: 8px;
+    font-weight: 500;
+    color: $text-light;
+    font-size: 0.95rem;
+    letter-spacing: 0.5px;
+  }
+
+  input[type="text"],
+  textarea {
+    width: 100%;
+    padding: 12px 15px;
+    border: 1px solid $border-color;
+    border-radius: 6px;
+    font-size: 1rem;
+    color: $text-light;
+    background: rgba($card-bg, 0.5);
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    box-sizing: border-box;
+
+    &:focus {
+      border-color: $primary-color;
+      box-shadow: 0 0 0 3px rgba($primary-color, 0.25);
+      outline: none;
+      background: rgba($card-bg, 0.8);
+    }
+
+    &:hover {
+      border-color: $primary-light;
+      background: rgba($card-bg, 0.8);
+    }
+
+    &.is-invalid {
+      border-color: $danger-color;
+      box-shadow: 0 0 0 3px rgba($danger-color, 0.15);
+    }
+  }
+
+  textarea {
+    resize: vertical;
+    min-height: 120px;
+    line-height: 1.6;
+  }
+}
+
+/* Validation Error Styling */
+.validation-error {
+  color: $accent-danger;
+  font-size: 0.85rem;
+  margin-top: 8px;
+  font-weight: 500;
+  animation: fadeInScale 0.3s ease-out;
+  padding-left: 4px;
+  border-left: 2px solid $accent-danger;
+}
+
+/* Form Actions (Buttons) */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 15px;
+  padding-top: 20px;
+  border-top: 1px solid $border-color;
+  margin-top: 10px;
+
+  button {
+    padding: 12px 25px;
+    border: none;
+    border-radius: 6px;
+    font-size: 1rem;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+
+    &:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+      transform: none !important;
+    }
+  }
+
+  .submit-button {
+    background: linear-gradient(135deg, $primary-color, $accent-color);
+    color: $text-light;
+    box-shadow: 0 4px 12px rgba($primary-color, 0.3);
+
+    &:not(:disabled):hover {
+      transform: translateY(-2px);
+      box-shadow: 0 6px 16px rgba($primary-color, 0.4);
+    }
+  }
+
+  .reset-button {
+    background: rgba($text-secondary, 0.1);
+    color: $text-light;
+    border: 1px solid $border-color;
+
+    &:hover {
+      background: rgba($text-secondary, 0.2);
+      transform: translateY(-2px);
+    }
+  }
+}
+
+select {
+  width: 100%;
+  padding: 12px 15px;
+  border: 1px solid $border-color;
+  border-radius: 6px;
+  background: rgba($card-bg, 0.5);
+  color: $text-light;
+  font-size: 1rem;
+  transition: all 0.3s ease;
+
+  &:focus {
+    border-color: $primary-color;
+    box-shadow: 0 0 0 3px rgba($primary-color, 0.25);
+    outline: none;
+  }
+
+  &:hover {
+    border-color: $primary-light;
+  }
+}

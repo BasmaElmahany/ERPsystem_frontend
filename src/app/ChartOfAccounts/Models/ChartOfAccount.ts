@@ -6,3 +6,10 @@ export interface ChartOfAccount {
     parentAccountId?: number,
     isDetail: boolean
 }
+
+
+export interface AccountList{
+     id: number,
+    accountName: string
+}
+

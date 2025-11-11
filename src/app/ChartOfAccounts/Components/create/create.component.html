@@ -1,1 +1,65 @@
-<p>create works!</p>
+<div class="form-container">
+  <div class="form-header">
+    <h2>{{ isEditMode ? 'Edit Account' : 'Create New Account' }}</h2>
+    <p>Fill in the details below to {{ isEditMode ? 'update the' : 'create a new' }} account.</p>
+  </div>
+
+  <form [formGroup]="AccountForm" (ngSubmit)="save()" class="employee-form">
+    <fieldset class="form-section">
+      <legend>Account Information</legend>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="accountCode">Account Code</label>
+          <input id="accountCode" type="text" formControlName="accountCode" placeholder="e.g. 1001" />
+        </div>
+
+        <div class="form-group">
+          <label for="accountName">Account Name</label>
+          <input id="accountName" type="text" formControlName="accountName" placeholder="e.g. Cash in Hand" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="accountType">Account Type</label>
+          <select id="accountType" formControlName="accountType">
+            <option value="">Select type</option>
+            <option value="Asset">Asset</option>
+            <option value="Liability">Liability</option>
+            <option value="Equity">Equity</option>
+            <option value="Revenue">Revenue</option>
+            <option value="Expense">Expense</option>
+          </select>
+        </div>
+
+        <div class="form-group">
+          <label for="parentAccountId">Parent Account</label>
+          <select id="parentAccountId" formControlName="parentAccountId">
+            <option value="0">— No Parent —</option>
+            <option *ngFor="let parent of parentAccounts" [value]="parent.id">
+              {{ parent.accountName }}
+            </option>
+          </select>
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="isDetail">Is Detail Account</label>
+          <select id="isDetail" formControlName="isDetail">
+            <option [value]="true">Yes</option>
+            <option [value]="false">No</option>
+          </select>
+        </div>
+      </div>
+    </fieldset>
+
+    <div class="form-actions">
+      <button type="button" (click)="cancel()" class="reset-button">Cancel</button>
+      <button type="submit" [disabled]="AccountForm.invalid" class="submit-button">
+        {{ isEditMode ? 'Update' : 'Create' }} Account
+      </button>
+    </div>
+  </form>
+</div>

@@ -41,10 +41,10 @@ updateProject(id: number, payload: UpdateProjectDto): Observable<Project> {
 }
 
 
-/** Join project (logged-in users) */
-joinProject(id: number): Observable<any> {
-  const url = `${this.projectsUrl}/${id}/join`;
-  return this.http.post(url, {}, { headers: this.getAuthHeaders() });
+/** Delete project (Admin only) */
+DeleteProject(id: number): Observable<any> {
+  const url = `${this.projectsUrl}/${id}`;
+  return this.http.delete(url, { headers: this.getAuthHeaders() });
 }
 
 }

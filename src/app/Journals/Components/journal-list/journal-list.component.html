@@ -1,0 +1,85 @@
+<div class="table-container" *ngIf="!loading; else loadingTpl">
+    <div class="table-header">
+        <h2>Journal Entries</h2>
+        <div class="header-actions">
+            <input type="text" placeholder="🔍 Search journals..." [(ngModel)]="searchTerm" (input)="applySearch()"
+                class="search-input" />
+
+            <button class="create-button" (click)="openCreateModal()">
+                <i class="material-icons">add</i>
+                New Journal
+            </button>
+        </div>
+    </div>
+
+
+    <div class="table-wrapper">
+        <table class="styled-table">
+            <thead>
+                <tr>
+                    <th (click)="sortData('id')" class="sortable">
+                        ID
+                        <span *ngIf="sortKey === 'id'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+                    </th>
+                    <th (click)="sortData('entryNumber')" class="sortable">
+                        Entry Number
+                        <span *ngIf="sortKey === 'entryNumber'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+                    </th>
+                    <th (click)="sortData('date')" class="sortable">Date</th>
+                    <th>Description</th>
+                    <th>Status</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let j of filteredJournals; let i = index">
+                    <td>{{ j.id }}</td>
+                    <td>{{ j.entryNumber }}</td>
+                    <td>{{ j.date | date: 'mediumDate' }}</td>
+                    <td>{{ j.description }}</td>
+                    <td>
+                        <span class="status-badge" [ngClass]="{
+          'status-active': j.posted,
+          'status-on-leave': !j.posted
+        }">
+                            {{ j.posted ? 'Posted' : 'Unposted' }}
+                        </span>
+                    </td>
+                    <td class="actions-cell">
+                        <button class="action-button edit-button" (click)="openEditModal(j)">
+                            <i class="material-icons">edit</i>
+                        </button>
+
+                        <button class="action-button join-button" *ngIf="!j.posted" (click)="openPostModal(j)">
+                            <i class="material-icons">publish</i>
+                            Post
+                        </button>
+
+                        <button class="action-button" *ngIf="j.posted" (click)="openUnpostModal(j)">
+                            <i class="material-icons">undo</i>
+                            Unpost
+                        </button>
+
+                        <button mat-icon-button color="warn" (click)="openDeleteModal(j)">
+                            <mat-icon>delete</mat-icon>
+                        </button>
+                    </td>
+
+                </tr>
+            </tbody>
+
+        </table>
+    </div>
+
+    <div class="table-footer">
+        <p>Showing {{ journals.length }} journal entries from {{ projectName | titlecase }} project</p>
+    </div>
+</div>
+
+<ng-template #loadingTpl>
+    <div class="table-container text-center">
+        <mat-spinner diameter="48"></mat-spinner>
+        <p>Loading journal entries...</p>
+    </div>
+</ng-template>

@@ -2,6 +2,10 @@
   <div class="table-header">
     <h2>Chart of Accounts</h2>
     <span class="employee-count">{{ accounts.length }} Accounts</span>
+     <button class="create-button" (click)="openCreateModal()">
+        <i class="material-icons">add</i>
+        New Account
+      </button>
   </div>
 
   <div class="table-wrapper">
@@ -34,6 +38,8 @@
           </th>
           <th>Parent Account</th>
           <th>Is Detail</th>
+          <th>Actions</th>
+          
         </tr>
       </thead>
 
@@ -68,6 +74,15 @@
             >
               {{ acc.isDetail ? 'Yes' : 'No' }}
             </span>
+          </td>
+          <td class="actions-cell">
+             <button class="action-button edit-button" (click)="openEditModal(acc)">
+              <i class="material-icons">edit</i>
+              
+            </button>
+               <button mat-icon-button color="warn" (click)="openDeleteModal(acc)">
+              <mat-icon>delete</mat-icon>
+            </button>
           </td>
         </tr>
       </tbody>
