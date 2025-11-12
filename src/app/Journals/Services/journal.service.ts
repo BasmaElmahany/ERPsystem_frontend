@@ -3,12 +3,12 @@ import { Injectable } from '@angular/core';
 import { AuthService } from '../../Auth/Services/auth.service';
 import { CreateJournalDto, JournalEntry, JournalWithLines } from '../Models/journal';
 import { Observable } from 'rxjs';
+import { baseUrl } from '../../env';
 
 @Injectable({
   providedIn: 'root'
 })
 export class JournalService {
-private readonly baseUrl = '/api';
   constructor(private http: HttpClient, private auth: AuthService) { }
 
     private getHeaders(): HttpHeaders {
@@ -23,7 +23,7 @@ private readonly baseUrl = '/api';
   // 🟢 Create new journal entry
   create(project: string, dto: CreateJournalDto): Observable<{ id: number }> {
     return this.http.post<{ id: number }>(
-      `${this.baseUrl}/${project}/journals`,
+      `${baseUrl}/${project}/journals`,
       dto,
       { headers: this.getHeaders() }
     );
@@ -32,7 +32,7 @@ private readonly baseUrl = '/api';
   // 🟢 Update existing journal entry
   update(project: string, id: number, dto: CreateJournalDto): Observable<void> {
     return this.http.put<void>(
-      `${this.baseUrl}/${project}/journals/${id}`,
+      `${baseUrl}/${project}/journals/${id}`,
       dto,
       { headers: this.getHeaders() }
     );
@@ -41,7 +41,7 @@ private readonly baseUrl = '/api';
   // 🟢 Get a single journal entry with its lines
   getById(project: string, id: number): Observable<JournalWithLines> {
     return this.http.get<JournalWithLines>(
-      `${this.baseUrl}/${project}/journals/${id}`,
+      `${baseUrl}/${project}/journals/${id}`,
       { headers: this.getHeaders() }
     );
   }
@@ -49,7 +49,7 @@ private readonly baseUrl = '/api';
   // 🟢 Get all journal entries (summary list)
   getAll(project: string): Observable<JournalEntry[]> {
     return this.http.get<JournalEntry[]>(
-      `${this.baseUrl}/${project}/journals`,
+      `${baseUrl}/${project}/journals`,
       { headers: this.getHeaders() }
     );
   }
@@ -57,7 +57,7 @@ private readonly baseUrl = '/api';
   // 🟢 Post a journal entry (mark as posted)
   post(project: string, id: number): Observable<void> {
     return this.http.post<void>(
-      `${this.baseUrl}/${project}/journals/${id}/post`,
+      `${baseUrl}/${project}/journals/${id}/post`,
       {},
       { headers: this.getHeaders() }
     );
@@ -66,7 +66,7 @@ private readonly baseUrl = '/api';
   // 🟢 Unpost a journal entry (reverse posting)
   unpost(project: string, id: number): Observable<{ message: string }> {
     return this.http.post<{ message: string }>(
-      `${this.baseUrl}/${project}/journals/${id}/unpost`,
+      `${baseUrl}/${project}/journals/${id}/unpost`,
       {},
       { headers: this.getHeaders() }
     );
@@ -75,7 +75,7 @@ private readonly baseUrl = '/api';
   // 🟢 Delete a journal entry
   delete(project: string, id: number): Observable<{ message: string }> {
     return this.http.delete<{ message: string }>(
-      `${this.baseUrl}/${project}/journals/${id}`,
+      `${baseUrl}/${project}/journals/${id}`,
       { headers: this.getHeaders() }
     );
   }

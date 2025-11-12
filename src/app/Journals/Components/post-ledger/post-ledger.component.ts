@@ -6,17 +6,16 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   templateUrl: './post-ledger.component.html',
   styleUrl: './post-ledger.component.scss'
 })
-export class PostLedgerComponent {
-  constructor(
+export class PostLedgerComponent {  constructor(
     private dialogRef: MatDialogRef<PostLedgerComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
-  confirm() {
+  onConfirm(): void {
     this.dialogRef.close(true);
   }
 
-  cancel() {
+  onCancel(): void {
     this.dialogRef.close(false);
   }
 }

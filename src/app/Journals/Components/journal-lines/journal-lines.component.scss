@@ -1,0 +1,158 @@
+@import '../../../../styles.scss';
+
+.journal-lines-container {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 14px;
+  padding: 24px;
+  color: white;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
+  backdrop-filter: blur(8px);
+  margin-top: 20px;
+}
+
+/* ===== HEADER SECTION ===== */
+.journal-header {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  margin-bottom: 25px;
+}
+
+.header-info {
+  display: flex;
+  gap: 16px;
+  flex-wrap: wrap;
+
+  .info-card {
+    background: linear-gradient(135deg, rgba(0, 230, 118, 0.15), rgba(41, 182, 246, 0.15));
+    padding: 12px 18px;
+    border-radius: 10px;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    min-width: 150px;
+    text-align: center;
+    box-shadow: 0 2px 6px rgba(0, 0, 0, 0.3);
+
+    h4 {
+      font-size: 0.9rem;
+      color: rgba(255, 255, 255, 0.7);
+      margin: 0;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+
+    p {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin: 4px 0 0;
+    }
+  }
+}
+
+.desc-box {
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 4px solid #29b6f6;
+  border-radius: 8px;
+  padding: 12px 16px;
+
+  h3 {
+    margin: 0 0 4px;
+    color: #29b6f6;
+    font-size: 1rem;
+  }
+
+  p {
+    margin: 0;
+    font-size: 0.95rem;
+    color: rgba(255, 255, 255, 0.85);
+  }
+}
+
+/* ===== TABLE ===== */
+.lines-table-wrapper {
+  overflow-x: auto;
+}
+
+.styled-table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95rem;
+  color: white;
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.25);
+
+  th,
+  td {
+    padding: 12px 16px;
+    text-align: center;
+  }
+
+  thead {
+    background: linear-gradient(135deg, #00e676, #29b6f6);
+    color: #0a0a0a;
+    font-weight: 700;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+
+    th {
+      border-bottom: 2px solid rgba(255, 255, 255, 0.15);
+    }
+  }
+
+  tbody tr {
+    transition: all 0.3s ease;
+    &:nth-child(even) {
+      background: rgba(255, 255, 255, 0.04);
+    }
+    &:hover {
+      background: rgba(41, 182, 246, 0.1);
+      transform: translateY(-2px);
+    }
+  }
+
+  tfoot {
+    background: rgba(0, 150, 136, 0.15);
+    font-weight: bold;
+
+    .totals-label {
+      text-align: right;
+      color: #00e676;
+      font-size: 1rem;
+    }
+
+    .totals-debit {
+      color: #64ffda;
+    }
+
+    .totals-credit {
+      color: #ffab91;
+    }
+
+    td {
+      border-top: 2px solid rgba(255, 255, 255, 0.15);
+      padding: 14px 16px;
+      font-weight: 600;
+    }
+  }
+}
+
+/* ===== STATUS COLORS ===== */
+.posted {
+  color: #00e676;
+  font-weight: bold;
+}
+
+.unposted {
+  color: #ffab40;
+  font-weight: bold;
+}
+
+/* ===== Loading ===== */
+.text-center {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  color: white;
+  margin-top: 30px;
+}

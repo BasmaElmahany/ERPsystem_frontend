@@ -1,1 +1,15 @@
-<p>delete-journal works!</p>
+<h2 mat-dialog-title>Confirm Delete</h2>
+
+<mat-dialog-content>
+  <p>
+    Are you sure you want to delete 
+    <strong>Journal #{{ data.journal.entryNumber }}</strong>?
+    <br />
+    This journal entry and its lines will be permanently deleted!
+  </p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="warn" (click)="onConfirm()">Delete</button>
+</mat-dialog-actions>

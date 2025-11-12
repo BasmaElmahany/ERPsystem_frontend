@@ -2,12 +2,24 @@
     <div class="table-header">
         <h2>Journal Entries</h2>
         <div class="header-actions">
+            <!-- 🔍 Search -->
             <input type="text" placeholder="🔍 Search journals..." [(ngModel)]="searchTerm" (input)="applySearch()"
                 class="search-input" />
+
+            <!-- 🗓 Date Range Filters -->
+            <div class="date-filters">
+                <input type="date" [(ngModel)]="startDate" (change)="applySearch()" class="date-input" />
+                <span class="date-separator">—</span>
+                <input type="date" [(ngModel)]="endDate" (change)="applySearch()" class="date-input" />
+            </div>
 
             <button class="create-button" (click)="openCreateModal()">
                 <i class="material-icons">add</i>
                 New Journal
+            </button>
+            <button class="export-button" (click)="exportToExcel()">
+                <i class="material-icons">download</i>
+                Export To Excel
             </button>
         </div>
     </div>
@@ -17,10 +29,10 @@
         <table class="styled-table">
             <thead>
                 <tr>
-                    <th (click)="sortData('id')" class="sortable">
+                    <!-- <th (click)="sortData('id')" class="sortable">
                         ID
                         <span *ngIf="sortKey === 'id'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
-                    </th>
+                    </th>-->
                     <th (click)="sortData('entryNumber')" class="sortable">
                         Entry Number
                         <span *ngIf="sortKey === 'entryNumber'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
@@ -29,20 +41,21 @@
                     <th>Description</th>
                     <th>Status</th>
                     <th>Actions</th>
+
                 </tr>
             </thead>
 
             <tbody>
-                <tr *ngFor="let j of filteredJournals; let i = index">
-                    <td>{{ j.id }}</td>
+                <tr *ngFor="let j of paginatedJournals; let i = index">
+                    <!--   <td>{{ j.id }}</td>-->
                     <td>{{ j.entryNumber }}</td>
                     <td>{{ j.date | date: 'mediumDate' }}</td>
                     <td>{{ j.description }}</td>
                     <td>
                         <span class="status-badge" [ngClass]="{
-          'status-active': j.posted,
-          'status-on-leave': !j.posted
-        }">
+                                    'status-active': j.posted,
+                                    'status-on-leave': !j.posted
+                                                                 }">
                             {{ j.posted ? 'Posted' : 'Unposted' }}
                         </span>
                     </td>
@@ -60,7 +73,10 @@
                             <i class="material-icons">undo</i>
                             Unpost
                         </button>
-
+                        <button class="action-button" (click)="openLines(j)">
+                            <i class="material-icons">visibility</i>
+                            View
+                        </button>
                         <button mat-icon-button color="warn" (click)="openDeleteModal(j)">
                             <mat-icon>delete</mat-icon>
                         </button>
@@ -70,6 +86,9 @@
             </tbody>
 
         </table>
+        <mat-paginator [length]="filteredJournals.length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+            [pageIndex]="pageIndex" (page)="onPageChange($event)" aria-label="Select page">
+        </mat-paginator>
     </div>
 
     <div class="table-footer">

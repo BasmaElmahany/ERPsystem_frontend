@@ -1,5 +1,6 @@
 import { Routes } from '@angular/router';
 import { HomeComponent } from './Home/Components/home/home.component';
+import { JournalLinesComponent } from './Journals/Components/journal-lines/journal-lines.component';
 
 export const routes: Routes = [
   { path: 'login', loadComponent: () => import('./Auth/Components/login/login.component').then(m => m.LoginComponent) },
@@ -25,7 +26,12 @@ export const routes: Routes = [
         path: 'journals/:project',
         loadChildren: () =>
           import('./Journals/journal.module').then(m => m.JournalModule)
-      }
+      },
+        {
+        path: ':project/journals/:id/lines',
+        component: JournalLinesComponent
+      }  // ✅ /journals/list
+      
     ]
   },
 

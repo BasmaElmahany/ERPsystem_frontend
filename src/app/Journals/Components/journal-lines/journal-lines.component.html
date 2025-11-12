@@ -1,0 +1,69 @@
+<div class="journal-lines-container" *ngIf="!loading && journalData; else loadingTpl">
+  <!-- ===== HEADER INFO ===== -->
+  <div class="journal-header">
+    <div class="header-info">
+      <div class="info-card">
+        <h4>Journal No.</h4>
+        <p>{{ journalData.entry.entryNumber }}</p>
+      </div>
+      <div class="info-card">
+        <h4>Date</h4>
+        <p>{{ journalData.entry.date | date: 'mediumDate' }}</p>
+      </div>
+      <div class="info-card">
+        <h4>Status</h4>
+        <p>
+          <span [class.posted]="journalData.entry.posted" [class.unposted]="!journalData.entry.posted">
+            {{ journalData.entry.posted ? 'Posted' : 'Unposted' }}
+          </span>
+        </p>
+      </div>
+    </div>
+
+    <div class="desc-box">
+      <h3>Description</h3>
+      <p>{{ journalData.entry.description }}</p>
+    </div>
+  </div>
+
+  <!-- ===== TABLE SECTION ===== -->
+  <div class="lines-table-wrapper">
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th>#</th>
+          <th>Account ID</th>
+          <th>Description</th>
+          <th>Debit (دائن)</th>
+          <th>Credit (مدين)</th>
+        </tr>
+      </thead>
+
+      <tbody>
+        <tr *ngFor="let line of journalData.lines; let i = index">
+          <td>{{ i + 1 }}</td>
+          <td>{{ line.accountId }}</td>
+          <td>{{ line.description || '-' }}</td>
+          <td>{{ line.debit | number: '1.2-2' }}</td>
+          <td>{{ line.credit | number: '1.2-2' }}</td>
+        </tr>
+      </tbody>
+
+      <tfoot>
+        <tr class="totals-row">
+          <td colspan="3" class="totals-label">Totals</td>
+          <td class="totals-debit">{{ totalDebit | number: '1.2-2' }}</td>
+          <td class="totals-credit">{{ totalCredit | number: '1.2-2' }}</td>
+        </tr>
+      </tfoot>
+    </table>
+  </div>
+</div>
+
+<!-- ===== LOADING STATE ===== -->
+<ng-template #loadingTpl>
+  <div class="text-center">
+    <mat-spinner diameter="48"></mat-spinner>
+    <p>Loading journal details...</p>
+  </div>
+</ng-template>

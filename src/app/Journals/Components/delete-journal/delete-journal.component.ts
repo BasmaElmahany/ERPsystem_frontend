@@ -7,17 +7,16 @@ import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
   templateUrl: './delete-journal.component.html',
   styleUrl: './delete-journal.component.scss'
 })
-export class DeleteJournalComponent {
-  constructor(
+export class DeleteJournalComponent {constructor(
     private dialogRef: MatDialogRef<DeleteJournalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
-  confirm() {
-    this.dialogRef.close(true);
+  onConfirm(): void {
+    this.dialogRef.close(true); // return true to parent
   }
 
-  cancel() {
-    this.dialogRef.close(false);
+  onCancel(): void {
+    this.dialogRef.close(false); // cancel action
   }
 }

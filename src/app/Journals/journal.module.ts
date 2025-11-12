@@ -20,7 +20,10 @@ import { DeleteJournalComponent } from './Components/delete-journal/delete-journ
 import { EditJournalComponent } from './Components/edit-journal/edit-journal.component';
 import { PostLedgerComponent } from './Components/post-ledger/post-ledger.component';
 import { UnpostLedgerComponent } from './Components/unpost-ledger/unpost-ledger.component';
+import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
+import { MatPaginatorModule } from '@angular/material/paginator';
+import { JournalLinesComponent } from './Components/journal-lines/journal-lines.component';
 
 
 @NgModule({
@@ -30,7 +33,8 @@ import { UnpostLedgerComponent } from './Components/unpost-ledger/unpost-ledger.
  DeleteJournalComponent,
  EditJournalComponent,
  PostLedgerComponent,
- UnpostLedgerComponent
+ UnpostLedgerComponent,
+ JournalLinesComponent
   ],
   imports: [
     CommonModule,
@@ -48,7 +52,8 @@ import { UnpostLedgerComponent } from './Components/unpost-ledger/unpost-ledger.
     MatProgressSpinnerModule,
     MatDividerModule,
     MatCardModule,
-    MatToolbarModule
+    MatToolbarModule,
+    MatPaginatorModule
   ],
   exports: [JournalListComponent]
 })

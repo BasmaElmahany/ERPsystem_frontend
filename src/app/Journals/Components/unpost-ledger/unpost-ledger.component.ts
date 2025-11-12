@@ -12,11 +12,11 @@ export class UnpostLedgerComponent {
     @Inject(MAT_DIALOG_DATA) public data: any
   ) {}
 
-  confirm() {
+  onConfirm(): void {
     this.dialogRef.close(true);
   }
 
-  cancel() {
+  onCancel(): void {
     this.dialogRef.close(false);
   }
 }

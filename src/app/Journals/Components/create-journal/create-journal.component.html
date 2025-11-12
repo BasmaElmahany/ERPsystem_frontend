@@ -1,1 +1,86 @@
-<p>create-journal works!</p>
+<div class="form-container">
+  <div class="form-header">
+    <h2>Create New Journal</h2>
+    <p>Fill in the details below to create a new journal entry.</p>
+  </div>
+
+  <form [formGroup]="JournalForm" (ngSubmit)="save()" class="employee-form">
+    <fieldset class="form-section">
+      <legend>Journal Information</legend>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="entryNumber">Entry Number</label>
+          <input id="entryNumber" type="text" formControlName="entryNumber" placeholder="e.g. JV-0001" />
+        </div>
+
+        <div class="form-group">
+          <label for="date">Date</label>
+          <input id="date" type="date" formControlName="date" />
+        </div>
+      </div>
+
+      <div class="form-row">
+        <div class="form-group" style="grid-column: 1 / span 2;">
+          <label for="description">Description</label>
+          <textarea id="description" formControlName="description" rows="3" placeholder="Enter description"></textarea>
+        </div>
+      </div>
+    </fieldset>
+
+    <fieldset class="form-section">
+      <legend>Journal Lines</legend>
+
+      <div formArrayName="lines">
+        <div
+          class="form-row line-row"
+          *ngFor="let line of lines.controls; let i = index"
+          [formGroupName]="i"
+        >
+          <div class="form-group">
+            <label>Account</label>
+            <select formControlName="accountId">
+              <option value="">Select account</option>
+              <option *ngFor="let acc of accounts" [value]="acc.id">{{ acc.accountName }}</option>
+            </select>
+          </div>
+
+          <div class="form-group">
+            <label>Debit</label>
+            <input type="number" formControlName="debit" min="0" />
+          </div>
+
+          <div class="form-group">
+            <label>Credit</label>
+            <input type="number" formControlName="credit" min="0" />
+          </div>
+
+          <div class="form-group">
+            <label>Line Description</label>
+            <input type="text" formControlName="description" placeholder="Optional note" />
+          </div>
+
+          <div class="form-group remove-btn">
+            <button type="button" class="reset-button" (click)="removeLine(i)" *ngIf="lines.length > 1">
+              Remove
+            </button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-actions" style="justify-content: flex-start;">
+        <button type="button" class="submit-button" (click)="addLine()">+ Add Line</button>
+      </div>
+
+      <div class="totals">
+        <p><strong>Total Debit:</strong> {{ totalDebit | number: '1.2-2' }}</p>
+        <p><strong>Total Credit:</strong> {{ totalCredit | number: '1.2-2' }}</p>
+      </div>
+    </fieldset>
+
+    <div class="form-actions">
+      <button type="button" (click)="cancel()" class="reset-button">Cancel</button>
+      <button type="submit" [disabled]="JournalForm.invalid" class="submit-button">Create Journal</button>
+    </div>
+  </form>
+</div>

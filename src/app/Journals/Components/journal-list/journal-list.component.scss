@@ -167,3 +167,79 @@
   align-items: center;
   gap: 12px;
 }
+.date-filters {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  background: rgba(255, 255, 255, 0.05);
+  padding: 6px 10px;
+  border-radius: 8px;
+
+  .date-input {
+    background: transparent;
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    color: white;
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 0.95rem;
+    transition: all 0.3s ease;
+    width: 150px;
+
+    &:focus {
+      border-color: #29b6f6;
+      box-shadow: 0 0 0 3px rgba(41, 182, 246, 0.3);
+      outline: none;
+      background: rgba(255, 255, 255, 0.08);
+    }
+
+    &::-webkit-calendar-picker-indicator {
+      filter: invert(1);
+      cursor: pointer;
+    }
+  }
+
+  .date-separator {
+    color: rgba(255, 255, 255, 0.6);
+    font-weight: 600;
+  }
+}
+.export-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #009688, #4caf50);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: lighten(#009688, 5%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 150, 136, 0.3);
+  }
+
+  i {
+    font-size: 20px;
+  }
+}
+mat-paginator {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  color: white;
+  margin-top: 15px;
+  font-size: 0.95rem;
+
+  ::ng-deep .mat-mdc-paginator-range-label,
+  ::ng-deep .mat-mdc-paginator-icon {
+    color: white;
+  }
+
+  ::ng-deep .mat-mdc-select-value,
+  ::ng-deep .mat-mdc-select-arrow {
+    color: white;
+  }
+}

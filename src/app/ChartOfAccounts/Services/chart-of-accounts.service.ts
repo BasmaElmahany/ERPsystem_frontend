@@ -9,7 +9,7 @@ import { AccountList, ChartOfAccount } from '../Models/ChartOfAccount';
 })
 export class ChartOfAccountsService {
   private readonly baseUrl = '/api';
-private readonly localURL = 'https://localhost:44326/api/'; 
+//private readonly localURL = 'https://localhost:44326/api/'; 
   constructor(private http: HttpClient, private auth: AuthService) { }
 
   private getHeaders(): HttpHeaders {

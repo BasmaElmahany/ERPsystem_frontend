@@ -1,1 +1,14 @@
-<p>unpost-ledger works!</p>
+<h2 mat-dialog-title>Confirm Unpost</h2>
+
+<mat-dialog-content>
+  <p>
+    Are you sure you want to <strong>unpost Journal #{{ data.journal.entryNumber }}</strong>?
+    <br />
+    This will reverse its effects from the ledger.
+  </p>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="warn" (click)="onConfirm()">Unpost</button>
+</mat-dialog-actions>
