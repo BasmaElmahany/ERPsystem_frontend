@@ -1,14 +1,17 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { JournalService } from '../../Services/journal.service';
 import { AccountList } from '../../../ChartOfAccounts/Models/ChartOfAccount';
 import { ChartOfAccountsService } from '../../../ChartOfAccounts/Services/chart-of-accounts.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '../../../Shared/Pipes/translate.pipe';
 
 @Component({
   selector: 'app-create-journal',
-
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './create-journal.component.html',
   styleUrl: './create-journal.component.scss'
 })

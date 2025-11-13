@@ -17,6 +17,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AccountRouteModule } from './accounts-route.module';
+import { TranslatePipe } from '../Shared/Pipes/translate.pipe';
 
 
 
@@ -44,6 +45,7 @@ import { AccountRouteModule } from './accounts-route.module';
     MatDividerModule,
     MatCardModule,
     MatToolbarModule
+    , TranslatePipe
   ],
   exports: [ListComponent]
 })

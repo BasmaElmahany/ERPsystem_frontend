@@ -4,6 +4,7 @@ import { AuthService } from '../../Services/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '../../../Shared/Pipes/translate.pipe';
 
 
 @Component({
@@ -14,7 +15,8 @@ import { CommonModule } from '@angular/common';
     CommonModule,
     ReactiveFormsModule,
     RouterModule,
-    ToastrModule
+    ToastrModule,
+    TranslatePipe
   ],
   styleUrls: ['./register.component.scss']
 })

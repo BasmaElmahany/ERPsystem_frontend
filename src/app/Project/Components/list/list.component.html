@@ -1,23 +1,23 @@
 <div class="table-container">
   <div class="table-header">
-    <h2>Projects Directory</h2>
+  <h2>{{ 'PROJECTS_DIRECTORY' | translate | async }}</h2>
     <div class="header-actions">
-      <span class="project-count">{{ projects.length }} Projects</span>
+  <span class="project-count">{{ projects.length }} {{ 'PROJECTS' | translate | async }}</span>
       <button class="create-button" (click)="openCreateModal()">
         <i class="material-icons">add</i>
-        New Project
+        {{ 'NEW_PROJECT' | translate | async }}
       </button>
     </div>
   </div>
 
-  <div *ngIf="isLoading" class="loading-state">
+    <div *ngIf="isLoading" class="loading-state">
     <div class="loader"></div>
-    <p>Loading projects...</p>
+    <p>{{ 'LOADING_PROJECTS' | translate | async }}</p>
   </div>
 
-  <div *ngIf="!isLoading && projects.length === 0" class="empty-state">
+    <div *ngIf="!isLoading && projects.length === 0" class="empty-state">
     <i class="material-icons">folder_off</i>
-    <p>No projects found.</p>
+    <p>{{ 'NO_PROJECTS_FOUND' | translate | async }}</p>
   </div>
 
   <div class="table-wrapper" *ngIf="!isLoading && projects.length > 0">
@@ -25,30 +25,30 @@
       <thead>
         <tr>
           <th (click)="sortData('id')" class="sortable">
-            ID
+            {{ 'TABLE_HEADER_ID' | translate | async }}
             <span class="sort-icon" *ngIf="sortKey === 'id'">
               {{ sortDirection === 'asc' ? '▲' : '▼' }}
             </span>
           </th>
           <th (click)="sortData('name')" class="sortable">
-            Name
+            {{ 'TABLE_HEADER_NAME' | translate | async }}
             <span class="sort-icon" *ngIf="sortKey === 'name'">
               {{ sortDirection === 'asc' ? '▲' : '▼' }}
             </span>
           </th>
           <th (click)="sortData('description')" class="sortable">
-            Description
+            {{ 'TABLE_HEADER_DESCRIPTION' | translate | async }}
             <span class="sort-icon" *ngIf="sortKey === 'description'">
               {{ sortDirection === 'asc' ? '▲' : '▼' }}
             </span>
           </th>
           <th (click)="sortData('createdAt')" class="sortable">
-            Created At
+            {{ 'TABLE_HEADER_CREATED_AT' | translate | async }}
             <span class="sort-icon" *ngIf="sortKey === 'createdAt'">
               {{ sortDirection === 'asc' ? '▲' : '▼' }}
             </span>
           </th>
-          <th>Actions</th>
+          <th>{{ 'ACTIONS' | translate | async }}</th>
         </tr>
       </thead>
       <tbody>
@@ -65,12 +65,12 @@
           <td class="actions-cell">
             <button class="action-button accounts-button" (click)="openAccounts(project)">
               <i class="material-icons">account_balance</i>
-              Accounts
+              {{ 'ACCOUNTS' | translate | async }}
             </button>
             <!-- 🟢 NEW: Journals button -->
             <button class="action-button journals-button" (click)="openJournals(project)">
               <i class="material-icons">receipt_long</i>
-              Journals
+              {{ 'JOURNALS' | translate | async }}
             </button>
             <button class="action-button edit-button" (click)="openEditModal(project)">
               <i class="material-icons">edit</i>
@@ -88,6 +88,6 @@
   </div>
 
   <div class="table-footer">
-    <p>Showing {{ projects.length }} projects</p>
+    <p>{{ 'SHOWING' | translate | async }} {{ projects.length }} {{ 'PROJECTS' | translate | async }}</p>
   </div>
 </div>

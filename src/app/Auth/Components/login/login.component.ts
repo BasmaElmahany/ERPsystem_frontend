@@ -4,12 +4,14 @@ import { AuthService } from '../../Services/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '../../../Shared/Pipes/translate.pipe';
 @Component({
   selector: 'app-login',
   standalone: true,
   imports: [CommonModule,
     ReactiveFormsModule,
     RouterModule,
+    TranslatePipe
      ],
   templateUrl: './login.component.html',
   styleUrl: './login.component.scss'

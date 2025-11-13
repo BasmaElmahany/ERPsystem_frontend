@@ -3,25 +3,25 @@
   <div class="journal-header">
     <div class="header-info">
       <div class="info-card">
-        <h4>Journal No.</h4>
+        <h4>{{ 'JOURNAL_NUMBER' | translate | async }}</h4>
         <p>{{ journalData.entry.entryNumber }}</p>
       </div>
       <div class="info-card">
-        <h4>Date</h4>
+        <h4>{{ 'DATE' | translate | async }}</h4>
         <p>{{ journalData.entry.date | date: 'mediumDate' }}</p>
       </div>
       <div class="info-card">
-        <h4>Status</h4>
+        <h4>{{ 'STATUS' | translate | async }}</h4>
         <p>
           <span [class.posted]="journalData.entry.posted" [class.unposted]="!journalData.entry.posted">
-            {{ journalData.entry.posted ? 'Posted' : 'Unposted' }}
+            {{ (journalData.entry.posted ? ('POSTED' | translate) : ('UNPOSTED' | translate)) | async }}
           </span>
         </p>
       </div>
     </div>
 
     <div class="desc-box">
-      <h3>Description</h3>
+      <h3>{{ 'DESCRIPTION' | translate | async }}</h3>
       <p>{{ journalData.entry.description }}</p>
     </div>
   </div>
@@ -31,11 +31,11 @@
     <table class="styled-table">
       <thead>
         <tr>
-          <th>#</th>
-          <th>Account Name</th>
-          <th>Description</th>
-          <th>Debit (دائن)</th>
-          <th>Credit (مدين)</th>
+          <th>{{ 'TABLE_HEADER_ID' | translate | async }}</th>
+          <th>{{ 'ACCOUNT_NAME' | translate | async }}</th>
+          <th>{{ 'DESCRIPTION' | translate | async }}</th>
+          <th>{{ 'DEBIT' | translate | async }}</th>
+          <th>{{ 'CREDIT' | translate | async }}</th>
         </tr>
       </thead>
 
@@ -51,7 +51,7 @@
 
       <tfoot>
         <tr class="totals-row">
-          <td colspan="3" class="totals-label">Totals</td>
+          <td colspan="3" class="totals-label">{{ 'TOTALS' | translate | async }}</td>
           <td class="totals-debit">{{ totalDebit | number: '1.2-2' }}</td>
           <td class="totals-credit">{{ totalCredit | number: '1.2-2' }}</td>
         </tr>
@@ -63,7 +63,7 @@
 <!-- ===== LOADING STATE ===== -->
 <ng-template #loadingTpl>
   <div class="text-center">
-    <mat-spinner diameter="48"></mat-spinner>
-    <p>Loading journal details...</p>
+  <mat-spinner diameter="48"></mat-spinner>
+  <p>{{ 'LOADING_JOURNAL_DETAILS' | translate | async }}</p>
   </div>
 </ng-template>

@@ -1,13 +1,17 @@
 import { Component, Inject, OnInit } from '@angular/core';
-import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormArray, FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '../../../Shared/Pipes/translate.pipe';
 import { AccountList } from '../../../ChartOfAccounts/Models/ChartOfAccount';
 import { ChartOfAccountsService } from '../../../ChartOfAccounts/Services/chart-of-accounts.service';
 
 
 @Component({
   selector: 'app-edit-journal',
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './edit-journal.component.html',
   styleUrls: ['./edit-journal.component.scss']
 })

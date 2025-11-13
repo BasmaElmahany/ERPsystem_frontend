@@ -16,19 +16,18 @@ import { CreateComponent } from './Components/create/create.component';
 import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
+import { TranslatePipe } from '../Shared/Pipes/translate.pipe';
 import { AppRouteModule } from '../app-route.module';
 import { HTTP_INTERCEPTORS } from '@angular/common/http';
 import { AuthInterceptor } from '../Auth/interceptors/auth.interceptor';
 import { UpdateComponent } from './Components/update/update.component';
 import { DeleteComponent } from './Components/delete/delete.component';
 @NgModule({
-  declarations: [
+  imports: [
     ListComponent,
     CreateComponent,
     UpdateComponent,
-    DeleteComponent
-  ],
-  imports: [
+    DeleteComponent,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -45,6 +44,7 @@ import { DeleteComponent } from './Components/delete/delete.component';
     MatDividerModule,
     MatCardModule,
     MatToolbarModule
+    , TranslatePipe
   ],
   exports: [
     ListComponent

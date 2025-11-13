@@ -17,7 +17,7 @@
     <div class="sidebar-footer">
       <button class="nav-item" (click)="toggleLanguage()">
         <i class="material-icons">translate</i>
-        <span class="nav-label">{{ (currentLang$ | async) === 'en' ? 'عربي' : 'EN' }}</span>
+        <span class="nav-label">{{ ((currentLang$ | async) === 'en' ? ('LANG_AR' | translate) : ('LANG_EN' | translate)) | async }}</span>
       </button>
       
       <a href="#" class="nav-item" (click)="logout()">

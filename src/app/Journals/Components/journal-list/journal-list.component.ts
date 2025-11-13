@@ -270,7 +270,7 @@ export class JournalListComponent implements OnInit {
       }
 
 
-      row.eachCell(cell => {
+      row.eachCell((cell: any) => {
         cell.border = {
           top: { style: 'thin', color: { argb: 'DDDDDD' } },
           left: { style: 'thin', color: { argb: 'DDDDDD' } },

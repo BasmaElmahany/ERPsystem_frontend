@@ -1,42 +1,42 @@
 <div class="form-container">
   <div class="form-header">
-    <h2>{{ isEditMode ? 'Edit Account' : 'Create New Account' }}</h2>
-    <p>Fill in the details below to {{ isEditMode ? 'update the' : 'create a new' }} account.</p>
+  <h2>{{ (isEditMode ? 'EDIT_ACCOUNT' : 'CREATE_ACCOUNT') | translate | async }}</h2>
+  <p>{{ (isEditMode ? 'EDIT_ACCOUNT_INSTRUCTION' : 'CREATE_ACCOUNT_INSTRUCTION') | translate | async }}</p>
   </div>
 
   <form [formGroup]="AccountForm" (ngSubmit)="save()" class="employee-form">
     <fieldset class="form-section">
-      <legend>Account Information</legend>
+  <legend>{{ 'ACCOUNT_INFORMATION' | translate | async }}</legend>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="accountCode">Account Code</label>
-          <input id="accountCode" type="text" formControlName="accountCode" placeholder="e.g. 1001" />
+          <label for="accountCode">{{ 'ACCOUNT_CODE' | translate | async }}</label>
+          <input id="accountCode" type="text" formControlName="accountCode" placeholder="{{ 'ACCOUNT_CODE_EXAMPLE' | translate | async }}" />
         </div>
 
         <div class="form-group">
-          <label for="accountName">Account Name</label>
-          <input id="accountName" type="text" formControlName="accountName" placeholder="e.g. Cash in Hand" />
+          <label for="accountName">{{ 'ACCOUNT_NAME' | translate | async }}</label>
+          <input id="accountName" type="text" formControlName="accountName" placeholder="{{ 'ACCOUNT_NAME_EXAMPLE' | translate | async }}" />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="accountType">Account Type</label>
+          <label for="accountType">{{ 'ACCOUNT_TYPE' | translate | async }}</label>
           <select id="accountType" formControlName="accountType">
-            <option value="">Select type</option>
-            <option value="Asset">Asset</option>
-            <option value="Liability">Liability</option>
-            <option value="Equity">Equity</option>
-            <option value="Revenue">Revenue</option>
-            <option value="Expense">Expense</option>
+            <option value="">{{ 'SELECT_TYPE' | translate | async }}</option>
+            <option value="Asset">{{ 'ASSET' | translate | async }}</option>
+            <option value="Liability">{{ 'LIABILITY' | translate | async }}</option>
+            <option value="Equity">{{ 'EQUITY' | translate | async }}</option>
+            <option value="Revenue">{{ 'REVENUE' | translate | async }}</option>
+            <option value="Expense">{{ 'EXPENSE' | translate | async }}</option>
           </select>
         </div>
 
         <div class="form-group">
-          <label for="parentAccountId">Parent Account</label>
+          <label for="parentAccountId">{{ 'PARENT_ACCOUNT' | translate | async }}</label>
           <select id="parentAccountId" formControlName="parentAccountId">
-            <option value="0">— No Parent —</option>
+            <option value="0">{{ 'NO_PARENT' | translate | async }}</option>
             <option *ngFor="let parent of parentAccounts" [value]="parent.id">
               {{ parent.accountName }}
             </option>
@@ -46,19 +46,19 @@
 
       <div class="form-row">
         <div class="form-group">
-          <label for="isDetail">Is Detail Account</label>
+          <label for="isDetail">{{ 'IS_DETAIL_ACCOUNT' | translate | async }}</label>
           <select id="isDetail" formControlName="isDetail">
-            <option [value]="true">Yes</option>
-            <option [value]="false">No</option>
+            <option [value]="true">{{ 'YES' | translate | async }}</option>
+            <option [value]="false">{{ 'NO' | translate | async }}</option>
           </select>
         </div>
       </div>
     </fieldset>
 
     <div class="form-actions">
-      <button type="button" (click)="cancel()" class="reset-button">Cancel</button>
+      <button type="button" (click)="cancel()" class="reset-button">{{ 'CANCEL' | translate | async }}</button>
       <button type="submit" [disabled]="AccountForm.invalid" class="submit-button">
-        {{ isEditMode ? 'Update' : 'Create' }} Account
+        {{ (isEditMode ? 'UPDATE_ACCOUNT' : 'CREATE_ACCOUNT') | translate | async }}
       </button>
     </div>
   </form>

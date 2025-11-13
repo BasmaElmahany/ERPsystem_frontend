@@ -1,4 +1,10 @@
 import { Component, EventEmitter, Output, OnInit } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { RouterModule } from '@angular/router';
+import { TranslatePipe } from '../../../Shared/Pipes/translate.pipe';
+import { MatIconModule } from '@angular/material/icon';
+import { MatButtonModule } from '@angular/material/button';
+import { MatDialogModule } from '@angular/material/dialog';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
 import { CreateComponent } from '../create/create.component';
@@ -10,6 +16,8 @@ import { DeleteComponent } from '../delete/delete.component';
 
 @Component({
   selector: 'app-list',
+  standalone: true,
+  imports: [CommonModule, RouterModule, TranslatePipe, MatIconModule, MatButtonModule, MatDialogModule],
   templateUrl: './list.component.html',
   styleUrls: ['./list.component.scss'] 
 })

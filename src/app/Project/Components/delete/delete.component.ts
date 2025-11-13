@@ -2,9 +2,15 @@
 import { Component, Inject } from '@angular/core';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { Project } from '../../Models/project';
+import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '../../../Shared/Pipes/translate.pipe';
+import { MatDialogModule } from '@angular/material/dialog';
+import { MatButtonModule } from '@angular/material/button';
 
 @Component({
   selector: 'app-delete',
+  standalone: true,
+  imports: [CommonModule, TranslatePipe, MatDialogModule, MatButtonModule],
   templateUrl: './delete.component.html',
   styleUrls: ['./delete.component.scss']
 })

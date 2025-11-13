@@ -16,7 +16,7 @@
 
       <div class="nav-right">
         <button class="lang-toggle" (click)="toggleLanguage()">
-          {{ (currentLang$ | async) === 'en' ? 'عربي' : 'EN' }}
+          {{ ((currentLang$ | async) === 'en' ? ('LANG_AR' | translate) : ('LANG_EN' | translate)) | async }}
         </button>
 
         <i class="material-icons nav-icon">notifications</i>

@@ -1,10 +1,10 @@
 <div class="table-container" *ngIf="!loading; else loadingTpl">
   <div class="table-header">
-    <h2>Chart of Accounts</h2>
-    <span class="employee-count">{{ accounts.length }} Accounts</span>
+  <h2>{{ 'CHART_OF_ACCOUNTS' | translate | async }}</h2>
+  <span class="employee-count">{{ accounts.length }} {{ 'ACCOUNTS' | translate | async }}</span>
      <button class="create-button" (click)="openCreateModal()">
         <i class="material-icons">add</i>
-        New Account
+        {{ 'NEW_ACCOUNT' | translate | async }}
       </button>
   </div>
 
@@ -13,32 +13,32 @@
       <thead>
         <tr>
           <th (click)="sortData('id')" class="sortable">
-            ID
+            {{ 'TABLE_HEADER_ID' | translate | async }}
             <span class="sort-icon" *ngIf="sortKey === 'id'">
               {{ sortDirection === 'asc' ? '▲' : '▼' }}
             </span>
           </th>
           <th (click)="sortData('accountCode')" class="sortable">
-            Code
+            {{ 'ACCOUNT_CODE' | translate | async }}
             <span class="sort-icon" *ngIf="sortKey === 'accountCode'">
               {{ sortDirection === 'asc' ? '▲' : '▼' }}
             </span>
           </th>
           <th (click)="sortData('accountName')" class="sortable">
-            Account Name
+            {{ 'ACCOUNT_NAME' | translate | async }}
             <span class="sort-icon" *ngIf="sortKey === 'accountName'">
               {{ sortDirection === 'asc' ? '▲' : '▼' }}
             </span>
           </th>
           <th (click)="sortData('accountType')" class="sortable">
-            Type
+            {{ 'ACCOUNT_TYPE' | translate | async }}
             <span class="sort-icon" *ngIf="sortKey === 'accountType'">
               {{ sortDirection === 'asc' ? '▲' : '▼' }}
             </span>
           </th>
-          <th>Parent Account</th>
-          <th>Is Detail</th>
-          <th>Actions</th>
+          <th>{{ 'PARENT_ACCOUNT' | translate | async }}</th>
+          <th>{{ 'IS_DETAIL' | translate | async }}</th>
+          <th>{{ 'ACTIONS' | translate | async }}</th>
           
         </tr>
       </thead>
@@ -60,10 +60,10 @@
                 'status-terminated': acc.accountType === 'Liability'
               }"
             >
-              {{ acc.accountType }}
+              {{ (acc.accountType | uppercase) | translate | async }}
             </span>
           </td>
-          <td>{{ acc.parentAccountId || '—' }}</td>
+          <td>{{ acc.parentAccountId || ('NO_PARENT' | translate | async) }}</td>
           <td>
             <span
               class="status-badge"
@@ -72,7 +72,7 @@
                 'status-on-leave': !acc.isDetail
               }"
             >
-              {{ acc.isDetail ? 'Yes' : 'No' }}
+              {{ acc.isDetail ? ('YES' | translate | async) : ('NO' | translate | async) }}
             </span>
           </td>
           <td class="actions-cell">
@@ -90,13 +90,13 @@
   </div>
 
   <div class="table-footer">
-    <p>Showing {{ accounts.length }} records from {{ projectName | titlecase }} project schema</p>
+  <p>{{ 'SHOWING' | translate | async }} {{ accounts.length }} {{ 'RECORDS_FROM' | translate | async }} {{ projectName | titlecase }} {{ 'PROJECT_SCHEMA' | translate | async }}</p>
   </div>
 </div>
 
 <ng-template #loadingTpl>
   <div class="table-container text-center">
     <mat-spinner diameter="48"></mat-spinner>
-    <p>Loading chart of accounts...</p>
+  <p>{{ 'LOADING_CHART_OF_ACCOUNTS' | translate | async }}</p>
   </div>
 </ng-template>

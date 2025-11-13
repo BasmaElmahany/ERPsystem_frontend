@@ -1,44 +1,44 @@
 <div class="login-wrapper">
   <div class="login-card animated-card">
     <div class="card-header animated-item">
-      <h1 class="title">Welcome Back</h1>
-      <p class="subtitle">Sign in to continue to your dashboard.</p>
+  <h1 class="title">{{ 'WELCOME_BACK' | translate | async }}</h1>
+  <p class="subtitle">{{ 'SIGN_IN_INSTRUCTION' | translate | async }}</p>
     </div>
 
     <form [formGroup]="loginForm" (ngSubmit)="onSubmit()" class="login-form">
 
       <div class="form-group animated-item">
-        <label for="email">Email Address</label>
-        <input id="email" type="email" formControlName="email" placeholder="you@example.com"
+        <label for="email">{{ 'EMAIL_ADDRESS' | translate | async }}</label>
+        <input id="email" type="email" formControlName="email" placeholder="{{ 'EMAIL_PLACEHOLDER' | translate | async }}"
                [class.is-invalid]="f['email'].invalid && f['email'].touched">
         <div *ngIf="f['email'].invalid && f['email'].touched" class="validation-error">
-          <div *ngIf="f['email'].errors?.['required']">Email is required.</div>
-          <div *ngIf="f['email'].errors?.['email']">Please enter a valid email address.</div>
+          <div *ngIf="f['email'].errors?.['required']">{{ 'EMAIL_REQUIRED' | translate | async }}</div>
+          <div *ngIf="f['email'].errors?.['email']">{{ 'EMAIL_INVALID' | translate | async }}</div>
         </div>
       </div>
 
       <div class="form-group animated-item">
-        <label for="password">Password</label>
-        <input id="password" type="password" formControlName="password" placeholder="••••••••"
+        <label for="password">{{ 'PASSWORD' | translate | async }}</label>
+        <input id="password" type="password" formControlName="password" placeholder="{{ 'PASSWORD_PLACEHOLDER' | translate | async }}"
                [class.is-invalid]="f['password'].invalid && f['password'].touched">
         <div *ngIf="f['password'].invalid && f['password'].touched" class="validation-error">
-          <div *ngIf="f['password'].errors?.['required']">Password is required.</div>
-          <div *ngIf="f['password'].errors?.['minlength']">Password must be at least 6 characters.</div>
+          <div *ngIf="f['password'].errors?.['required']">{{ 'PASSWORD_REQUIRED' | translate | async }}</div>
+          <div *ngIf="f['password'].errors?.['minlength']">{{ 'PASSWORD_MINLENGTH' | translate | async }}</div>
         </div>
       </div>
 
       <button type="submit" [disabled]="loginForm.invalid || loading" class="login-button animated-item">
-        <span *ngIf="!loading">Sign In</span>
+        <span *ngIf="!loading">{{ 'SIGN_IN' | translate | async }}</span>
         <span *ngIf="loading" class="spinner"></span>
       </button>
 
       <div class="forgot-password animated-item">
-        <a href="#">Forgot Password?</a>
+        <a href="#">{{ 'FORGOT_PASSWORD' | translate | async }}</a>
       </div>
     </form>
 
     <div class="card-footer animated-item">
-      <p>Don't have an account? <a routerLink="/register">Sign Up</a></p>
+      <p>{{ 'DONT_HAVE_ACCOUNT' | translate | async }} <a routerLink="/register">{{ 'REGISTER' | translate | async }}</a></p>
     </div>
   </div>
 </div>

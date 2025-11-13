@@ -1,11 +1,13 @@
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '../../../Shared/Pipes/translate.pipe';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 
 @Component({
   selector: 'app-create',
-  standalone: false,
- // imports: [],
+  standalone: true,
+  imports: [CommonModule, ReactiveFormsModule, TranslatePipe],
   templateUrl: './create.component.html',
  styleUrls: ['./create.component.scss']
 })

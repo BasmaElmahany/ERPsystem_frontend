@@ -1,14 +1,14 @@
-<h2 mat-dialog-title>Confirm Post</h2>
+<h2 mat-dialog-title>{{ 'CONFIRM_POST' | translate | async }}</h2>
 
 <mat-dialog-content>
   <p>
-    Are you sure you want to <strong>post Journal #{{ data.journal.entryNumber }}</strong>?
+    {{ 'CONFIRM_POST' | translate | async }} <strong>#{{ data.journal.entryNumber }}</strong>.
     <br />
-    Once posted, it cannot be edited or deleted.
+    {{ 'POST_CONFIRM_NOTE' | translate | async }}
   </p>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="onCancel()">Cancel</button>
-  <button mat-raised-button color="primary" (click)="onConfirm()">Post</button>
+  <button mat-button (click)="onCancel()">{{ 'CANCEL' | translate | async }}</button>
+  <button mat-raised-button color="primary" (click)="onConfirm()">{{ 'POST' | translate | async }}</button>
 </mat-dialog-actions>

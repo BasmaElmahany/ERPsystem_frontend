@@ -1,35 +1,35 @@
 <div class="form-container">
   <div class="form-header">
-    <h2>Create New Journal</h2>
-    <p>Fill in the details below to create a new journal entry.</p>
+  <h2>{{ 'CREATE_NEW_JOURNAL' | translate | async }}</h2>
+  <p>{{ 'CREATE_JOURNAL_INSTRUCTION' | translate | async }}</p>
   </div>
 
   <form [formGroup]="JournalForm" (ngSubmit)="save()" class="employee-form">
     <fieldset class="form-section">
-      <legend>Journal Information</legend>
+  <legend>{{ 'JOURNAL_INFORMATION' | translate | async }}</legend>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="entryNumber">Entry Number</label>
-          <input id="entryNumber" type="text" formControlName="entryNumber" placeholder="e.g. JV-0001" />
+          <label for="entryNumber">{{ 'JOURNAL_NUMBER' | translate | async }}</label>
+          <input id="entryNumber" type="text" formControlName="entryNumber" placeholder="{{ 'JOURNAL_NUMBER_EXAMPLE' | translate | async }}" />
         </div>
 
         <div class="form-group">
-          <label for="date">Date</label>
+          <label for="date">{{ 'DATE' | translate | async }}</label>
           <input id="date" type="date" formControlName="date" />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group" style="grid-column: 1 / span 2;">
-          <label for="description">Description</label>
-          <textarea id="description" formControlName="description" rows="3" placeholder="Enter description"></textarea>
+          <label for="description">{{ 'DESCRIPTION' | translate | async }}</label>
+          <textarea id="description" formControlName="description" rows="3" placeholder="{{ 'ENTER_DESCRIPTION' | translate | async }}"></textarea>
         </div>
       </div>
     </fieldset>
 
     <fieldset class="form-section">
-      <legend>Journal Lines</legend>
+  <legend>{{ 'JOURNAL_LINES' | translate | async }}</legend>
 
       <div formArrayName="lines">
         <div
@@ -38,49 +38,49 @@
           [formGroupName]="i"
         >
           <div class="form-group">
-            <label>Account</label>
+            <label>{{ 'ACCOUNT' | translate | async }}</label>
             <select formControlName="accountId">
-              <option value="">Select account</option>
+              <option value="">{{ 'SELECT_ACCOUNT' | translate | async }}</option>
               <option *ngFor="let acc of accounts" [value]="acc.id">{{ acc.accountName }}</option>
             </select>
           </div>
 
           <div class="form-group">
-            <label>Debit</label>
+            <label>{{ 'DEBIT' | translate | async }}</label>
             <input type="number" formControlName="debit" min="0" />
           </div>
 
           <div class="form-group">
-            <label>Credit</label>
+            <label>{{ 'CREDIT' | translate | async }}</label>
             <input type="number" formControlName="credit" min="0" />
           </div>
 
           <div class="form-group">
-            <label>Line Description</label>
-            <input type="text" formControlName="description" placeholder="Optional note" />
+            <label>{{ 'LINE_DESCRIPTION' | translate | async }}</label>
+            <input type="text" formControlName="description" placeholder="{{ 'OPTIONAL_NOTE' | translate | async }}" />
           </div>
 
           <div class="form-group remove-btn">
             <button type="button" class="reset-button" (click)="removeLine(i)" *ngIf="lines.length > 1">
-              Remove
+              {{ 'REMOVE' | translate | async }}
             </button>
           </div>
         </div>
       </div>
 
       <div class="form-actions" style="justify-content: flex-start;">
-        <button type="button" class="submit-button" (click)="addLine()">+ Add Line</button>
+  <button type="button" class="submit-button" (click)="addLine()">{{ 'ADD_LINE' | translate | async }}</button>
       </div>
 
       <div class="totals">
-        <p><strong>Total Debit:</strong> {{ totalDebit | number: '1.2-2' }}</p>
-        <p><strong>Total Credit:</strong> {{ totalCredit | number: '1.2-2' }}</p>
+  <p><strong>{{ 'TOTAL_DEBIT' | translate | async }}:</strong> {{ totalDebit | number: '1.2-2' }}</p>
+  <p><strong>{{ 'TOTAL_CREDIT' | translate | async }}:</strong> {{ totalCredit | number: '1.2-2' }}</p>
       </div>
     </fieldset>
 
     <div class="form-actions">
-      <button type="button" (click)="cancel()" class="reset-button">Cancel</button>
-      <button type="submit" [disabled]="JournalForm.invalid" class="submit-button">Create Journal</button>
+      <button type="button" (click)="cancel()" class="reset-button">{{ 'CANCEL' | translate | async }}</button>
+      <button type="submit" [disabled]="JournalForm.invalid" class="submit-button">{{ 'CREATE_JOURNAL' | translate | async }}</button>
     </div>
   </form>
 </div>

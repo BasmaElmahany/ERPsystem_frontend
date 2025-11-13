@@ -24,19 +24,20 @@ import { BrowserAnimationsModule } from '@angular/platform-browser/animations';
 
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { JournalLinesComponent } from './Components/journal-lines/journal-lines.component';
+import { TranslatePipe } from '../Shared/Pipes/translate.pipe';
 
 
 @NgModule({
   declarations: [
  JournalListComponent ,
- CreateJournalComponent,
- DeleteJournalComponent,
- EditJournalComponent,
- PostLedgerComponent,
- UnpostLedgerComponent,
  JournalLinesComponent
   ],
   imports: [
+    CreateJournalComponent,
+    DeleteJournalComponent,
+    EditJournalComponent,
+    PostLedgerComponent,
+    UnpostLedgerComponent,
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
@@ -54,6 +55,7 @@ import { JournalLinesComponent } from './Components/journal-lines/journal-lines.
     MatCardModule,
     MatToolbarModule,
     MatPaginatorModule
+    , TranslatePipe
   ],
   exports: [JournalListComponent]
 })

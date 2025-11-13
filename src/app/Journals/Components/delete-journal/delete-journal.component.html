@@ -1,15 +1,14 @@
-<h2 mat-dialog-title>Confirm Delete</h2>
+<h2 mat-dialog-title>{{ 'CONFIRM_DELETE' | translate | async }}</h2>
 
 <mat-dialog-content>
   <p>
-    Are you sure you want to delete 
-    <strong>Journal #{{ data.journal.entryNumber }}</strong>?
+    {{ 'CONFIRM_DELETE' | translate | async }} <strong>#{{ data.journal.entryNumber }}</strong>.
     <br />
-    This journal entry and its lines will be permanently deleted!
+    {{ 'DELETE_JOURNAL_NOTE' | translate | async }}
   </p>
 </mat-dialog-content>
 
 <mat-dialog-actions align="end">
-  <button mat-button (click)="onCancel()">Cancel</button>
-  <button mat-raised-button color="warn" (click)="onConfirm()">Delete</button>
+  <button mat-button (click)="onCancel()">{{ 'CANCEL' | translate | async }}</button>
+  <button mat-raised-button color="warn" (click)="onConfirm()">{{ 'DELETE' | translate | async }}</button>
 </mat-dialog-actions>
