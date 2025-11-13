@@ -32,7 +32,7 @@ import { DeleteComponent } from './Components/delete/delete.component';
     CommonModule,
     FormsModule,
     ReactiveFormsModule,
-AppRouteModule,
+    AppRouteModule,
     // ✅ All material modules go here
     MatDialogModule,
     MatTooltipModule,
@@ -40,8 +40,8 @@ AppRouteModule,
     MatInputModule,
     MatFormFieldModule,
     MatIconModule,
-  MatListModule,
-  MatProgressSpinnerModule,
+    MatListModule,
+    MatProgressSpinnerModule,
     MatDividerModule,
     MatCardModule,
     MatToolbarModule
@@ -49,7 +49,7 @@ AppRouteModule,
   exports: [
     ListComponent
   ],
-   providers: [
+  providers: [
     { provide: HTTP_INTERCEPTORS, useClass: AuthInterceptor, multi: true }
   ]
 })

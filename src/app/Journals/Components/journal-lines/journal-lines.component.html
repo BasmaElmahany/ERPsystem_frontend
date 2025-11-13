@@ -32,7 +32,7 @@
       <thead>
         <tr>
           <th>#</th>
-          <th>Account ID</th>
+          <th>Account Name</th>
           <th>Description</th>
           <th>Debit (دائن)</th>
           <th>Credit (مدين)</th>
@@ -42,7 +42,7 @@
       <tbody>
         <tr *ngFor="let line of journalData.lines; let i = index">
           <td>{{ i + 1 }}</td>
-          <td>{{ line.accountId }}</td>
+          <td>{{ line.accountName }}</td>
           <td>{{ line.description || '-' }}</td>
           <td>{{ line.debit | number: '1.2-2' }}</td>
           <td>{{ line.credit | number: '1.2-2' }}</td>

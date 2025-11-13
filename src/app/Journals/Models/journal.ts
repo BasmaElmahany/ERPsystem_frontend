@@ -3,6 +3,8 @@ export interface JournalLine {
   debit: number;
   credit: number;
   description?: string;
+   // New mapped field
+  accountName?: string;
 }
 
 export interface JournalEntry {
