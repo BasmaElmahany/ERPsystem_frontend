@@ -156,3 +156,26 @@
   color: white;
   margin-top: 30px;
 }
+.export-button {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: linear-gradient(135deg, #009688, #4caf50);
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+
+  &:hover {
+    background: lighten(#009688, 5%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 150, 136, 0.3);
+  }
+
+  i {
+    font-size: 20px;
+  }
+}

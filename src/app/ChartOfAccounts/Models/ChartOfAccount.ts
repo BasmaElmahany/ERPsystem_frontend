@@ -13,3 +13,14 @@ export interface AccountList{
     accountName: string
 }
 
+export interface AccountWithChartDto {
+  accountCode: string;
+  accountName: string;
+  accountType: string;
+  parentAccountId?: number;
+  isDetail: boolean;
+
+  // New fields (Account entity)
+  currency: string;
+  openingBalance: number;
+}

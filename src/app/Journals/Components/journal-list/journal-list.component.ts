@@ -219,78 +219,134 @@ export class JournalListComponent implements OnInit {
     });
   }
 
-  exportToExcel(): void {
-    const workbook = new ExcelJS.Workbook();
-    const sheet = workbook.addWorksheet('دفتر القيود اليومية', {
-      views: [{ rightToLeft: true }]
-    });
+ exportToExcel(): void {
+  const workbook = new ExcelJS.Workbook();
+  const sheet = workbook.addWorksheet('القيود اليومية', {
+    views: [{ rightToLeft: true }]
+  });
 
-    // 🟢 العنوان الرئيسي
-    sheet.mergeCells('A1:E1');
-    const titleCell = sheet.getCell('A1');
-    titleCell.value = 'دفتر القيود اليومية';
-    titleCell.alignment = { horizontal: 'center', vertical: 'middle' };
-    titleCell.font = { name: 'Tahoma', size: 16, bold: true, color: { argb: '00695C' } };
-    titleCell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'C8E6C9' } };
+  let currentRow = 1;
 
-    // 🟢 رؤوس الأعمدة بالعربية
-    const header = ['رقم المعرف', 'رقم القيد', 'التاريخ', 'الوصف', 'الحالة'];
-    sheet.addRow(header);
+  const addTitle = (text: string) => {
+    sheet.mergeCells(`A${currentRow}:F${currentRow}`);
+    const cell = sheet.getCell(`A${currentRow}`);
+    cell.value = text;
+    cell.font = { size: 16, bold: true, color: { argb: '00695C' } };
+    cell.alignment = { horizontal: 'center' };
+    cell.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'C8E6C9' }
+    };
+    currentRow += 2;
+  };
 
-    const headerRow = sheet.getRow(2);
-    headerRow.font = { bold: true, name: 'Tahoma', size: 12 };
-    headerRow.alignment = { horizontal: 'center' };
-    headerRow.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'E0E0E0' } };
+  // Title
+  addTitle(`دفتر القيود اليومية - ${this.projectName}`);
 
-    // 🟢 عرض الأعمدة
-    sheet.columns = [
-      { key: 'id', width: 15 },
-      { key: 'entryNumber', width: 15 },
-      { key: 'date', width: 15 },
-      { key: 'description', width: 45 },
-      { key: 'posted', width: 15 },
+  // Loop through journals
+  const fetchPromises = this.filteredJournals.map(j =>
+    this.service.getById(this.projectName, j.id).toPromise()
+  );
 
-    ];
+  Promise.all(fetchPromises).then(journalsWithLines => {
 
-    // 🟢 إضافة البيانات مع تلوين الصفوف بالتبادل
-    this.filteredJournals.forEach((j, index) => {
-      const row = sheet.addRow([
-        j.id,
-        j.entryNumber,
-        new Date(j.date).toLocaleDateString('ar-EG'),
-        j.description,
-        j.posted ? 'مُرحّل' : 'غير مُرحّل'
+    journalsWithLines.forEach((journal, index) => {
+      const entry = journal!.entry;
 
+      // ---------------- HEADER ----------------
+      sheet.addRow([
+        'رقم القيد:', entry.entryNumber,
+        'التاريخ:', new Date(entry.date).toLocaleDateString('ar-EG'),
+        'الحالة:', entry.posted ? 'مُرحّل' : 'غير مُرحّل'
       ]);
 
-      row.font = { name: 'Tahoma', size: 11 };
-      row.alignment = { horizontal: 'right' };
-      if (index % 2 === 0) {
-        row.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'F9F9F9' } };
-      }
+      sheet.getRow(currentRow).font = { bold: true };
+      currentRow++;
 
+      sheet.mergeCells(`A${currentRow}:F${currentRow}`);
+      sheet.getCell(`A${currentRow}`).value = entry.description || '-';
+      sheet.getCell(`A${currentRow}`).font = { italic: true, color: { argb: '555555' } };
+      currentRow += 2;
 
-      row.eachCell(cell => {
-        cell.border = {
-          top: { style: 'thin', color: { argb: 'DDDDDD' } },
-          left: { style: 'thin', color: { argb: 'DDDDDD' } },
-          bottom: { style: 'thin', color: { argb: 'DDDDDD' } },
-          right: { style: 'thin', color: { argb: 'DDDDDD' } }
-        };
+      // ---------------- TABLE HEADER ----------------
+      const header = sheet.addRow([
+        '#',
+        'الحساب',
+        'الوصف',
+        'مدين',
+        'دائن',
+        ''
+      ]);
+
+      header.font = { bold: true, size: 12 };
+      header.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'E0E0E0' }
+      };
+      header.alignment = { horizontal: 'center' };
+      currentRow++;
+
+      // ---------------- JOURNAL LINES ----------------
+      let totalDebit = 0;
+      let totalCredit = 0;
+
+      journal!.lines.forEach((line, idx) => {
+        sheet.addRow([
+          idx + 1,
+          line.accountName,
+          line.description || '-',
+          line.debit,
+          line.credit,
+          ''
+        ]);
+
+        totalDebit += line.debit || 0;
+        totalCredit += line.credit || 0;
+
+        currentRow++;
       });
+
+      // ---------------- TOTALS ROW ----------------
+      const totalRow = sheet.addRow([
+        '',
+        '',
+        'الإجمالي:',
+        totalDebit,
+        totalCredit,
+        ''
+      ]);
+
+      totalRow.font = { bold: true };
+      totalRow.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'C8E6C9' }
+      };
+
+      currentRow += 3;
     });
 
-    // 🟢 إضافة الفلترة
-    sheet.autoFilter = { from: 'A2', to: 'E2' };
+    // Set column widths
+    sheet.columns = [
+      { width: 10 },
+      { width: 30 },
+      { width: 40 },
+      { width: 15 },
+      { width: 15 },
+      { width: 5 }
+    ];
 
-    // 🟢 تصدير الملف
-    workbook.xlsx.writeBuffer().then((data: any) => {
-      const blob = new Blob([data], {
+    // Export file
+    workbook.xlsx.writeBuffer().then((buffer) => {
+      const blob = new Blob([buffer], {
         type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
       });
-      saveAs(blob, `دفتر_القيود_اليومية_${this.projectName}_${new Date().toISOString().split('T')[0]}.xlsx`);
+      saveAs(blob, `Journals_With_Lines_${this.projectName}_${new Date().toISOString().split('T')[0]}.xlsx`);
     });
-  }
+  });
+}
 
 
 openLines(journal: any) {

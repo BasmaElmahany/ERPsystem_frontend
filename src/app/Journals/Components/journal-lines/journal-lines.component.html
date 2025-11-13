@@ -24,8 +24,14 @@
       <h3>Description</h3>
       <p>{{ journalData.entry.description }}</p>
     </div>
-  </div>
 
+  </div>
+<button class="export-button" (click)="exportToExcel()">
+                <i class="material-icons">download</i>
+                Export To Excel
+            </button>
+            <br>
+            
   <!-- ===== TABLE SECTION ===== -->
   <div class="lines-table-wrapper">
     <table class="styled-table">

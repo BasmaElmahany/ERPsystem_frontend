@@ -5,6 +5,7 @@
   </div>
 
   <form [formGroup]="AccountForm" (ngSubmit)="save()" class="employee-form">
+
     <fieldset class="form-section">
       <legend>Account Information</legend>
 
@@ -51,7 +52,20 @@
             <option [value]="false">No</option>
           </select>
         </div>
+
+        <div class="form-group">
+          <label for="currency">Currency</label>
+          <input id="currency" type="text" formControlName="currency" placeholder="e.g. EGP" />
+        </div>
       </div>
+
+      <div class="form-row">
+        <div class="form-group">
+          <label for="openingBalance">Opening Balance</label>
+          <input id="openingBalance" type="number" formControlName="openingBalance" />
+        </div>
+      </div>
+
     </fieldset>
 
     <div class="form-actions">

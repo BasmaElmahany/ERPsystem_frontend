@@ -1,6 +1,6 @@
 import { Component, EventEmitter, Inject, OnInit, Output } from '@angular/core';
 import { FormBuilder, FormGroup, Validators } from '@angular/forms';
-import { AccountList, ChartOfAccount } from '../../Models/ChartOfAccount';
+import { AccountList, AccountWithChartDto, ChartOfAccount } from '../../Models/ChartOfAccount';
 import { CreateComponent } from '../create/create.component';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { ChartOfAccountsService } from '../../Services/chart-of-accounts.service';
@@ -17,26 +17,24 @@ export class EditComponent implements OnInit {
   isEditMode = true; // Always true for edit
   parentAccounts: AccountList[] = [];
   projectName = '';
-  account: ChartOfAccount;
+  //account: ChartOfAccount;
 
   constructor(
-    private fb: FormBuilder,
-    private dialogRef: MatDialogRef<EditComponent>,
-    @Inject(MAT_DIALOG_DATA) public data: { projectName: string; account: ChartOfAccount },
-    private service: ChartOfAccountsService
-  ) {
-    this.projectName = data.projectName;
-    this.account = data.account;
-
-    // ✅ Initialize the form with the existing account data
-    this.AccountForm = this.fb.group({
-      accountCode: [this.account.accountCode, Validators.required],
-      accountName: [this.account.accountName, Validators.required],
-      accountType: [this.account.accountType, Validators.required],
-      parentAccountId: [this.account.parentAccountId || 0],
-      isDetail: [this.account.isDetail, Validators.required]
-    });
-  }
+  private fb: FormBuilder,  private service: ChartOfAccountsService,
+  private dialogRef: MatDialogRef<EditComponent>,
+  @Inject(MAT_DIALOG_DATA) public data: { projectName: string; id: number; dto: AccountWithChartDto }
+) {
+    this.projectName = data.projectName; // ✅ FIXED
+  this.AccountForm = this.fb.group({
+    accountCode: [data.dto.accountCode, Validators.required],
+    accountName: [data.dto.accountName, Validators.required],
+    accountType: [data.dto.accountType, Validators.required],
+    parentAccountId: [data.dto.parentAccountId || 0],
+    isDetail: [data.dto.isDetail],
+    currency: [data.dto.currency, Validators.required],
+    openingBalance: [data.dto.openingBalance, Validators.required]
+  });
+}
 
   ngOnInit(): void {
     console.log(`Editing account for project: ${this.projectName}`);

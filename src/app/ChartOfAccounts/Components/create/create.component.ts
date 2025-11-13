@@ -24,13 +24,16 @@ export class CreateComponent implements OnInit {
   ) {
     this.isEditMode = !!data?.accountCode; // check if edit mode based on data presence
     this.projectName = data?.projectName || ''; // ✅ get project name from dialog data
-
     this.AccountForm = this.fb.group({
-      accountCode: [data?.accountCode || '', Validators.required],
-      accountName: [data?.accountName || '', Validators.required],
-      accountType: [data?.accountType || '', Validators.required],
-      parentAccountId: [data?.parentAccountId || 0],
-      isDetail: [data?.isDetail ?? true, Validators.required]
+      accountCode: ['', Validators.required],
+      accountName: ['', Validators.required],
+      accountType: ['', Validators.required],
+      parentAccountId: [0],
+      isDetail: [true, Validators.required],
+
+      // NEW FIELDS
+      currency: ['EGP', Validators.required],
+      openingBalance: [0, Validators.required]
     });
   }
 

@@ -84,40 +84,42 @@ export class ListComponent implements OnInit {
       }
     });
   }
-  openEditModal(account: ChartOfAccount) {
-    this.selectedAccount = { ...account };
+ openEditModal(account: ChartOfAccount) {
+  this.loading = true;
 
-    const dialogRef = this.dialog.open(EditComponent, {
-      width: '500px',
-      disableClose: true,
-      panelClass: 'custom-dialog-container',
-      data: { projectName: this.projectName, account: this.selectedAccount }
-    });
-
-    dialogRef.afterClosed().subscribe(result => {
-      if (result) {
-        console.log('Attempting to update account:', result);
-        if (!this.selectedAccount) {
-          console.error('No account selected for update.');
-          return;
+  // Load DTO (chart + account)
+  this.service.getFullById(this.projectName, account.id).subscribe({
+    next: (dto) => {
+      const dialogRef = this.dialog.open(EditComponent, {
+        width: '500px',
+        disableClose: true,
+        panelClass: 'custom-dialog-container',
+        data: { 
+          projectName: this.projectName, 
+          id: account.id,
+          dto: dto 
         }
-        // ✅ Use update() instead of create()
-        this.service.update(this.projectName, this.selectedAccount.id, result).subscribe({
+      });
+
+      dialogRef.afterClosed().subscribe(result => {
+        if (!result) return;
+
+        this.service.update(this.projectName, account.id, result).subscribe({
           next: () => {
-            console.log('تم تعديل الحساب بنجاح:', result);
-            this.snackBar.open('Account updated successfully', 'Close', { duration: 4000 });
-            this.loadAccounts(); // Refresh list
+            this.snackBar.open("Account updated successfully", "Close");
+            this.loadAccounts();
           },
-          error: (error) => {
-            console.error('Error updating Account:', error);
-            const status = error?.status;
-            const serverMessage = error?.error?.message || error?.message || 'Unknown error';
-            this.snackBar.open(`Failed to update Account: ${status || ''} ${serverMessage}`, 'Close', { duration: 6000 });
+          error: (err) => {
+            this.snackBar.open("Failed to update account", "Close");
+            console.error(err);
           }
         });
-      }
-    });
-  }
+      });
+    },
+    error: (err) => console.error("Failed to load DTO", err),
+    complete: () => (this.loading = false)
+  });
+}
 
 
    openDeleteModal(account: ChartOfAccount): void {
