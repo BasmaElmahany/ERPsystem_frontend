@@ -122,3 +122,41 @@
   }
 }
 
+mat-paginator {
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 8px;
+  color: white;
+  margin-top: 15px;
+  font-size: 0.95rem;
+
+  ::ng-deep .mat-mdc-paginator-range-label,
+  ::ng-deep .mat-mdc-paginator-icon {
+    color: white;
+  }
+
+  ::ng-deep .mat-mdc-select-value,
+  ::ng-deep .mat-mdc-select-arrow {
+    color: white;
+  }
+}
+.search-input {
+  padding: 10px 14px;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 8px;
+  font-size: 1rem;
+  background: rgba(255, 255, 255, 0.05);
+  color: white;
+  width: 250px;
+  transition: all 0.3s ease;
+
+  &:focus {
+    outline: none;
+    border-color: #29b6f6;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 0 0 0 3px rgba(41, 182, 246, 0.3);
+  }
+
+  &::placeholder {
+    color: rgba(255, 255, 255, 0.6);
+  }
+}

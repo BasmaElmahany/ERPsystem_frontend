@@ -17,6 +17,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AccountRouteModule } from './accounts-route.module';
+import { MatPaginator } from '@angular/material/paginator';
 
 
 
@@ -32,6 +33,7 @@ import { AccountRouteModule } from './accounts-route.module';
     FormsModule,
     ReactiveFormsModule,
     AccountRouteModule,
+    MatPaginator ,
     // ✅ All material modules go here
     MatDialogModule,
     MatTooltipModule,

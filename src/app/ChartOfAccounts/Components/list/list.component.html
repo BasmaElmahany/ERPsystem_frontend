@@ -2,13 +2,17 @@
   <div class="table-header">
     <h2>Chart of Accounts</h2>
     <span class="employee-count">{{ accounts.length }} Accounts</span>
-     <button class="create-button" (click)="openCreateModal()">
-        <i class="material-icons">add</i>
-        New Account
-      </button>
+    <button class="create-button" (click)="openCreateModal()">
+      <i class="material-icons">add</i>
+      New Account
+    </button>
   </div>
 
   <div class="table-wrapper">
+          <input type="text" [(ngModel)]="searchTerm" (input)="applySearch()" placeholder="🔍 Search accounts..."
+        class="search-input" />
+        <br>
+         <br>
     <table class="styled-table">
       <thead>
         <tr>
@@ -39,12 +43,14 @@
           <th>Parent Account</th>
           <th>Is Detail</th>
           <th>Actions</th>
-          
+
         </tr>
       </thead>
 
+
       <tbody>
-        <tr *ngFor="let acc of accounts; let i = index" [style]="'--row-index: ' + i">
+        <tr *ngFor="let acc of paginatedAccounts">
+
           <td class="id-cell">{{ acc.id }}</td>
           <td>{{ acc.accountCode }}</td>
           <td class="employee-name-cell">
@@ -52,41 +58,43 @@
             {{ acc.accountName }}
           </td>
           <td>
-            <span
-              class="status-badge"
-              [ngClass]="{
+            <span class="status-badge" [ngClass]="{
                 'status-active': acc.accountType === 'Asset',
                 'status-on-leave': acc.accountType === 'Expense',
                 'status-terminated': acc.accountType === 'Liability'
-              }"
-            >
+              }">
               {{ acc.accountType }}
             </span>
           </td>
           <td>{{ acc.parentAccountId || '—' }}</td>
           <td>
-            <span
-              class="status-badge"
-              [ngClass]="{
+            <span class="status-badge" [ngClass]="{
                 'status-active': acc.isDetail,
                 'status-on-leave': !acc.isDetail
-              }"
-            >
+              }">
               {{ acc.isDetail ? 'Yes' : 'No' }}
             </span>
           </td>
           <td class="actions-cell">
-             <button class="action-button edit-button" (click)="openEditModal(acc)">
+            <button class="action-button edit-button" (click)="openEditModal(acc)">
               <i class="material-icons">edit</i>
-              
+
             </button>
-               <button mat-icon-button color="warn" (click)="openDeleteModal(acc)">
+            <button mat-icon-button color="warn" (click)="openDeleteModal(acc)">
               <mat-icon>delete</mat-icon>
             </button>
           </td>
         </tr>
       </tbody>
     </table>
+    <mat-paginator
+  [length]="filteredAccounts.length"
+  [pageSize]="pageSize"
+  [pageSizeOptions]="pageSizeOptions"
+  [pageIndex]="pageIndex"
+  (page)="onPageChange($event)">
+</mat-paginator>
+
   </div>
 
   <div class="table-footer">
