@@ -24,3 +24,8 @@ export interface AccountWithChartDto {
   currency: string;
   openingBalance: number;
 }
+
+export interface CreateChartResponse {
+  chart: ChartOfAccount;
+  account: AccountList; // or Account (based on your model)
+}
