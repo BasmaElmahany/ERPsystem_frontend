@@ -17,7 +17,7 @@ export interface ApiResponse<T> {
 export class ProjectService {
 
 
-
+private url = `${baseUrl}/projects`;
   constructor(
     private http: HttpClient,
     private authService: AuthService
@@ -38,7 +38,7 @@ export class ProjectService {
   // 📌 GET ALL PROJECTS
   // --------------------------------------------------------------------
   getProjects(): Observable<Project[]> {
-    return this.http.get(baseUrl, {
+    return this.http.get(this.url, {
       headers: this.getAuthHeaders(),
       responseType: 'text'
     }).pipe(
@@ -52,7 +52,7 @@ export class ProjectService {
   // --------------------------------------------------------------------
   createProject(payload: CreateProjectDto): Observable<Project> {
     return this.http.post<ApiResponse<Project>>(
-      baseUrl,
+      this.url,
       payload,
       { headers: this.getAuthHeaders() }
     ).pipe(
@@ -65,7 +65,7 @@ export class ProjectService {
   // --------------------------------------------------------------------
   updateProject(id: number, payload: UpdateProjectDto): Observable<Project> {
     return this.http.put<ApiResponse<Project>>(
-      `${baseUrl}/${id}`,
+      `${this.url}/${id}`,
       payload,
       { headers: this.getAuthHeaders() }
     ).pipe(
@@ -78,7 +78,7 @@ export class ProjectService {
   // --------------------------------------------------------------------
   deleteProject(id: number): Observable<{ success: boolean; message: string }> {
     return this.http.delete<ApiResponse<null>>(
-      `${baseUrl}/${id}`,
+      `${this.url}/${id}`,
       { headers: this.getAuthHeaders() }
     ).pipe(
       map(res => ({
