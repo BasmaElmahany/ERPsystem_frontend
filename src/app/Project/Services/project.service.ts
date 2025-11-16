@@ -4,6 +4,12 @@ import { map, Observable } from 'rxjs';
 import { CreateProjectDto, Project, UpdateProjectDto } from '../Models/project';
 import { AuthService } from '../../Auth/Services/auth.service';
 
+export interface ApiResponse<T> {
+  success: boolean;
+  message?: string;
+  data: T;
+}
+
 @Injectable({
   providedIn: 'root'
 })
@@ -16,6 +22,7 @@ export class ProjectService {
     private authService: AuthService
   ) { }
 
+  /** Attach JWT token to headers */
   private getAuthHeaders(): HttpHeaders {
     const token = this.authService.getToken();
     let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
@@ -26,9 +33,11 @@ export class ProjectService {
     return headers;
   }
 
-  /** Get all projects */
+  // --------------------------------------------------------------------
+  // 📌 GET ALL PROJECTS
+  // --------------------------------------------------------------------
   getProjects(): Observable<Project[]> {
-    return this.http.get<{ success: boolean; data: Project[] }>(
+    return this.http.get<ApiResponse<Project[]>>(
       this.projectsUrl,
       { headers: this.getAuthHeaders() }
     ).pipe(
@@ -36,9 +45,11 @@ export class ProjectService {
     );
   }
 
-  /** Create project */
+  // --------------------------------------------------------------------
+  // 📌 CREATE PROJECT
+  // --------------------------------------------------------------------
   createProject(payload: CreateProjectDto): Observable<Project> {
-    return this.http.post<{ success: boolean; data: Project }>(
+    return this.http.post<ApiResponse<Project>>(
       this.projectsUrl,
       payload,
       { headers: this.getAuthHeaders() }
@@ -47,9 +58,11 @@ export class ProjectService {
     );
   }
 
-  /** Update project */
+  // --------------------------------------------------------------------
+  // 📌 UPDATE PROJECT
+  // --------------------------------------------------------------------
   updateProject(id: number, payload: UpdateProjectDto): Observable<Project> {
-    return this.http.put<{ success: boolean; data: Project }>(
+    return this.http.put<ApiResponse<Project>>(
       `${this.projectsUrl}/${id}`,
       payload,
       { headers: this.getAuthHeaders() }
@@ -58,13 +71,18 @@ export class ProjectService {
     );
   }
 
-  /** Delete project */
-  deleteProject(id: number): Observable<any> {
-    return this.http.delete<{ success: boolean; message: string }>(
+  // --------------------------------------------------------------------
+  // 📌 DELETE PROJECT
+  // --------------------------------------------------------------------
+  deleteProject(id: number): Observable<{ success: boolean; message: string }> {
+    return this.http.delete<ApiResponse<null>>(
       `${this.projectsUrl}/${id}`,
       { headers: this.getAuthHeaders() }
     ).pipe(
-      map(res => res)
+      map(res => ({
+        success: res.success,
+        message: res.message ?? 'Deleted successfully'
+      }))
     );
   }
 }
