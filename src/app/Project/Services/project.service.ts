@@ -37,13 +37,14 @@ export class ProjectService {
   // 📌 GET ALL PROJECTS
   // --------------------------------------------------------------------
   getProjects(): Observable<Project[]> {
-    return this.http.get<ApiResponse<Project[]>>(
-      this.projectsUrl,
-      { headers: this.getAuthHeaders() }
-    ).pipe(
-      map(res => res.data)
+    return this.http.get(this.projectsUrl, {
+      headers: this.getAuthHeaders(),
+      responseType: 'text'
+    }).pipe(
+      map(txt => JSON.parse(txt).data)
     );
   }
+
 
   // --------------------------------------------------------------------
   // 📌 CREATE PROJECT
