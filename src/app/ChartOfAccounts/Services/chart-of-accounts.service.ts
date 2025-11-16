@@ -21,9 +21,10 @@ export class ChartOfAccountsService {
 
   /** GET all Chart Of Accounts */
   getAll(project: string): Observable<ChartOfAccount[]> {
+     const encodedProject = encodeURIComponent(project);
     return this.http
       .get<{ list: ChartOfAccount[] }>(
-        `${baseUrl}/${project}/chart-of-accounts`,
+        `${baseUrl}/${encodedProject}/chart-of-accounts`,
         { headers: this.getHeaders() }
       )
       .pipe(map(res => res.list));
@@ -31,9 +32,10 @@ export class ChartOfAccountsService {
 
   /** GET List of simple accounts */
   getList(project: string): Observable<AccountList[]> {
+     const encodedProject = encodeURIComponent(project);
     return this.http
       .get<{ list: AccountList[] }>(
-        `${baseUrl}/${project}/chart-of-accounts/list`,
+        `${baseUrl}/${encodedProject}/chart-of-accounts/list`,
         { headers: this.getHeaders() }
       )
       .pipe(map(res => res.list));
@@ -49,16 +51,18 @@ export class ChartOfAccountsService {
 
   /** GET full DTO */
   getFullById(project: string, id: number): Observable<AccountWithChartDto> {
+     const encodedProject = encodeURIComponent(project);
     return this.http.get<AccountWithChartDto>(
-      `${baseUrl}/${project}/chart-of-accounts/${id}/dto`,
+      `${baseUrl}/${encodedProject}/chart-of-accounts/${id}/dto`,
       { headers: this.getHeaders() }
     );
   }
 
   /** CREATE new chart/account pair */
 create(project: string, account: AccountWithChartDto): Observable<AccountWithChartDto> {
+   const encodedProject = encodeURIComponent(project);
   return this.http.post<any>(
-    `${baseUrl}/${project}/chart-of-accounts`,
+    `${baseUrl}/${encodedProject}/chart-of-accounts`,
     account,
     { headers: this.getHeaders() }
   ).pipe(
@@ -80,8 +84,9 @@ create(project: string, account: AccountWithChartDto): Observable<AccountWithCha
 
   /** UPDATE */
   update(project: string, id: number, account: AccountWithChartDto): Observable<void> {
+     const encodedProject = encodeURIComponent(project);
     return this.http.put<void>(
-      `${baseUrl}/${project}/chart-of-accounts/${id}`,
+      `${baseUrl}/${encodedProject}/chart-of-accounts/${id}`,
       account,
       { headers: this.getHeaders() }
     );
@@ -89,8 +94,9 @@ create(project: string, account: AccountWithChartDto): Observable<AccountWithCha
 
   /** DELETE */
   delete(project: string, id: number): Observable<void> {
+     const encodedProject = encodeURIComponent(project);
     return this.http.delete<void>(
-      `${baseUrl}/${project}/chart-of-accounts/${id}`,
+      `${baseUrl}/${encodedProject}/chart-of-accounts/${id}`,
       { headers: this.getHeaders() }
     );
   }

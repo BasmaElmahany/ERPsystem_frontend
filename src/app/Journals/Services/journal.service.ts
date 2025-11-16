@@ -22,8 +22,9 @@ export class JournalService {
 
   // 🟢 Create new journal entry
   create(project: string, dto: CreateJournalDto): Observable<{ id: number }> {
+     const encodedProject = encodeURIComponent(project);
     return this.http.post<{ id: number }>(
-      `${baseUrl}/${project}/journals`,
+      `${baseUrl}/${encodedProject}/journals`,
       dto,
       { headers: this.getHeaders() }
     );
@@ -31,8 +32,9 @@ export class JournalService {
 
   // 🟢 Update existing journal entry
   update(project: string, id: number, dto: CreateJournalDto): Observable<void> {
+     const encodedProject = encodeURIComponent(project);
     return this.http.put<void>(
-      `${baseUrl}/${project}/journals/${id}`,
+      `${baseUrl}/${encodedProject}/journals/${id}`,
       dto,
       { headers: this.getHeaders() }
     );
@@ -40,15 +42,17 @@ export class JournalService {
 
   // 🟢 Get a single journal entry with its lines
   getById(project: string, id: number): Observable<JournalWithLines> {
+     const encodedProject = encodeURIComponent(project);
     return this.http.get<JournalWithLines>(
-      `${baseUrl}/${project}/journals/${id}`,
+      `${baseUrl}/${encodedProject}/journals/${id}`,
       { headers: this.getHeaders() }
     );
   }
 
 getAll(project: string): Observable<JournalEntry[]> {
+   const encodedProject = encodeURIComponent(project);
   return this.http.get<{ list: JournalEntry[] }>(
-    `${baseUrl}/${project}/journals`,
+    `${baseUrl}/${encodedProject}/journals`,
     { headers: this.getHeaders() }
   ).pipe(
     map(response => response.list) // ⬅️ correct property
@@ -58,8 +62,9 @@ getAll(project: string): Observable<JournalEntry[]> {
 
   // 🟢 Post a journal entry (mark as posted)
   post(project: string, id: number): Observable<void> {
+     const encodedProject = encodeURIComponent(project);
     return this.http.post<void>(
-      `${baseUrl}/${project}/journals/${id}/post`,
+      `${baseUrl}/${encodedProject}/journals/${id}/post`,
       {},
       { headers: this.getHeaders() }
     );
@@ -67,8 +72,9 @@ getAll(project: string): Observable<JournalEntry[]> {
 
   // 🟢 Unpost a journal entry (reverse posting)
   unpost(project: string, id: number): Observable<{ message: string }> {
+     const encodedProject = encodeURIComponent(project);
     return this.http.post<{ message: string }>(
-      `${baseUrl}/${project}/journals/${id}/unpost`,
+      `${baseUrl}/${encodedProject}/journals/${id}/unpost`,
       {},
       { headers: this.getHeaders() }
     );
@@ -76,8 +82,9 @@ getAll(project: string): Observable<JournalEntry[]> {
 
   // 🟢 Delete a journal entry
   delete(project: string, id: number): Observable<{ message: string }> {
+     const encodedProject = encodeURIComponent(project);
     return this.http.delete<{ message: string }>(
-      `${baseUrl}/${project}/journals/${id}`,
+      `${baseUrl}/${encodedProject}/journals/${id}`,
       { headers: this.getHeaders() }
     );
   }
