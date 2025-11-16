@@ -131,18 +131,7 @@ export class ListComponent implements OnInit {
     });
   }
 
-  DeleteProject(project: Project): void {
-    // call backend to join project
-    this.projectService.DeleteProject(project.id).subscribe({
-      next: (res) => {
-        console.log(`Delete project ${project.id}`, res);
-        // Optionally update UI or navigate
-      },
-      error: (err) => {
-        console.error('Failed to Delete project', err);
-      }
-    });
-  }
+
 
   openDeleteModal(project: Project): void {
   const dialogRef = this.dialog.open(DeleteComponent, {
@@ -154,19 +143,39 @@ export class ListComponent implements OnInit {
 
   dialogRef.afterClosed().subscribe(confirmed => {
     if (confirmed) {
-      this.projectService.DeleteProject(project.id).subscribe({
-        next: () => {
-          this.snackBar.open(`Project "${project.name}" deleted successfully.`, 'Close', { duration: 4000 });
-          this.loadProjects();
+      this.projectService.deleteProject(project.id).subscribe({
+        next: (res) => {
+
+          if (res.success) {
+            this.snackBar.open(
+              `Project "${project.name}" deleted successfully.`,
+              'Close',
+              { duration: 4000 }
+            );
+            this.loadProjects();
+          } else {
+            this.snackBar.open(
+              `Failed to delete project: ${res.message}`,
+              'Close',
+              { duration: 6000 }
+            );
+          }
+
         },
         error: (err) => {
-          console.error('Failed to delete project', err);
-          this.snackBar.open(`Failed to delete project: ${err?.statusText}`, 'Close', { duration: 6000 });
+          // This only triggers if server/network is down
+          console.error('Unexpected error deleting project', err);
+          this.snackBar.open(
+            `Server error: Could not delete project`,
+            'Close',
+            { duration: 6000 }
+          );
         }
       });
     }
   });
 }
+
 
  openEditModal(project: Project) {
   this.selectedProject = { ...project };
