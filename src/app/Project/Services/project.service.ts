@@ -1,6 +1,6 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
-import { Observable, throwError } from 'rxjs';
+import { map, Observable, throwError } from 'rxjs';
 import { CreateProjectDto, Project, UpdateProjectDto } from '../Models/project';
 import { AuthService } from '../../Auth/Services/auth.service';
 
@@ -27,8 +27,12 @@ export class ProjectService {
  
 
  /** Get all projects (requires token) */
-getProjects(): Observable<Project[]> {
-  return this.http.get<Project[]>(this.projectsUrl, { headers: this.getAuthHeaders() });
+getProjects(): Observable<Project[]>  {
+  return this.http.get<{ projects: Project[] }>(this.projectsUrl, {
+    headers: this.getAuthHeaders()
+  }).pipe(
+    map(response => response.projects) // ⬅️ unwrap here
+  );
 }
 
 createProject(payload: CreateProjectDto): Observable<Project> {

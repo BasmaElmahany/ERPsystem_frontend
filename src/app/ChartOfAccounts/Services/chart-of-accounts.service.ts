@@ -1,7 +1,7 @@
 import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from '../../Auth/Services/auth.service';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { AccountList, AccountWithChartDto, ChartOfAccount } from '../Models/ChartOfAccount';
 import { baseUrl } from '../../env';
 
@@ -20,10 +20,14 @@ export class ChartOfAccountsService {
   }
 
   getAll(project: string): Observable<ChartOfAccount[]> {
-    return this.http.get<ChartOfAccount[]>(`${baseUrl}/${project}/chart-of-accounts`, { headers: this.getHeaders() });
+    return this.http.get<{list:ChartOfAccount[]}>(`${baseUrl}/${project}/chart-of-accounts`, { headers: this.getHeaders() }).pipe(
+      map(response => response.list) // ⬅️ unwrap here
+    );
   }
   getList(project: string): Observable<AccountList[]> {
-    return this.http.get<AccountList[]>(`${baseUrl}/${project}/chart-of-accounts/List`, { headers: this.getHeaders() });
+    return this.http.get<{list:AccountList[]}>(`${baseUrl}/${project}/chart-of-accounts/List`, { headers: this.getHeaders() }).pipe(
+      map(response => response.list) // ⬅️ unwrap here
+    );
   }
   getById(project: string, id: number): Observable<ChartOfAccount> {
     return this.http.get<ChartOfAccount>(`${baseUrl}/${project}/chart-of-accounts/${id}`, { headers: this.getHeaders() });

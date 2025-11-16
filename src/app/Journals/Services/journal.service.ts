@@ -2,7 +2,7 @@ import { HttpClient, HttpHeaders } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AuthService } from '../../Auth/Services/auth.service';
 import { CreateJournalDto, JournalEntry, JournalWithLines } from '../Models/journal';
-import { Observable } from 'rxjs';
+import { map, Observable } from 'rxjs';
 import { baseUrl } from '../../env';
 
 @Injectable({
@@ -11,15 +11,15 @@ import { baseUrl } from '../../env';
 export class JournalService {
   constructor(private http: HttpClient, private auth: AuthService) { }
 
-    private getHeaders(): HttpHeaders {
-      const token = this.auth.getToken();
-      let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
-      if (token) headers = headers.set('Authorization', `Bearer ${token}`);
-      return headers;
-    }
+  private getHeaders(): HttpHeaders {
+    const token = this.auth.getToken();
+    let headers = new HttpHeaders({ 'Content-Type': 'application/json' });
+    if (token) headers = headers.set('Authorization', `Bearer ${token}`);
+    return headers;
+  }
 
 
-    
+
   // 🟢 Create new journal entry
   create(project: string, dto: CreateJournalDto): Observable<{ id: number }> {
     return this.http.post<{ id: number }>(
@@ -46,13 +46,15 @@ export class JournalService {
     );
   }
 
-  // 🟢 Get all journal entries (summary list)
-  getAll(project: string): Observable<JournalEntry[]> {
-    return this.http.get<JournalEntry[]>(
-      `${baseUrl}/${project}/journals`,
-      { headers: this.getHeaders() }
-    );
-  }
+getAll(project: string): Observable<JournalEntry[]> {
+  return this.http.get<{ list: JournalEntry[] }>(
+    `${baseUrl}/${project}/journals`,
+    { headers: this.getHeaders() }
+  ).pipe(
+    map(response => response.list) // ⬅️ correct property
+  );
+}
+
 
   // 🟢 Post a journal entry (mark as posted)
   post(project: string, id: number): Observable<void> {
