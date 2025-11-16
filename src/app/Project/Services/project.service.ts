@@ -3,6 +3,7 @@ import { Injectable } from '@angular/core';
 import { map, Observable } from 'rxjs';
 import { CreateProjectDto, Project, UpdateProjectDto } from '../Models/project';
 import { AuthService } from '../../Auth/Services/auth.service';
+import { baseUrl } from '../../env';
 
 export interface ApiResponse<T> {
   success: boolean;
@@ -15,7 +16,7 @@ export interface ApiResponse<T> {
 })
 export class ProjectService {
 
-  private readonly projectsUrl = '/api/Projects';
+
 
   constructor(
     private http: HttpClient,
@@ -37,7 +38,7 @@ export class ProjectService {
   // 📌 GET ALL PROJECTS
   // --------------------------------------------------------------------
   getProjects(): Observable<Project[]> {
-    return this.http.get(this.projectsUrl, {
+    return this.http.get(baseUrl, {
       headers: this.getAuthHeaders(),
       responseType: 'text'
     }).pipe(
@@ -51,7 +52,7 @@ export class ProjectService {
   // --------------------------------------------------------------------
   createProject(payload: CreateProjectDto): Observable<Project> {
     return this.http.post<ApiResponse<Project>>(
-      this.projectsUrl,
+      baseUrl,
       payload,
       { headers: this.getAuthHeaders() }
     ).pipe(
@@ -64,7 +65,7 @@ export class ProjectService {
   // --------------------------------------------------------------------
   updateProject(id: number, payload: UpdateProjectDto): Observable<Project> {
     return this.http.put<ApiResponse<Project>>(
-      `${this.projectsUrl}/${id}`,
+      `${baseUrl}/${id}`,
       payload,
       { headers: this.getAuthHeaders() }
     ).pipe(
@@ -77,7 +78,7 @@ export class ProjectService {
   // --------------------------------------------------------------------
   deleteProject(id: number): Observable<{ success: boolean; message: string }> {
     return this.http.delete<ApiResponse<null>>(
-      `${this.projectsUrl}/${id}`,
+      `${baseUrl}/${id}`,
       { headers: this.getAuthHeaders() }
     ).pipe(
       map(res => ({
