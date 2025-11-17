@@ -217,4 +217,7 @@ export class ListComponent implements OnInit {
 openJournals(project: any): void {
   this.router.navigate(['/journals', project.name]);
 }
+openLedger(project: any): void {
+  this.router.navigate(['/ledger', project.name]);
+}
 }

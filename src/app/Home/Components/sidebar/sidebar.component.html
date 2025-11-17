@@ -3,8 +3,9 @@
 <div class="erp-layout" [class.sidebar-closed]="!isOpen" [dir]="(isRTL$ | async) ? 'rtl' : 'ltr'">
   <aside class="sidebar">
     <div class="logo-section">
-      <span class="logo-icon">ERP</span>
-      <span class="logo-text">{{ 'APP_NAME' | translate | async }}</span>
+      <span class="logo-icon">
+        {{ 'Logo' | translate | async }}
+      </span>
     </div>
 
     <nav class="sidebar-nav">

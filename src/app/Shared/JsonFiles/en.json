@@ -1,5 +1,6 @@
 {
-  "APP_NAME": "ERP System",
+  "APP_NAME": "System",
+  "Logo" : "Finance",
   "LOGOUT": "Logout",
   "DASHBOARD_OVERVIEW": "Dashboard Overview",
   "MENU_DASHBOARD": "Dashboard",

@@ -30,8 +30,12 @@ export const routes: Routes = [
         {
         path: ':project/journals/:id/lines',
         component: JournalLinesComponent
-      }  // ✅ /journals/list
-      
+      } , // ✅ /journals/list
+  {
+        path: 'ledger/:project',
+        loadChildren: () =>
+          import('./Ledger/ledger.module').then(m => m.LedgerModule)
+      },     
     ]
   },
 

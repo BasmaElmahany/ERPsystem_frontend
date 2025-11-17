@@ -72,6 +72,11 @@
               <i class="material-icons">receipt_long</i>
               Journals
             </button>
+            <!-- 🟢 NEW: Journals button -->
+            <button class="action-button journals-button" (click)="openLedger(project)">
+              <i class="material-icons">library_books</i>
+              Ledger
+            </button>
             <button class="action-button edit-button" (click)="openEditModal(project)">
               <i class="material-icons">edit</i>
 
@@ -79,8 +84,6 @@
             <button mat-icon-button color="warn" (click)="openDeleteModal(project)">
               <mat-icon>delete</mat-icon>
             </button>
-
-
           </td>
         </tr>
       </tbody>

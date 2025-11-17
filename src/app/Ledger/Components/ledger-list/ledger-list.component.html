@@ -1,0 +1,87 @@
+<div class="table-container" *ngIf="!loading; else loadingTpl">
+    <div class="table-header">
+        <h2>General Ledger</h2>
+        <div class="header-actions">
+            <!-- 🔍 Search -->
+            <input type="text" placeholder="🔍 Search journals..." [(ngModel)]="searchTerm" (input)="applySearch()"
+                class="search-input" />
+
+            <!-- 🗓 Date Range Filters -->
+            <div class="date-filters">
+                <input type="date" [(ngModel)]="startDate" (change)="applySearch()" class="date-input" />
+                <span class="date-separator">—</span>
+                <input type="date" [(ngModel)]="endDate" (change)="applySearch()" class="date-input" />
+            </div>
+
+            <button class="export-button">
+                <i class="material-icons">download</i>
+                Export To Excel
+            </button>
+        </div>
+    </div>
+
+
+    <div class="table-wrapper">
+        <table class="styled-table">
+            <thead>
+                <tr>
+               
+                    <th (click)="sortData('accountName')" class="sortable">
+                        Account Name
+                        <span *ngIf="sortKey === 'accountName'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+                    </th>
+
+                    <th (click)="sortData('accountType')" class="sortable">
+                        Type
+                        <span *ngIf="sortKey === 'accountName'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+                    </th>
+                    <th (click)="sortData('description')" class="sortable">Description
+                        <span *ngIf="sortKey === 'description'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+                    </th>
+                    <th (click)="sortData('debit')" class="sortable">
+                        Debit
+                    <span *ngIf="sortKey === 'debit'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+                    <th (click)="sortData('credit')" class="sortable">Credit
+                        <span *ngIf="sortKey === 'credit'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+                    </th>
+                    <th (click)="sortData('balance')" class="sortable">Balance
+                        <span *ngIf="sortKey === 'balance'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+                    </th>
+                    <th (click)="sortData('date')" class="sortable">Date
+                        <span *ngIf="sortKey === 'date'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+                    </th>
+
+
+                </tr>
+            </thead>
+
+            <tbody>
+                <tr *ngFor="let j of paginatedledger; let i = index">
+                  
+                    <td>{{ j.accountName }}</td>
+                    <td>{{ j.accountType }}</td>
+                    <td>{{ j.description }}</td>
+                    <td>{{ j.debit }}</td>
+                    <td>{{ j.credit }}</td>
+                    <td>{{ j.balance }}</td>
+                    <td>{{ j.date | date: 'mediumDate' }}</td>
+                </tr>
+            </tbody>
+
+        </table>
+        <mat-paginator [length]="paginatedledger.length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+            [pageIndex]="pageIndex" (page)="onPageChange($event)" aria-label="Select page">
+        </mat-paginator>
+    </div>
+
+    <div class="table-footer">
+        <p>Showing {{ ledger.length }} ledger entries from {{ projectName | titlecase }} project</p>
+    </div>
+</div>
+
+<ng-template #loadingTpl>
+    <div class="table-container text-center">
+        <mat-spinner diameter="48"></mat-spinner>
+        <p>Loading ledger entries...</p>
+    </div>
+</ng-template>
