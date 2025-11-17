@@ -160,3 +160,35 @@ mat-paginator {
     color: rgba(255, 255, 255, 0.6);
   }
 }
+/* 🔹 Scrollable table container */
+.scroll-area {
+  max-height: 450px; /* adjust height if needed */
+  overflow-y: auto;
+  overflow-x: hidden;
+  margin-top: 10px;
+
+  /* Smooth scrolling */
+  scrollbar-width: thin;
+  scrollbar-color: rgba(255, 255, 255, 0.4) transparent;
+
+  &::-webkit-scrollbar {
+    width: 8px;
+  }
+
+  &::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+  }
+
+  &::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.4);
+    border-radius: 4px;
+  }
+}
+
+/* 🔹 Keep header fixed (optional but recommended) */
+.styled-table thead th {
+  position: relative;
+  top: 0;
+  z-index: 5;
+  
+}

@@ -12,6 +12,8 @@ import { UnpostLedgerComponent } from '../unpost-ledger/unpost-ledger.component'
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { MatPaginator } from '@angular/material/paginator';
+import { AccountList } from '../../../ChartOfAccounts/Models/ChartOfAccount';
+import { ChartOfAccountsService } from '../../../ChartOfAccounts/Services/chart-of-accounts.service';
 
 @Component({
   selector: 'app-journal-list',
@@ -23,6 +25,9 @@ export class JournalListComponent implements OnInit {
   journals: JournalEntry[] = [];
   filteredJournals: JournalEntry[] = []; // ✅ filtered results
   paginatedJournals: JournalEntry[] = []; // ✅ فقط الصفحة الحالية
+  accounts: AccountList[] = [];
+
+accountMap: { [id: number]: string } = {};
 
   searchTerm = ''; // ✅ search box model
   loading = false;
@@ -30,26 +35,29 @@ export class JournalListComponent implements OnInit {
   sortDirection: 'asc' | 'desc' = 'asc';
   startDate: string = '';
   endDate: string = '';
-   // 🟢 إعدادات المقسم
+  // 🟢 إعدادات المقسم
   pageSize = 5;
   pageIndex = 0;
   pageSizeOptions = [5, 10, 20, 50];
-    @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
 
   constructor(
     private route: ActivatedRoute,
     private service: JournalService,
     private dialog: MatDialog,
     private snackBar: MatSnackBar,
-      private router: Router
+    private router: Router,
+    private accountService: ChartOfAccountsService,
+
   ) { }
 
   ngOnInit(): void {
     this.projectName = this.route.snapshot.paramMap.get('project') || '';
     this.loadJournals();
+    this.loadAccounts();
   }
 
- 
+
   loadJournals(): void {
     this.loading = true;
     this.service.getAll(this.projectName).subscribe({
@@ -218,139 +226,154 @@ export class JournalListComponent implements OnInit {
       }
     });
   }
+loadAccounts() {
+  this.accountService.getList(this.projectName).subscribe({
+    next: (res) => {
+      this.accounts = res;
+      this.accountMap = Object.fromEntries(
+        res.map(a => [a.id, a.accountName])
+        
+      );
+      console.log("Accounts from API:", res);
 
- exportToExcel(): void {
-  const workbook = new ExcelJS.Workbook();
-  const sheet = workbook.addWorksheet('القيود اليومية', {
-    views: [{ rightToLeft: true }]
+    },
+    error: () => this.snackBar.open("Failed to load accounts", "Close", { duration: 4000 })
   });
+}
 
-  let currentRow = 1;
+  exportToExcel(): void {
+    const workbook = new ExcelJS.Workbook();
+    const sheet = workbook.addWorksheet('القيود اليومية', {
+      views: [{ rightToLeft: true }]
+    });
 
-  const addTitle = (text: string) => {
-    sheet.mergeCells(`A${currentRow}:F${currentRow}`);
-    const cell = sheet.getCell(`A${currentRow}`);
-    cell.value = text;
-    cell.font = { size: 16, bold: true, color: { argb: '00695C' } };
-    cell.alignment = { horizontal: 'center' };
-    cell.fill = {
-      type: 'pattern',
-      pattern: 'solid',
-      fgColor: { argb: 'C8E6C9' }
-    };
-    currentRow += 2;
-  };
+    let currentRow = 1;
 
-  // Title
-  addTitle(`دفتر القيود اليومية - ${this.projectName}`);
-
-  // Loop through journals
-  const fetchPromises = this.filteredJournals.map(j =>
-    this.service.getById(this.projectName, j.id).toPromise()
-  );
-
-  Promise.all(fetchPromises).then(journalsWithLines => {
-
-    journalsWithLines.forEach((journal, index) => {
-      const entry = journal!.entry;
-
-      // ---------------- HEADER ----------------
-      sheet.addRow([
-        'رقم القيد:', entry.entryNumber,
-        'التاريخ:', new Date(entry.date).toLocaleDateString('ar-EG'),
-        'الحالة:', entry.posted ? 'مُرحّل' : 'غير مُرحّل'
-      ]);
-
-      sheet.getRow(currentRow).font = { bold: true };
-      currentRow++;
-
+    const addTitle = (text: string) => {
       sheet.mergeCells(`A${currentRow}:F${currentRow}`);
-      sheet.getCell(`A${currentRow}`).value = entry.description || '-';
-      sheet.getCell(`A${currentRow}`).font = { italic: true, color: { argb: '555555' } };
-      currentRow += 2;
-
-      // ---------------- TABLE HEADER ----------------
-      const header = sheet.addRow([
-        '#',
-        'الحساب',
-        'الوصف',
-        'مدين',
-        'دائن',
-        ''
-      ]);
-
-      header.font = { bold: true, size: 12 };
-      header.fill = {
-        type: 'pattern',
-        pattern: 'solid',
-        fgColor: { argb: 'E0E0E0' }
-      };
-      header.alignment = { horizontal: 'center' };
-      currentRow++;
-
-      // ---------------- JOURNAL LINES ----------------
-      let totalDebit = 0;
-      let totalCredit = 0;
-
-      journal!.lines.forEach((line, idx) => {
-        sheet.addRow([
-          idx + 1,
-          line.accountName,
-          line.description || '-',
-          line.debit,
-          line.credit,
-          ''
-        ]);
-
-        totalDebit += line.debit || 0;
-        totalCredit += line.credit || 0;
-
-        currentRow++;
-      });
-
-      // ---------------- TOTALS ROW ----------------
-      const totalRow = sheet.addRow([
-        '',
-        '',
-        'الإجمالي:',
-        totalDebit,
-        totalCredit,
-        ''
-      ]);
-
-      totalRow.font = { bold: true };
-      totalRow.fill = {
+      const cell = sheet.getCell(`A${currentRow}`);
+      cell.value = text;
+      cell.font = { size: 16, bold: true, color: { argb: '00695C' } };
+      cell.alignment = { horizontal: 'center' };
+      cell.fill = {
         type: 'pattern',
         pattern: 'solid',
         fgColor: { argb: 'C8E6C9' }
       };
+      currentRow += 2;
+    };
 
-      currentRow += 3;
-    });
+    // Title
+    addTitle(`دفتر القيود اليومية - ${this.projectName}`);
 
-    // Set column widths
-    sheet.columns = [
-      { width: 10 },
-      { width: 30 },
-      { width: 40 },
-      { width: 15 },
-      { width: 15 },
-      { width: 5 }
-    ];
+    // Loop through journals
+    const fetchPromises = this.filteredJournals.map(j =>
+      this.service.getById(this.projectName, j.id).toPromise()
+    );
 
-    // Export file
-    workbook.xlsx.writeBuffer().then((buffer) => {
-      const blob = new Blob([buffer], {
-        type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+    Promise.all(fetchPromises).then(journalsWithLines => {
+
+      journalsWithLines.forEach((journal, index) => {
+        const entry = journal!.entry;
+
+        // ---------------- HEADER ----------------
+        sheet.addRow([
+          'رقم القيد:', entry.entryNumber,
+          'التاريخ:', new Date(entry.date).toLocaleDateString('ar-EG'),
+          'الحالة:', entry.posted ? 'مُرحّل' : 'غير مُرحّل'
+        ]);
+
+        sheet.getRow(currentRow).font = { bold: true };
+        currentRow++;
+
+        sheet.mergeCells(`A${currentRow}:F${currentRow}`);
+        sheet.getCell(`A${currentRow}`).value = entry.description || '-';
+        sheet.getCell(`A${currentRow}`).font = { italic: true, color: { argb: '555555' } };
+        currentRow += 2;
+
+        // ---------------- TABLE HEADER ----------------
+        const header = sheet.addRow([
+          '#',
+          'الحساب',
+          'الوصف',
+          'مدين',
+          'دائن',
+          ''
+        ]);
+
+        header.font = { bold: true, size: 12 };
+        header.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'E0E0E0' }
+        };
+        header.alignment = { horizontal: 'center' };
+        currentRow++;
+
+        // ---------------- JOURNAL LINES ----------------
+        let totalDebit = 0;
+        let totalCredit = 0;
+
+        journal!.lines.forEach((line, idx) => {
+            line.accountName = this.accountMap[line.accountId] || "Account Not Found";
+          sheet.addRow([
+            idx + 1,
+            line.accountName,
+            line.description || '-',
+            line.debit,
+            line.credit,
+            ''
+          ]);
+
+          totalDebit += line.debit || 0;
+          totalCredit += line.credit || 0;
+
+          currentRow++;
+        });
+
+        // ---------------- TOTALS ROW ----------------
+        const totalRow = sheet.addRow([
+          '',
+          '',
+          'الإجمالي:',
+          totalDebit,
+          totalCredit,
+          ''
+        ]);
+
+        totalRow.font = { bold: true };
+        totalRow.fill = {
+          type: 'pattern',
+          pattern: 'solid',
+          fgColor: { argb: 'C8E6C9' }
+        };
+
+        currentRow += 3;
       });
-      saveAs(blob, `Journals_With_Lines_${this.projectName}_${new Date().toISOString().split('T')[0]}.xlsx`);
+
+      // Set column widths
+      sheet.columns = [
+        { width: 10 },
+        { width: 30 },
+        { width: 40 },
+        { width: 15 },
+        { width: 15 },
+        { width: 5 }
+      ];
+
+      // Export file
+      workbook.xlsx.writeBuffer().then((buffer) => {
+        const blob = new Blob([buffer], {
+          type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
+        });
+        saveAs(blob, `Journals_With_Lines_${this.projectName}_${new Date().toISOString().split('T')[0]}.xlsx`);
+      });
     });
-  });
-}
+  }
 
 
-openLines(journal: any) {
-  this.router.navigate([`${this.projectName}/journals/${journal.id}/lines`]);
-}
+  openLines(journal: any) {
+    this.router.navigate([`${this.projectName}/journals/${journal.id}/lines`]);
+  }
 
 }
