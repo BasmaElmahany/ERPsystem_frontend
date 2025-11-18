@@ -1,4 +1,4 @@
-import { NgModule } from '@angular/core';
+import { CUSTOM_ELEMENTS_SCHEMA, NgModule, NO_ERRORS_SCHEMA } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule, ReactiveFormsModule } from '@angular/forms';
 import { MatButtonModule } from '@angular/material/button';
@@ -15,8 +15,8 @@ import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatTooltipModule } from '@angular/material/tooltip';
 import { LedgerListComponent } from './Components/ledger-list/ledger-list.component';
 import { LedgerRoutingModule } from './ledger-routing.module';
-
-
+import { MatTabsModule } from '@angular/material/tabs'; // <-- Import MatTabsModule
+import { NgApexchartsModule } from 'ng-apexcharts'; // <-- ApexCharts module
 
 @NgModule({
   declarations: [LedgerListComponent],
@@ -37,8 +37,13 @@ import { LedgerRoutingModule } from './ledger-routing.module';
         MatDividerModule,
         MatCardModule,
         MatToolbarModule,
-        MatPaginatorModule
+        MatPaginatorModule,
+        MatTabsModule  ,NgApexchartsModule 
+         
+       
   ], 
+  
+   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   exports : [LedgerListComponent]
 })
 export class LedgerModule { }

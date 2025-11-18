@@ -1,3 +1,4 @@
+<div class="container">
 <div class="table-container " *ngIf="!loading; else loadingTpl">
     <div class="table-header">
         <h2>General Ledger</h2>
@@ -87,3 +88,43 @@
         <p>Loading ledger entries...</p>
     </div>
 </ng-template>
+
+
+<mat-tab-group>
+  <mat-tab label="إجمالي الحسابات">
+    <div class="charts-container" style="display:flex; gap:20px; flex-wrap:wrap;">
+      <!-- Pie chart -->
+   
+
+    <!-- Pie chart -->
+    <div class="chart-wrapper">
+      <apx-chart
+        [series]="pieChartOptions.series"
+        [chart]="pieChartOptions.chart"
+        [labels]="pieChartOptions.labels"
+        [dataLabels]="pieChartOptions.dataLabels"
+        [title]="pieChartOptions.title"
+      ></apx-chart>
+    </div>
+
+    <!-- Bar chart -->
+    <div class="chart-wrapper">
+      <apx-chart
+        [series]="barChartOptions.series"
+        [chart]="barChartOptions.chart"
+        [xaxis]="barChartOptions.xaxis"
+        [dataLabels]="barChartOptions.dataLabels"
+        [title]="barChartOptions.title"
+      ></apx-chart>
+    </div>
+
+  </div>
+</mat-tab>
+
+
+  <mat-tab label="التفاصيل">
+    <!-- Optional detailed content -->
+  </mat-tab>
+</mat-tab-group>
+
+</div>

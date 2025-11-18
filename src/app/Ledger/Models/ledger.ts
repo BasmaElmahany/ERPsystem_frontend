@@ -1,3 +1,5 @@
+import { ApexChart, ApexDataLabels, ApexNonAxisChartSeries, ApexTitleSubtitle, ApexXAxis } from "ng-apexcharts";
+
 export interface generaledger {
     accountName: string;
     accountType: string;
@@ -7,3 +9,20 @@ export interface generaledger {
     balance: number;
     date: Date
 } 
+
+export type PieChartOptions = {
+  series: ApexNonAxisChartSeries;
+  chart: ApexChart;
+  labels: string[];
+  dataLabels: ApexDataLabels;
+  title: ApexTitleSubtitle;
+};
+
+export type BarChartOptions = {
+  series: { name: string; data: number[] }[];
+  chart: ApexChart;
+  xaxis: ApexXAxis;
+  dataLabels: ApexDataLabels;
+  title: ApexTitleSubtitle;
+  
+};
