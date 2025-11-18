@@ -206,7 +206,12 @@ body {
 /* ============================================
    TABLE STYLING - DARK THEME
    ============================================ */
-
+.page-wrapper {
+  position: relative;
+  height: calc(100vh - 80px); // leave space for header if you have one
+  overflow-y: auto;
+  padding-bottom: 90px; // space for fixed paginator
+}
 .table-container {
   background: linear-gradient(135deg, $card-bg 0%, $card-hover-bg 100%);
   border-radius: 12px;

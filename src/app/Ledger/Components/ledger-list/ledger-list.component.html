@@ -1,4 +1,4 @@
-<div class="table-container" *ngIf="!loading; else loadingTpl">
+<div class="table-container " *ngIf="!loading; else loadingTpl">
     <div class="table-header">
         <h2>General Ledger</h2>
         <div class="header-actions">
@@ -13,10 +13,11 @@
                 <input type="date" [(ngModel)]="endDate" (change)="applySearch()" class="date-input" />
             </div>
 
-            <button class="export-button">
+            <button class="export-button" (click)="exportToExcel()">
                 <i class="material-icons">download</i>
                 Export To Excel
             </button>
+
         </div>
     </div>
 
@@ -25,7 +26,7 @@
         <table class="styled-table">
             <thead>
                 <tr>
-               
+
                     <th (click)="sortData('accountName')" class="sortable">
                         Account Name
                         <span *ngIf="sortKey === 'accountName'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
@@ -40,7 +41,8 @@
                     </th>
                     <th (click)="sortData('debit')" class="sortable">
                         Debit
-                    <span *ngIf="sortKey === 'debit'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span></th>
+                        <span *ngIf="sortKey === 'debit'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
+                    </th>
                     <th (click)="sortData('credit')" class="sortable">Credit
                         <span *ngIf="sortKey === 'credit'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
                     </th>
@@ -57,7 +59,7 @@
 
             <tbody>
                 <tr *ngFor="let j of paginatedledger; let i = index">
-                  
+
                     <td>{{ j.accountName }}</td>
                     <td>{{ j.accountType }}</td>
                     <td>{{ j.description }}</td>
@@ -69,7 +71,7 @@
             </tbody>
 
         </table>
-        <mat-paginator [length]="paginatedledger.length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
+        <mat-paginator [length]="filteredledger.length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
             [pageIndex]="pageIndex" (page)="onPageChange($event)" aria-label="Select page">
         </mat-paginator>
     </div>
