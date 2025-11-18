@@ -102,105 +102,188 @@ export class LedgerListComponent implements OnInit {
 
     this.updatePagination();
   }
-
 exportToExcel(): void {
   const workbook = new ExcelJS.Workbook();
-  const worksheet = workbook.addWorksheet('دفتر الأستاذ', {
-    views: [{ rightToLeft: true }]  // RTL mode
+
+  // =============================
+  // 1️⃣ شيت إجمالي الحسابات
+  // =============================
+  const summarySheet = workbook.addWorksheet('إجمالي الحسابات', {
+    views: [{ rightToLeft: true }]
   });
 
-  // 🎨 HEADER STYLE
-  worksheet.mergeCells('A1:G2');
-  const titleCell = worksheet.getCell('A1');
-  titleCell.value = `دفتر الأستاذ - مشروع ${this.projectName}`;
-  titleCell.font = { size: 20, bold: true, color: { argb: 'FFFFFFFF' } };
-  titleCell.alignment = { horizontal: 'center', vertical: 'middle' };
-  titleCell.fill = {
-    type: 'gradient',
-    gradient: 'angle',
-    degree: 45,
-    stops: [
-      { position: 0, color: { argb: 'FF009688' } },
-      { position: 1, color: { argb: 'FF4CAF50' } },
-    ],
+  // عنوان
+  summarySheet.mergeCells('A1:D2');
+  const title = summarySheet.getCell('A1');
+  title.value = `إجمالي حسابات مشروع ${this.projectName}`;
+  title.font = { size: 20, bold: true, color: { argb: 'FFFFFFFF' } };
+  title.alignment = { horizontal: 'center', vertical: 'middle' };
+  title.fill = {
+    type: 'pattern',
+    pattern: 'solid',
+    fgColor: { argb: 'FF4CAF50' }
   };
 
-  // 🟦 COLUMN HEADERS (ARABIC)
-  const header = [
+  summarySheet.addRow([]);
+  const summaryHeader = summarySheet.addRow([
     'اسم الحساب',
-    'النوع',
-    'الوصف',
-    'مدين',
-    'دائن',
-    'الرصيد',
-    'التاريخ'
-  ];
+    'إجمالي مدين',
+    'إجمالي دائن',
+    'الرصيد'
+  ]);
 
-  worksheet.addRow([]);
-  const headerRow = worksheet.addRow(header);
-
-  headerRow.eachCell((cell) => {
-    cell.font = { bold: true, color: { argb: 'FFFFFFFF' }, size: 12 };
-    cell.alignment = { horizontal: 'center', vertical: 'middle' };
+  summaryHeader.eachCell(cell => {
+    cell.font = { bold: true, size: 12, color: { argb: 'FFFFFFFF' } };
+    cell.alignment = { horizontal: 'center' };
     cell.fill = {
       type: 'pattern',
       pattern: 'solid',
-      fgColor: { argb: 'FF1976D2' }, // blue header
-    };
-    cell.border = {
-      top: { style: 'thin', color: { argb: 'FFFFFFFF' } },
-      left: { style: 'thin', color: { argb: 'FFFFFFFF' } },
-      bottom: { style: 'thin', color: { argb: 'FFFFFFFF' } },
-      right: { style: 'thin', color: { argb: 'FFFFFFFF' } },
+      fgColor: { argb: 'FF1976D2' }
     };
   });
 
-  // 🟢 DATA ROWS
-  this.filteredledger.forEach((j) => {
-    const row = worksheet.addRow([
-      j.accountName,
-      j.accountType,
-      j.description,
-      j.debit,
-      j.credit,
-      j.balance,
-      new Date(j.date).toLocaleDateString('ar-EG')
-    ]);
+  // =============================
+  // 2️⃣ عمل جروب للحسابات
+  // =============================
+  const groups = new Map<string, any[]>();
 
-    row.eachCell((cell) => {
-      cell.border = {
-        top: { style: 'thin', color: { argb: 'FFBDBDBD' } },
-        left: { style: 'thin', color: { argb: 'FFBDBDBD' } },
-        bottom: { style: 'thin', color: { argb: 'FFBDBDBD' } },
-        right: { style: 'thin', color: { argb: 'FFBDBDBD' } },
-      };
-      cell.alignment = { horizontal: 'center' };
+  this.filteredledger.forEach(item => {
+    if (!groups.has(item.accountName)) groups.set(item.accountName, []);
+    groups.get(item.accountName)!.push(item);
+  });
+
+  // =============================
+  // 3️⃣ تعبئة شيت الإجمالي + إنشاء شيت لكل حساب
+  // =============================
+  groups.forEach((entries, accountName) => {
+    // إجمالي الحساب
+    let totalDebit = 0;
+    let totalCredit = 0;
+    let finalBalance = 0;
+
+    entries.forEach(j => {
+      totalDebit += j.debit;
+      totalCredit += j.credit;
+      finalBalance = j.balance;
     });
 
-    // 💰 Number columns formatting
-    row.getCell(4).numFmt = '#,##0.00';
-    row.getCell(5).numFmt = '#,##0.00';
-    row.getCell(6).numFmt = '#,##0.00';
+    // 🟦 صف الإجمالي في Sheet الإجمالي
+    const row = summarySheet.addRow([
+      accountName,
+      totalDebit,
+      totalCredit,
+      finalBalance
+    ]);
+
+    row.eachCell(cell => {
+      cell.alignment = { horizontal: 'center' };
+      cell.numFmt = '#,##0.00';
+    });
+
+    // =============================
+    // 4️⃣ إنشاء شيت لكل حساب
+    // =============================
+    const sheet = workbook.addWorksheet(accountName.substring(0, 31), {
+      views: [{ rightToLeft: true }]
+    });
+
+    // عنوان الحساب
+    sheet.mergeCells('A1:F2');
+    const accTitle = sheet.getCell('A1');
+    accTitle.value = `تفاصيل حساب: ${accountName}`;
+    accTitle.font = { size: 20, bold: true, color: { argb: 'FFFFFFFF' } };
+    accTitle.alignment = { horizontal: 'center', vertical: 'middle' };
+    accTitle.fill = {
+      type: 'pattern',
+      pattern: 'solid',
+      fgColor: { argb: 'FF009688' }
+    };
+
+    sheet.addRow([]);
+
+    // Header
+    const header = sheet.addRow([
+      'الوصف',
+      'مدين',
+      'دائن',
+      'الرصيد',
+      'التاريخ'
+    ]);
+
+    header.eachCell(cell => {
+      cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+      cell.alignment = { horizontal: 'center' };
+      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1976D2' } };
+    });
+
+    // البيانات التفصيلية
+    entries.forEach(j => {
+      const dataRow = sheet.addRow([
+        j.description,
+        j.debit,
+        j.credit,
+        j.balance,
+        new Date(j.date).toLocaleDateString('ar-EG')
+      ]);
+
+      dataRow.eachCell(cell => {
+        cell.alignment = { horizontal: 'center' };
+        cell.border = {
+          top: { style: 'thin', color: { argb: 'FFBDBDBD' } },
+          left: { style: 'thin', color: { argb: 'FFBDBDBD' } },
+          bottom: { style: 'thin', color: { argb: 'FFBDBDBD' } },
+          right: { style: 'thin', color: { argb: 'FFBDBDBD' } }
+        };
+      });
+
+      dataRow.getCell(2).numFmt = '#,##0.00';
+      dataRow.getCell(3).numFmt = '#,##0.00';
+      dataRow.getCell(4).numFmt = '#,##0.00';
+    });
+
+    // =============================
+    // 5️⃣ صف الإجمالي في شيت الحساب
+    // =============================
+    const totalRow = sheet.addRow([
+      'الإجمالي',
+      totalDebit,
+      totalCredit,
+      finalBalance,
+      ''
+    ]);
+
+    totalRow.eachCell(cell => {
+      cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+      cell.alignment = { horizontal: 'center' };
+      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF455A64' } };
+    });
+
+    totalRow.getCell(2).numFmt = '#,##0.00';
+    totalRow.getCell(3).numFmt = '#,##0.00';
+    totalRow.getCell(4).numFmt = '#,##0.00';
   });
 
-  // 📏 Auto width
- // 📏 Auto width (SAFE VERSION — No TS errors)
-worksheet.columns?.forEach((column) => {
-  if (!column) return;
-
-  let maxLength = 20;
-
-  column.eachCell?.({ includeEmpty: true }, (cell) => {
-    if (cell && cell.value != null) {
-      const len = cell.value.toString().length;
-      if (len > maxLength) maxLength = len + 5;
-    }
+  // =============================
+  // 6️⃣ Auto width
+  // =============================
+  workbook.worksheets.forEach(ws => {
+    ws.columns?.forEach(column => {
+      if (!column) return;
+      let maxLength = 20;
+      column.eachCell?.({ includeEmpty: true }, cell => {
+        if (cell?.value) {
+          const len = cell.value.toString().length;
+          if (len > maxLength) maxLength = len + 5;
+        }
+      });
+      column.width = maxLength;
+    });
   });
 
-  column.width = maxLength;
-});
-  // 📂 Export
-  workbook.xlsx.writeBuffer().then((buffer) => {
+  // =============================
+  // 7️⃣ حفظ الملف
+  // =============================
+  workbook.xlsx.writeBuffer().then(buffer => {
     saveAs(
       new Blob([buffer]),
       `دفتر الأستاذ - ${this.projectName}.xlsx`
@@ -208,5 +291,31 @@ worksheet.columns?.forEach((column) => {
   });
 }
 
+
+
+getGroupedLedger() {
+  const grouped: any = {};
+
+  this.filteredledger.forEach(j => {
+    if (!grouped[j.accountName]) {
+      grouped[j.accountName] = {
+        accountName: j.accountName,
+        accountType: j.accountType,
+        totalDebit: 0,
+        totalCredit: 0,
+        balance: 0,
+        rows: []
+      };
+    }
+
+    grouped[j.accountName].totalDebit += j.debit || 0;
+    grouped[j.accountName].totalCredit += j.credit || 0;
+    grouped[j.accountName].balance += j.balance || 0;
+
+    grouped[j.accountName].rows.push(j);
+  });
+
+  return Object.values(grouped);
+}
 
 }
