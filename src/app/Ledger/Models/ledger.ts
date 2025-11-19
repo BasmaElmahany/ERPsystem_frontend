@@ -1,4 +1,4 @@
-import { ApexChart, ApexDataLabels, ApexNonAxisChartSeries, ApexTitleSubtitle, ApexXAxis } from "ng-apexcharts";
+import { ApexChart, ApexDataLabels, ApexMarkers, ApexNonAxisChartSeries, ApexStroke, ApexTitleSubtitle, ApexXAxis } from "ng-apexcharts";
 
 export interface generaledger {
     accountName: string;
@@ -24,5 +24,8 @@ export type BarChartOptions = {
   xaxis: ApexXAxis;
   dataLabels: ApexDataLabels;
   title: ApexTitleSubtitle;
+  stroke : ApexStroke;
+  markers :ApexMarkers;
   
+
 };

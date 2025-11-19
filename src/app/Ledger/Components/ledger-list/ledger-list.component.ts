@@ -1,10 +1,11 @@
-import { Component, OnInit, ViewChild } from '@angular/core';
+import { AfterViewInit, Component, OnInit, ViewChild } from '@angular/core';
 import { LedgerService } from '../../Services/ledger.service';
 import { BarChartOptions, generaledger, PieChartOptions } from '../../Models/ledger';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginator, PageEvent } from '@angular/material/paginator';
 import { ActivatedRoute } from '@angular/router';
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
+import { ChartComponent } from 'ng-apexcharts';
 
 @Component({
   selector: 'app-ledger-list',
@@ -12,25 +13,25 @@ import { saveAs } from 'file-saver';
   templateUrl: './ledger-list.component.html',
   styleUrl: './ledger-list.component.scss'
 })
-export class LedgerListComponent implements OnInit {
-
+export class LedgerListComponent implements OnInit, AfterViewInit {
 
   projectName = '';
   ledger: generaledger[] = [];
-  filteredledger: generaledger[] = []; // ✅ filtered results
-  paginatedledger: generaledger[] = []; // ✅ فقط الصفحة الحالية
-  searchTerm = ''; // ✅ search box model
+  filteredledger: generaledger[] = [];
+  paginatedledger: generaledger[] = [];
+  searchTerm = '';
   loading = false;
   sortKey: keyof generaledger | '' = '';
   sortDirection: 'asc' | 'desc' = 'asc';
   startDate: string = '';
   endDate: string = '';
-  // 🟢 إعدادات المقسم
+  
   pageSize = 5;
   pageIndex = 0;
   pageSizeOptions = [5, 10, 20, 50];
-  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  
   groupedLedger: any[] = [];
+
   pieChartOptions: PieChartOptions = {
     series: [],
     chart: { type: 'pie', height: 400 },
@@ -44,9 +45,14 @@ export class LedgerListComponent implements OnInit {
     chart: { type: 'bar', height: 400 },
     xaxis: { categories: [] },
     dataLabels: { enabled: false },
+    stroke: { width: 2 },
+    markers: { size: 3 },
     title: { text: '', align: 'center' }
   };
 
+  @ViewChild(MatPaginator) paginator!: MatPaginator;
+  @ViewChild('pieChart') pieChart!: ChartComponent;
+  @ViewChild('barChart') barChart!: ChartComponent;
 
   constructor(private service: LedgerService, private route: ActivatedRoute) { }
 
@@ -54,6 +60,12 @@ export class LedgerListComponent implements OnInit {
     this.projectName = this.route.snapshot.paramMap.get('project') || '';
     this.loadLedger();
   }
+
+  ngAfterViewInit(): void {
+    // Update charts after view is ready
+    setTimeout(() => this.updateCharts(), 100);
+  }
+
   loadLedger(): void {
     this.loading = true;
     this.service.getAll(this.projectName).subscribe({
@@ -63,14 +75,12 @@ export class LedgerListComponent implements OnInit {
         this.updatePagination();
         this.groupLedger();
         this.initCharts();
-        console.log(res);
       },
       error: (err) => console.error(err),
       complete: () => (this.loading = false)
     });
   }
 
-  // ✅ البحث + الفلترة
   applySearch(): void {
     const term = this.searchTerm.toLowerCase();
     const start = this.startDate ? new Date(this.startDate) : null;
@@ -81,30 +91,28 @@ export class LedgerListComponent implements OnInit {
       const matchesText =
         j.accountName?.toLowerCase().includes(term) ||
         j.accountType?.toLowerCase().includes(term) ||
-        j.description?.toLowerCase().includes(term) || j.date?.toString().includes(term);
-      const matchesDate =
-        (!start || entryDate >= start) && (!end || entryDate <= end);
+        j.description?.toLowerCase().includes(term) ||
+        j.date?.toString().includes(term);
+      const matchesDate = (!start || entryDate >= start) && (!end || entryDate <= end);
       return matchesText && matchesDate;
     });
 
-    this.pageIndex = 0; // reset to first page
+    this.pageIndex = 0;
     this.updatePagination();
   }
 
-  // ✅ تحديث الصفحة
   updatePagination(): void {
     const start = this.pageIndex * this.pageSize;
     const end = start + this.pageSize;
     this.paginatedledger = this.filteredledger.slice(start, end);
   }
 
-  onPageChange(event: any): void {
+  onPageChange(event: PageEvent): void {
     this.pageIndex = event.pageIndex;
     this.pageSize = event.pageSize;
     this.updatePagination();
   }
 
-  // 🔁 فرز البيانات
   sortData(key: keyof generaledger): void {
     if (this.sortKey === key) {
       this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
@@ -122,6 +130,62 @@ export class LedgerListComponent implements OnInit {
     });
 
     this.updatePagination();
+  }
+
+  groupLedger(): void {
+    const grouped: any = {};
+    this.filteredledger.forEach(j => {
+      if (!grouped[j.accountName]) {
+        grouped[j.accountName] = { accountName: j.accountName, totalDebit: 0, totalCredit: 0, balance: 0 };
+      }
+      grouped[j.accountName].totalDebit += j.debit || 0;
+      grouped[j.accountName].totalCredit += j.credit || 0;
+      grouped[j.accountName].balance = j.balance;
+    });
+    this.groupedLedger = Object.values(grouped);
+  }
+
+  initCharts(): void {
+    const names = this.groupedLedger.map(a => a.accountName);
+    const totalDebits = this.groupedLedger.map(a => a.totalDebit);
+    const totalCredits = this.groupedLedger.map(a => a.totalCredit);
+    const balances = this.groupedLedger.map(a => a.balance);
+
+    this.pieChartOptions = {
+      series: totalDebits,
+      chart: { type: 'pie', height: 400 },
+      labels: names,
+      title: { text: 'إجمالي المدين لكل حساب', align: 'center' },
+      dataLabels: { enabled: true }
+    };
+
+    this.barChartOptions = {
+      series: [
+        { name: 'مدين', data: totalDebits },
+        { name: 'دائن', data: totalCredits },
+        { name: 'الرصيد', data: balances }
+      ],
+      chart: { type: 'line', height: 400 },
+      xaxis: { categories: names },
+      dataLabels: { enabled: false },
+      stroke: { curve: 'smooth', width: 3 },
+      markers: { size: 5 },
+      title: { text: 'مقارنة المدين / الدائن / الرصيد لكل حساب', align: 'center' }
+    };
+
+    this.updateCharts();
+  }
+
+  updateCharts(): void {
+    if (this.pieChart) this.pieChart.updateOptions(this.pieChartOptions);
+    if (this.barChart) this.barChart.updateOptions(this.barChartOptions);
+  }
+
+  onTabChange(event: any): void {
+    // Refresh charts when switching to charts tab
+    if (event.index === 1) {
+      setTimeout(() => this.updateCharts(), 100);
+    }
   }
   exportToExcel(): void {
     const workbook = new ExcelJS.Workbook();
@@ -339,54 +403,8 @@ export class LedgerListComponent implements OnInit {
     return Object.values(grouped);
   }
 
-  groupLedger() {
-    const grouped: any = {};
-    this.filteredledger.forEach(j => {
-      if (!grouped[j.accountName]) {
-        grouped[j.accountName] = {
-          accountName: j.accountName,
-          totalDebit: 0,
-          totalCredit: 0,
-          balance: 0
-        };
-      }
-      grouped[j.accountName].totalDebit += j.debit || 0;
-      grouped[j.accountName].totalCredit += j.credit || 0;
-      grouped[j.accountName].balance = j.balance;
-    });
-    this.groupedLedger = Object.values(grouped);
-  }
+  
 
 
-  initCharts() {
-    const names = this.groupedLedger.map(a => a.accountName);
-    const totalDebits = this.groupedLedger.map(a => a.totalDebit);
-    const totalCredits = this.groupedLedger.map(a => a.totalCredit);
-    const balances = this.groupedLedger.map(a => a.balance);
-
-    // ===== Pie Chart (Debits) =====
-    this.pieChartOptions = {
-      series: totalDebits,
-      chart: { type: 'pie', height: 400 },
-      labels: names,
-      title: { text: 'إجمالي المدين لكل حساب', align: 'center' },
-      dataLabels: { enabled: true }
-    };
-
-    // ===== Bar Chart (Debit/Credit/Balance) =====
-    this.barChartOptions = {
-      series: [
-        { name: 'مدين', data: totalDebits },
-        { name: 'دائن', data: totalCredits },
-        { name: 'الرصيد', data: balances }
-      ],
-      chart: { type: 'bar', height: 400 },
-      xaxis: { categories: names },
-      dataLabels: { enabled: true },
-      title: { text: 'مقارنة المدين / الدائن / الرصيد لكل حساب', align: 'center' }
-    };
-
-   
-  }
 
 }

@@ -5,27 +5,72 @@
   overflow-y: auto;
   padding: 20px; /* horizontal scroll if table is wider than container */
 }
-.charts-container {
-  display: flex;
-  flex-direction: column;  // stack charts vertically
-  gap: 30px;               // space between charts
-  background-color: #f8f9fa; // clear background for charts
-  padding: 20px;
-  border-radius: 12px;
+/* ============================
+   CHARTS TAB DESIGN
+=============================== */
+
+.charts-tab-container {
+  padding: 25px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 14px;
+  margin-top: 20px;
+  backdrop-filter: blur(8px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
 }
 
-.chart-wrapper {
-  width: 100%;   // full width
-  background-color: #ffffff; // white background for each chart
-  padding: 15px;
-  border-radius: 8px;
-  box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+/* Layout for charts inside the tab */
+.charts-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 25px;
 }
 
+/* For larger screens: Put charts side-by-side */
+@media (min-width: 900px) {
+  .charts-grid {
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* Card-like chart container */
+.chart-card {
+  background: rgba(255, 255, 255, 0.07);
+  padding: 22px;
+  border-radius: 14px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  transition: 0.3s ease;
+  backdrop-filter: blur(10px);
+
+  &:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, 0.5);
+  }
+}
+
+/* ApexCharts styling override */
 apx-chart {
-  width: 100% !important;  // ensure charts take full width
-  height: 400px;            // fixed height or adjust as needed
+  width: 100% !important;
+  height: auto !important;
+  min-height: 360px;
 }
+
+/* Tab header styling (Arabic or English) */
+.mat-mdc-tab-labels {
+  background: rgba(255, 255, 255, 0.06);
+  border-radius: 10px;
+}
+
+.mat-mdc-tab-label {
+  color: rgba(255, 255, 255, 0.8) !important;
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.mat-mdc-tab-label.mdc-tab--active {
+  color: #29b6f6 !important;
+}
+
+
 .table-container {
   margin-top: 20px;
   

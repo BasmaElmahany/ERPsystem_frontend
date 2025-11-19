@@ -1,130 +1,161 @@
 <div class="container">
-<div class="table-container " *ngIf="!loading; else loadingTpl">
-    <div class="table-header">
-        <h2>General Ledger</h2>
-        <div class="header-actions">
-            <!-- 🔍 Search -->
-            <input type="text" placeholder="🔍 Search journals..." [(ngModel)]="searchTerm" (input)="applySearch()"
-                class="search-input" />
 
-            <!-- 🗓 Date Range Filters -->
-            <div class="date-filters">
-                <input type="date" [(ngModel)]="startDate" (change)="applySearch()" class="date-input" />
-                <span class="date-separator">—</span>
-                <input type="date" [(ngModel)]="endDate" (change)="applySearch()" class="date-input" />
+    <mat-tab-group (selectedTabChange)="onTabChange($event)">
+
+        <!-- ================= TAB 1: Ledger Table ================= -->
+        <mat-tab label="General Ledger">
+
+            <div class="table-container" *ngIf="!loading; else loadingTpl">
+
+                <div class="table-header">
+                    <h2>General Ledger</h2>
+
+                    <div class="header-actions">
+
+                        <!-- 🔍 Search -->
+                        <input type="text" placeholder="🔍 Search journals..." [(ngModel)]="searchTerm"
+                            (input)="applySearch()" class="search-input" />
+
+                        <!-- 🗓 Date Range Filters -->
+                        <div class="date-filters">
+                            <input type="date" [(ngModel)]="startDate" (change)="applySearch()" class="date-input" />
+                            <span class="date-separator">—</span>
+                            <input type="date" [(ngModel)]="endDate" (change)="applySearch()" class="date-input" />
+                        </div>
+
+                        <button class="export-button" (click)="exportToExcel()">
+                            <i class="material-icons">download</i>
+                            Export To Excel
+                        </button>
+
+                    </div>
+                </div>
+
+                <!-- TABLE -->
+                <div class="table-wrapper">
+                    <table class="styled-table">
+                        <thead>
+                            <tr>
+                                <th (click)="sortData('accountName')" class="sortable">
+                                    Account Name
+                                    <span *ngIf="sortKey === 'accountName'">
+                                        {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                                    </span>
+                                </th>
+
+                                <th (click)="sortData('accountType')" class="sortable">
+                                    Type
+                                    <span *ngIf="sortKey === 'accountType'">
+                                        {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                                    </span>
+                                </th>
+
+                                <th (click)="sortData('description')" class="sortable">
+                                    Description
+                                    <span *ngIf="sortKey === 'description'">
+                                        {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                                    </span>
+                                </th>
+
+                                <th (click)="sortData('debit')" class="sortable">
+                                    Debit
+                                    <span *ngIf="sortKey === 'debit'">
+                                        {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                                    </span>
+                                </th>
+
+                                <th (click)="sortData('credit')" class="sortable">
+                                    Credit
+                                    <span *ngIf="sortKey === 'credit'">
+                                        {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                                    </span>
+                                </th>
+
+                                <th (click)="sortData('balance')" class="sortable">
+                                    Balance
+                                    <span *ngIf="sortKey === 'balance'">
+                                        {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                                    </span>
+                                </th>
+
+                                <th (click)="sortData('date')" class="sortable">
+                                    Date
+                                    <span *ngIf="sortKey === 'date'">
+                                        {{ sortDirection === 'asc' ? '▲' : '▼' }}
+                                    </span>
+                                </th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+                            <tr *ngFor="let j of paginatedledger; let i = index">
+                                <td>{{ j.accountName }}</td>
+                                <td>{{ j.accountType }}</td>
+                                <td>{{ j.description }}</td>
+                                <td>{{ j.debit }}</td>
+                                <td>{{ j.credit }}</td>
+                                <td>{{ j.balance }}</td>
+                                <td>{{ j.date | date: 'mediumDate' }}</td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    <mat-paginator [length]="filteredledger.length" [pageSize]="pageSize"
+                        [pageSizeOptions]="pageSizeOptions" [pageIndex]="pageIndex" (page)="onPageChange($event)"
+                        aria-label="Select page">
+                    </mat-paginator>
+
+                </div>
+
+                <div class="table-footer">
+                    <p>
+                        Showing {{ ledger.length }} ledger entries from {{ projectName | titlecase }} project
+                    </p>
+                </div>
+
             </div>
 
-            <button class="export-button" (click)="exportToExcel()">
-                <i class="material-icons">download</i>
-                Export To Excel
-            </button>
+            <!-- Loading template -->
+            <ng-template #loadingTpl>
+                <div class="table-container text-center">
+                    <mat-spinner diameter="48"></mat-spinner>
+                    <p>Loading ledger entries...</p>
+                </div>
+            </ng-template>
 
-        </div>
-    </div>
+        </mat-tab>
 
+        <!-- ================= TAB 2: Charts ================= -->
+        <mat-tab label="Charts Summary">
 
-    <div class="table-wrapper">
-        <table class="styled-table">
-            <thead>
-                <tr>
+            <div class="charts-tab-container">
 
-                    <th (click)="sortData('accountName')" class="sortable">
-                        Account Name
-                        <span *ngIf="sortKey === 'accountName'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
-                    </th>
+                <div class="charts-grid">
 
-                    <th (click)="sortData('accountType')" class="sortable">
-                        Type
-                        <span *ngIf="sortKey === 'accountName'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
-                    </th>
-                    <th (click)="sortData('description')" class="sortable">Description
-                        <span *ngIf="sortKey === 'description'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
-                    </th>
-                    <th (click)="sortData('debit')" class="sortable">
-                        Debit
-                        <span *ngIf="sortKey === 'debit'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
-                    </th>
-                    <th (click)="sortData('credit')" class="sortable">Credit
-                        <span *ngIf="sortKey === 'credit'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
-                    </th>
-                    <th (click)="sortData('balance')" class="sortable">Balance
-                        <span *ngIf="sortKey === 'balance'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
-                    </th>
-                    <th (click)="sortData('date')" class="sortable">Date
-                        <span *ngIf="sortKey === 'date'">{{ sortDirection === 'asc' ? '▲' : '▼' }}</span>
-                    </th>
+                    <!-- Pie Chart -->
+                    <div class="chart-card">
+                        <apx-chart #pieChart [series]="pieChartOptions.series" [chart]="pieChartOptions.chart"
+                            [labels]="pieChartOptions.labels" [dataLabels]="pieChartOptions.dataLabels"
+                            [title]="pieChartOptions.title">
+                        </apx-chart>
+                    </div>
 
+                    <!-- Bar Chart -->
+                    <div class="chart-card">
+                        <apx-chart #barChart [series]="barChartOptions.series" [chart]="barChartOptions.chart"
+                            [xaxis]="barChartOptions.xaxis" [dataLabels]="barChartOptions.dataLabels"
+                            [stroke]="barChartOptions.stroke" [markers]="barChartOptions.markers"
+                            [title]="barChartOptions.title">
+                            </apx-chart>
+                    </div>
 
-                </tr>
-            </thead>
+                </div>
 
-            <tbody>
-                <tr *ngFor="let j of paginatedledger; let i = index">
+            </div>
 
-                    <td>{{ j.accountName }}</td>
-                    <td>{{ j.accountType }}</td>
-                    <td>{{ j.description }}</td>
-                    <td>{{ j.debit }}</td>
-                    <td>{{ j.credit }}</td>
-                    <td>{{ j.balance }}</td>
-                    <td>{{ j.date | date: 'mediumDate' }}</td>
-                </tr>
-            </tbody>
-
-        </table>
-        <mat-paginator [length]="filteredledger.length" [pageSize]="pageSize" [pageSizeOptions]="pageSizeOptions"
-            [pageIndex]="pageIndex" (page)="onPageChange($event)" aria-label="Select page">
-        </mat-paginator>
-    </div>
-
-    <div class="table-footer">
-        <p>Showing {{ ledger.length }} ledger entries from {{ projectName | titlecase }} project</p>
-    </div>
-</div>
-
-<ng-template #loadingTpl>
-    <div class="table-container text-center">
-        <mat-spinner diameter="48"></mat-spinner>
-        <p>Loading ledger entries...</p>
-    </div>
-</ng-template>
+        </mat-tab>
 
 
-<mat-tab-group>
-  <mat-tab label="إجمالي الحسابات">
-    <div class="charts-container" style="display:flex; gap:20px; flex-wrap:wrap;">
-      <!-- Pie chart -->
-   
-
-    <!-- Pie chart -->
-    <div class="chart-wrapper">
-      <apx-chart
-        [series]="pieChartOptions.series"
-        [chart]="pieChartOptions.chart"
-        [labels]="pieChartOptions.labels"
-        [dataLabels]="pieChartOptions.dataLabels"
-        [title]="pieChartOptions.title"
-      ></apx-chart>
-    </div>
-
-    <!-- Bar chart -->
-    <div class="chart-wrapper">
-      <apx-chart
-        [series]="barChartOptions.series"
-        [chart]="barChartOptions.chart"
-        [xaxis]="barChartOptions.xaxis"
-        [dataLabels]="barChartOptions.dataLabels"
-        [title]="barChartOptions.title"
-      ></apx-chart>
-    </div>
-
-  </div>
-</mat-tab>
-
-
-  <mat-tab label="التفاصيل">
-    <!-- Optional detailed content -->
-  </mat-tab>
-</mat-tab-group>
+    </mat-tab-group>
 
 </div>
