@@ -59,6 +59,10 @@ export class LoginComponent implements OnInit {
       }*/
      console.log(res);
      console.log(user);
+      // navigate to start-home inside the main layout after successful login
+      this.loading = false;
+      this.isSuccess = true;
+      this.router.navigate(['/start-home']);
     },
   error: (err) => {
   this.loading = false;
