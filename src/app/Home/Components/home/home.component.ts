@@ -6,7 +6,7 @@ import ar from '../../../Shared/JsonFiles/ar.json';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslatePipe } from '../../../Shared/Pipes/translate.pipe';
-import {NavItem , DashboardCard ,Activity ,Employee} from '../../Models/home'
+import {NavItem , DashboardCard  ,Employee} from '../../Models/home'
 import { SidebarComponent } from '../sidebar/sidebar.component';
 const translations: Record<Language, any> = { en, ar };
 @Component({

@@ -19,7 +19,7 @@ private readonly apiUrl = `${baseUrl}/auth`;
     }
   };
 
-  constructor(private http: HttpClient) {}
+  constructor(private http: HttpClient)  {}
 
   // ✅ Send login request
   login(data: Userlogin): Observable<{ token: string }> {

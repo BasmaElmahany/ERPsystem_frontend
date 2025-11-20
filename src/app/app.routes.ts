@@ -13,6 +13,7 @@ export const routes: Routes = [
       { path: '', redirectTo: 'projects', pathMatch: 'full' },
       // start-home page (opened after login)
       { path: 'start-home', loadComponent: () => import('./Home/Components/start-home/start-home.component').then(m => m.StartHomeComponent) },
+      { path: 'dashboard', loadComponent: () => import('./Home/Components/project-dashboard/project-dashboard.component').then(m => m.ProjectDashboardComponent) },
 
       {
         path: 'projects',

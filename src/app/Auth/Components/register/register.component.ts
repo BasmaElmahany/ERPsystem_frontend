@@ -4,6 +4,8 @@ import { AuthService } from '../../Services/auth.service';
 import { Router, RouterModule } from '@angular/router';
 import { ToastrModule, ToastrService } from 'ngx-toastr';
 import { CommonModule } from '@angular/common';
+import { ProjectService } from '../../../Project/Services/project.service';
+import { Project } from '../../../Project/Models/project';
 
 
 @Component({
@@ -23,7 +25,8 @@ export class RegisterComponent implements OnInit {
   message: string | null = null;
   isSuccess: boolean = false;
   loading: boolean = false;
-  
+   isLoading = false;
+     projects: Project[] = [];
   get f() {
     return this.registerForm.controls;
   }
@@ -31,7 +34,8 @@ export class RegisterComponent implements OnInit {
     private fb: FormBuilder,
     private auth: AuthService,
     private router: Router,
-    private toastr: ToastrService
+    private toastr: ToastrService ,
+    private service : ProjectService 
   ) {}
   ngOnInit(): void {
     this.registerForm = this.fb.group({
@@ -42,6 +46,7 @@ export class RegisterComponent implements OnInit {
       terms: [false, Validators.requiredTrue],
       projectId: [0, Validators.required]
     }, { validators: this.passwordMatchValidator });
+     this.loadProjects();  // ⬅️ LOAD PROJECTS HERE
   }
   
 
@@ -85,5 +90,33 @@ export class RegisterComponent implements OnInit {
   }
   
   
+loadProjects(): void {
+    console.log("load");
+    this.isLoading = true;
+    this.service.getProjects().subscribe({
+      next: (res) => {
+        this.projects = res || [];
+      
+        console.log('Projects loaded:', {
+          totalProjects: this.projects.length,
+          projects: this.projects.map(p => ({
+            id: p.id,
+            name: p.name,
+            description: p.description || 'No description',
+            createdAt: p.createdAt
+          }))
+        });
+        this.isLoading = false;
+      },
+      error: (err) => {
+        console.error('Failed to load projects:', {
+          error: err.message,
+          status: err.status,
+          statusText: err.statusText
+        });
+        this.isLoading = false;
+      }
+    });
+  }
 
 }
