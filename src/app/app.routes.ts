@@ -11,6 +11,8 @@ export const routes: Routes = [
     component: HomeComponent, // ✅ layout ثابت
     children: [
       { path: '', redirectTo: 'projects', pathMatch: 'full' },
+      // start-home page (opened after login)
+      { path: 'start-home', loadComponent: () => import('./Home/Components/start-home/start-home.component').then(m => m.StartHomeComponent) },
 
       {
         path: 'projects',
