@@ -5,6 +5,7 @@ import { JournalService } from '../../Services/journal.service';
 import { AccountList } from '../../../ChartOfAccounts/Models/ChartOfAccount';
 import { ChartOfAccountsService } from '../../../ChartOfAccounts/Services/chart-of-accounts.service';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { I18nService } from '../../../Shared/Services/i18n.service';
 
 @Component({
   selector: 'app-create-journal',
@@ -23,7 +24,8 @@ export class CreateJournalComponent implements OnInit {
     @Inject(MAT_DIALOG_DATA) public data: any,
     private journalService: JournalService,
     private chartService: ChartOfAccountsService,
-      private snackBar: MatSnackBar 
+      private snackBar: MatSnackBar,
+      private i18n: I18nService
   ) {
     this.projectName = data.projectName;
 
@@ -79,8 +81,8 @@ export class CreateJournalComponent implements OnInit {
     if (this.JournalForm.valid) {
       if (this.totalDebit !== this.totalCredit) { // 🟡 Show styled snackbar instead of alert
       this.snackBar.open(
-        '⚠️ Debits and Credits must be equal before saving!',
-        'Close',
+        this.i18n.instant('DEBITS_CREDITS_MUST_EQUAL'),
+        this.i18n.instant('CLOSE'),
         {
           duration: 5000,
           horizontalPosition: 'center',
@@ -94,8 +96,8 @@ export class CreateJournalComponent implements OnInit {
     this.dialogRef.close(this.JournalForm.value);
   } else {
     this.snackBar.open(
-      'Please fill in all required fields before saving.',
-      'Close',
+      this.i18n.instant('FILL_REQUIRED_FIELDS'),
+      this.i18n.instant('CLOSE'),
       {
         duration: 4000,
         horizontalPosition: 'center',

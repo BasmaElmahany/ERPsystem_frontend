@@ -2,6 +2,7 @@ import { Component, Inject, OnInit } from '@angular/core';
 import { FormArray, FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { I18nService } from '../../../Shared/Services/i18n.service';
 import { AccountList } from '../../../ChartOfAccounts/Models/ChartOfAccount';
 import { ChartOfAccountsService } from '../../../ChartOfAccounts/Services/chart-of-accounts.service';
 
@@ -22,7 +23,8 @@ export class EditJournalComponent implements OnInit {
     private dialogRef: MatDialogRef<EditJournalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private snackBar: MatSnackBar,
-    private accountsService: ChartOfAccountsService
+    private accountsService: ChartOfAccountsService,
+    private i18n: I18nService
   ) {
     // ✅ Extract the data safely
     const { projectName, journal } = data;
@@ -87,7 +89,7 @@ export class EditJournalComponent implements OnInit {
     if (this.lines.length > 1) {
       this.lines.removeAt(index);
     } else {
-      this.snackBar.open('At least one journal line is required.', 'Close', {
+      this.snackBar.open(this.i18n.instant('AT_LEAST_ONE_LINE_REQUIRED'), this.i18n.instant('CLOSE'), {
         duration: 3000,
         panelClass: ['snackbar-warning']
       });
@@ -96,7 +98,7 @@ export class EditJournalComponent implements OnInit {
 
   save(): void {
     if (this.JournalForm.invalid) {
-      this.snackBar.open('Please fill all required fields.', 'Close', {
+      this.snackBar.open(this.i18n.instant('FILL_REQUIRED_FIELDS'), this.i18n.instant('CLOSE'), {
         duration: 3000,
         panelClass: ['snackbar-error']
       });
@@ -105,8 +107,8 @@ export class EditJournalComponent implements OnInit {
 
     if (this.totalDebit !== this.totalCredit) {
       this.snackBar.open(
-        `Debits (${this.totalDebit}) and Credits (${this.totalCredit}) must be equal!`,
-        'Close',
+        this.i18n.instant('DEBITS_CREDITS_MUST_EQUAL'),
+        this.i18n.instant('CLOSE'),
         { duration: 4000, panelClass: ['snackbar-warning'] }
       );
       return;

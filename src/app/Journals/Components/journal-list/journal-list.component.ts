@@ -3,6 +3,7 @@ import { ActivatedRoute, Router } from '@angular/router';
 import { JournalService } from '../../Services/journal.service';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { I18nService } from '../../../Shared/Services/i18n.service';
 import { JournalEntry } from '../../Models/journal';
 import { CreateJournalComponent } from '../create-journal/create-journal.component';
 import { EditJournalComponent } from '../edit-journal/edit-journal.component';
@@ -48,6 +49,7 @@ accountMap: { [id: number]: string } = {};
     private snackBar: MatSnackBar,
     private router: Router,
     private accountService: ChartOfAccountsService,
+    private i18n: I18nService,
 
   ) { }
 
@@ -136,10 +138,10 @@ accountMap: { [id: number]: string } = {};
       if (result) {
         this.service.create(this.projectName, result).subscribe({
           next: () => {
-            this.snackBar.open('Journal created successfully', 'Close', { duration: 4000 });
+            this.snackBar.open(this.i18n.instant('CREATE_JOURNAL_SUCCESS'), this.i18n.instant('CLOSE'), { duration: 4000 });
             this.loadJournals();
           },
-          error: err => this.snackBar.open('Failed to create Journal', 'Close', { duration: 4000 })
+          error: err => this.snackBar.open(this.i18n.instant('CREATE_JOURNAL_FAIL'), this.i18n.instant('CLOSE'), { duration: 4000 })
         });
       }
     });
@@ -157,10 +159,10 @@ accountMap: { [id: number]: string } = {};
         if (result) {
           this.service.update(this.projectName, journal.id, result).subscribe({
             next: () => {
-              this.snackBar.open('Journal updated successfully', 'Close', { duration: 4000 });
+              this.snackBar.open(this.i18n.instant('UPDATE_JOURNAL_SUCCESS'), this.i18n.instant('CLOSE'), { duration: 4000 });
               this.loadJournals();
             },
-            error: err => this.snackBar.open('Failed to update Journal', 'Close', { duration: 4000 })
+            error: err => this.snackBar.open(this.i18n.instant('UPDATE_JOURNAL_FAIL'), this.i18n.instant('CLOSE'), { duration: 4000 })
           });
         }
       });
@@ -177,11 +179,11 @@ accountMap: { [id: number]: string } = {};
     dialogRef.afterClosed().subscribe(confirm => {
       if (confirm) {
         this.service.delete(this.projectName, journal.id).subscribe({
-          next: () => {
-            this.snackBar.open('Journal deleted successfully', 'Close', { duration: 4000 });
+            next: () => {
+            this.snackBar.open(this.i18n.instant('DELETE_JOURNAL_SUCCESS'), this.i18n.instant('CLOSE'), { duration: 4000 });
             this.loadJournals();
           },
-          error: err => this.snackBar.open('Failed to delete Journal', 'Close', { duration: 4000 })
+          error: err => this.snackBar.open(this.i18n.instant('DELETE_JOURNAL_FAIL'), this.i18n.instant('CLOSE'), { duration: 4000 })
         });
       }
     });
@@ -197,11 +199,11 @@ accountMap: { [id: number]: string } = {};
     dialogRef.afterClosed().subscribe(confirm => {
       if (confirm) {
         this.service.post(this.projectName, journal.id).subscribe({
-          next: () => {
-            this.snackBar.open('Journal posted successfully', 'Close', { duration: 4000 });
+            next: () => {
+            this.snackBar.open(this.i18n.instant('POST_JOURNAL_SUCCESS'), this.i18n.instant('CLOSE'), { duration: 4000 });
             this.loadJournals();
           },
-          error: err => this.snackBar.open('Failed to post Journal', 'Close', { duration: 4000 })
+          error: err => this.snackBar.open(this.i18n.instant('POST_JOURNAL_FAIL'), this.i18n.instant('CLOSE'), { duration: 4000 })
         });
       }
     });
@@ -217,11 +219,11 @@ accountMap: { [id: number]: string } = {};
     dialogRef.afterClosed().subscribe(confirm => {
       if (confirm) {
         this.service.unpost(this.projectName, journal.id).subscribe({
-          next: () => {
-            this.snackBar.open('Journal unposted successfully', 'Close', { duration: 4000 });
+            next: () => {
+            this.snackBar.open(this.i18n.instant('UNPOST_JOURNAL_SUCCESS'), this.i18n.instant('CLOSE'), { duration: 4000 });
             this.loadJournals();
           },
-          error: err => this.snackBar.open('Failed to unpost Journal', 'Close', { duration: 4000 })
+          error: err => this.snackBar.open(this.i18n.instant('UNPOST_JOURNAL_FAIL'), this.i18n.instant('CLOSE'), { duration: 4000 })
         });
       }
     });
@@ -237,7 +239,7 @@ loadAccounts() {
       console.log("Accounts from API:", res);
 
     },
-    error: () => this.snackBar.open("Failed to load accounts", "Close", { duration: 4000 })
+    error: () => this.snackBar.open(this.i18n.instant('FAILED_LOAD_ACCOUNTS') || 'Failed to load accounts', this.i18n.instant('CLOSE'), { duration: 4000 })
   });
 }
 

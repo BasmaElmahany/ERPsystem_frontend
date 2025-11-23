@@ -4,6 +4,8 @@
  */
 
 import { Component, AfterViewInit, OnDestroy } from '@angular/core';
+import { CommonModule } from '@angular/common';
+import { TranslatePipe } from '../../../Shared/Pipes/translate.pipe';
 import { Router } from '@angular/router';
 
 // ============================================
@@ -556,78 +558,7 @@ function monitorPerformance(): void {
     // measureFPS();
 }
 
-// ============================================
-// SCROLL-JUMP (snap between top and features)
-// ============================================
-
-function initializeScrollJump(): void {
-    const featuresEl = document.getElementById('features');
-    if (!featuresEl) return;
-
-    let locked = false;
-    let touchStartY = 0;
-
-    const featuresTop = () => {
-        const rect = featuresEl.getBoundingClientRect();
-        return window.scrollY + rect.top;
-    };
-
-    const wheelHandler = (e: WheelEvent) => {
-        if (locked) return;
-        const delta = e.deltaY;
-        const current = window.scrollY;
-        const threshold = window.innerHeight / 2;
-
-        // If scrolling down while near top -> jump to features
-        if (delta > 0 && current < threshold) {
-            locked = true;
-            window.scrollTo({ top: featuresTop(), behavior: 'smooth' });
-            setTimeout(() => (locked = false), 500);
-            return;
-        }
-
-        // If scrolling up while below threshold -> jump to top
-        if (delta < 0 && current > threshold) {
-            locked = true;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(() => (locked = false), 500);
-            return;
-        }
-    };
-
-    const touchStart = (e: TouchEvent) => {
-        touchStartY = e.touches[0].clientY;
-    };
-
-    const touchEnd = (e: TouchEvent) => {
-        if (locked) return;
-        const touchEndY = e.changedTouches[0].clientY;
-        const diff = touchStartY - touchEndY;
-        const current = window.scrollY;
-        const threshold = window.innerHeight / 2;
-
-        if (diff > 30 && current < threshold) {
-            locked = true;
-            window.scrollTo({ top: featuresTop(), behavior: 'smooth' });
-            setTimeout(() => (locked = false), 700);
-        } else if (diff < -30 && current > threshold) {
-            locked = true;
-            window.scrollTo({ top: 0, behavior: 'smooth' });
-            setTimeout(() => (locked = false), 700);
-        }
-    };
-
-    // use non-passive to improve responsiveness for some devices
-    window.addEventListener('wheel', wheelHandler, { passive: false } as AddEventListenerOptions);
-    window.addEventListener('touchstart', touchStart, { passive: true });
-    window.addEventListener('touchend', touchEnd, { passive: true });
-
-    (window as any).__scrollJumpCleanup = () => {
-        window.removeEventListener('wheel', wheelHandler as any);
-        window.removeEventListener('touchstart', touchStart as any);
-        window.removeEventListener('touchend', touchEnd as any);
-    };
-}
+// Scroll-jump behavior removed — normal scrolling allowed
 
 // ============================================
 // INITIALIZATION
@@ -650,9 +581,6 @@ function initializeApp(): void {
 
     // Initialize navigation
     initializeSmoothScroll();
-
-    // Initialize scroll-jump behavior (snap to features / top)
-    initializeScrollJump();
 
     // Initialize buttons
     initializeButtons();
@@ -699,6 +627,7 @@ window.addEventListener("beforeunload", () => {
 @Component({
     selector: 'app-start-home',
     standalone: true,
+    imports: [CommonModule, TranslatePipe],
     templateUrl: './start-home.component.html',
     styleUrls: ['./start-home.component.scss'],
 })
@@ -710,13 +639,30 @@ export class StartHomeComponent implements AfterViewInit, OnDestroy {
     ngAfterViewInit(): void {
         // hide global sidebar while this page is active by adding a body class
         document.body.classList.add('start-home-active');
+        // also mark the <html> element so global styles that target html can be overridden
+        document.documentElement.classList.add('start-home-active');
 
         // inject a small stylesheet that hides the `app-sidebar` when active
         this._styleEl = document.createElement('style');
         this._styleEl.textContent = `
-            body.start-home-active app-sidebar { display: none !important; }
-            body.start-home-active .top-navbar { display: none !important; }
-            body.start-home-active .main-content-area { margin-left: 0 !important; }
+            /* hide layout chrome for landing */
+            html.start-home-active app-sidebar, body.start-home-active app-sidebar { display: none !important; }
+            html.start-home-active .top-navbar, body.start-home-active .top-navbar { display: none !important; }
+            html.start-home-active .main-content-area, body.start-home-active .main-content-area { margin-left: 0 !important; }
+
+            /* allow normal window scrolling while landing page is active */
+            html.start-home-active, body.start-home-active, html.start-home-active .erp-layout, body.start-home-active .erp-layout {
+                overflow: auto !important;
+                height: auto !important;
+            }
+            html.start-home-active .main-content-area, body.start-home-active .main-content-area {
+                overflow: visible !important;
+                height: auto !important;
+            }
+            html.start-home-active .dashboard-content, body.start-home-active .dashboard-content {
+                overflow: visible !important;
+                height: auto !important;
+            }
         `;
         document.head.appendChild(this._styleEl);
 
@@ -734,6 +680,7 @@ export class StartHomeComponent implements AfterViewInit, OnDestroy {
             this._styleEl = null;
         }
         document.body.classList.remove('start-home-active');
+        document.documentElement.classList.remove('start-home-active');
 
         // call any existing cleanup hooks
         if ((window as any).__canvasCleanup) {
@@ -742,8 +689,22 @@ export class StartHomeComponent implements AfterViewInit, OnDestroy {
         if ((window as any).__financeChartCleanup) {
             (window as any).__financeChartCleanup();
         }
-        if ((window as any).__scrollJumpCleanup) {
-            (window as any).__scrollJumpCleanup();
+    }
+
+    // Scroll controls used by the floating buttons in the template
+    scrollDown(): void {
+        try {
+            window.scrollBy({ top: Math.max(window.innerHeight * 0.9, 300), behavior: 'smooth' });
+        } catch (e) {
+            window.scrollTo(0, window.scrollY + Math.max(window.innerHeight * 0.9, 300));
+        }
+    }
+
+    scrollUp(): void {
+        try {
+            window.scrollBy({ top: -Math.max(window.innerHeight * 0.9, 300), behavior: 'smooth' });
+        } catch (e) {
+            window.scrollTo(0, Math.max(0, window.scrollY - Math.max(window.innerHeight * 0.9, 300)));
         }
     }
 

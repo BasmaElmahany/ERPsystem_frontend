@@ -8,6 +8,7 @@ import { ToastrModule } from 'ngx-toastr';
 import { provideAnimationsAsync } from '@angular/platform-browser/animations/async';
 import { routes } from './app/app.routes';
 import { ProjectModule } from './app/Project/project.module';
+import { SharedTranslationsModule } from './app/Shared/shared-translations.module';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -17,6 +18,7 @@ bootstrapApplication(AppComponent, {
     importProvidersFrom(
       BrowserAnimationsModule,
       ProjectModule, // ✅ import the module *inside* importProvidersFrom
+      SharedTranslationsModule,
       ToastrModule.forRoot({
         positionClass: 'toast-bottom-right',
         timeOut: 3000,

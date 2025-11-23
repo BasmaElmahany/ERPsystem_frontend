@@ -17,6 +17,7 @@ import { MatDividerModule } from '@angular/material/divider';
 import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AccountRouteModule } from './accounts-route.module';
+import { SharedTranslationsModule } from '../Shared/shared-translations.module';
 import { MatPaginator } from '@angular/material/paginator';
 
 
@@ -46,6 +47,8 @@ import { MatPaginator } from '@angular/material/paginator';
     MatDividerModule,
     MatCardModule,
     MatToolbarModule
+    ,
+    SharedTranslationsModule
   ],
   exports: [ListComponent]
 })

@@ -1,5 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { I18nService } from '../../../Shared/Services/i18n.service';
 import { ActivatedRoute } from '@angular/router';
 import { JournalWithLines } from '../../Models/journal';
 import { JournalService } from '../../Services/journal.service';
@@ -27,7 +28,8 @@ export class JournalLinesComponent implements OnInit {
     private route: ActivatedRoute,
     private service: JournalService,
     private accountService: ChartOfAccountsService,
-    private snackBar: MatSnackBar
+    private snackBar: MatSnackBar,
+    private i18n: I18nService
   ) {}
 
   ngOnInit(): void {
@@ -44,7 +46,7 @@ export class JournalLinesComponent implements OnInit {
         this.accounts = res;
         this.fetchJournalLines();
       },
-      error: () => this.snackBar.open("Failed to load accounts", "Close", { duration: 4000 })
+      error: () => this.snackBar.open(this.i18n.instant('FAILED_LOAD_ACCOUNTS'), this.i18n.instant('CLOSE'), { duration: 4000 })
     });
   }
 
@@ -69,7 +71,7 @@ export class JournalLinesComponent implements OnInit {
         this.totalCredit = res.lines.reduce((sum, l) => sum + (l.credit || 0), 0);
       },
       error: () => {
-        this.snackBar.open('Failed to fetch journal lines', 'Close', { duration: 4000 });
+        this.snackBar.open(this.i18n.instant('FAILED_FETCH_JOURNAL_LINES'), this.i18n.instant('CLOSE'), { duration: 4000 });
       },
       complete: () => (this.loading = false)
     });

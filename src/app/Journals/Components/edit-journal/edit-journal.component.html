@@ -1,39 +1,39 @@
 <div class="form-container">
   <div class="form-header">
-    <h2>Edit Journal Entry</h2>
-    <p>Update journal information and modify lines as needed.</p>
+    <h2>{{ 'EDIT_JOURNAL_TITLE' | translate | async }}</h2>
+    <p>{{ 'EDIT_JOURNAL_DESC' | translate | async }}</p>
   </div>
 
   <form [formGroup]="JournalForm" (ngSubmit)="save()" class="employee-form">
     <!-- === Journal Header === -->
     <fieldset class="form-section">
-      <legend>Journal Information</legend>
+      <legend>{{ 'JOURNAL_INFORMATION' | translate | async }}</legend>
 
       <div class="form-row">
         <div class="form-group">
-          <label for="entryNumber">Entry Number</label>
+          <label for="entryNumber">{{ 'ENTRY_NUMBER' | translate | async }}</label>
           <input
             id="entryNumber"
             type="text"
             formControlName="entryNumber"
-            placeholder="e.g. JV-0001"
+            placeholder="{{ 'ENTRY_NUMBER_PLACEHOLDER' | translate | async }}"
           />
         </div>
 
         <div class="form-group">
-          <label for="date">Date</label>
+          <label for="date">{{ 'DATE' | translate | async }}</label>
           <input id="date" type="date" formControlName="date" />
         </div>
       </div>
 
       <div class="form-row">
         <div class="form-group" style="grid-column: 1 / span 2;">
-          <label for="description">Description</label>
+          <label for="description">{{ 'DESCRIPTION' | translate | async }}</label>
           <textarea
             id="description"
             formControlName="description"
             rows="3"
-            placeholder="Enter description"
+            placeholder="{{ 'DESCRIPTION_PLACEHOLDER' | translate | async }}"
           ></textarea>
         </div>
       </div>
@@ -41,7 +41,7 @@
 
     <!-- === Journal Lines === -->
     <fieldset class="form-section lines-section">
-      <legend>Journal Lines</legend>
+      <legend>{{ 'JOURNAL_LINES' | translate | async }}</legend>
 
       <div formArrayName="lines" class="lines-scroll">
         <div
@@ -50,9 +50,9 @@
           [formGroupName]="i"
         >
           <div class="form-group">
-            <label>Account</label>
+            <label>{{ 'ACCOUNT' | translate | async }}</label>
             <select formControlName="accountId">
-              <option value="">Select account</option>
+              <option value="">{{ 'SELECT_ACCOUNT' | translate | async }}</option>
               <option *ngFor="let acc of accounts" [value]="acc.id">
                 {{ acc.accountName }}
               </option>
@@ -60,32 +60,32 @@
           </div>
 
           <div class="form-group number-input">
-            <label>Debit</label>
+            <label>{{ 'DEBIT' | translate | async }}</label>
             <input type="number" formControlName="debit" min="0" />
           </div>
 
           <div class="form-group number-input">
-            <label>Credit</label>
+            <label>{{ 'CREDIT' | translate | async }}</label>
             <input type="number" formControlName="credit" min="0" />
           </div>
 
           <div class="form-group">
-            <label>Line Description</label>
+            <label>{{ 'LINE_DESCRIPTION' | translate | async }}</label>
             <input
               type="text"
               formControlName="description"
-              placeholder="Optional note"
+              placeholder="{{ 'LINE_DESCRIPTION_PLACEHOLDER' | translate | async }}"
             />
           </div>
 
           <div class="form-group remove-btn">
-            <button
+              <button
               type="button"
               class="reset-button"
               (click)="removeLine(i)"
               *ngIf="lines.length > 1"
             >
-              Remove
+              {{ 'REMOVE_LINE' | translate | async }}
             </button>
           </div>
         </div>
@@ -93,27 +93,27 @@
 
       <div class="form-actions" style="justify-content: flex-start;">
         <button type="button" class="submit-button" (click)="addLine()">
-          + Add Line
+          + {{ 'ADD_LINE' | translate | async }}
         </button>
       </div>
 
       <div class="totals">
-        <p><strong>Total Debit:</strong> {{ totalDebit | number: '1.2-2' }}</p>
-        <p><strong>Total Credit:</strong> {{ totalCredit | number: '1.2-2' }}</p>
+        <p><strong>{{ 'TOTAL_DEBIT' | translate | async }}:</strong> {{ totalDebit | number: '1.2-2' }}</p>
+        <p><strong>{{ 'TOTAL_CREDIT' | translate | async }}:</strong> {{ totalCredit | number: '1.2-2' }}</p>
       </div>
     </fieldset>
 
     <!-- === Actions === -->
     <div class="form-actions">
       <button type="button" (click)="cancel()" class="reset-button">
-        Cancel
+        {{ 'CANCEL' | translate | async }}
       </button>
       <button
         type="submit"
         [disabled]="JournalForm.invalid"
         class="submit-button"
       >
-        Save Changes
+        {{ 'SAVE_CHANGES' | translate | async }}
       </button>
     </div>
   </form>
