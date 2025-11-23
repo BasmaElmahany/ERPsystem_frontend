@@ -1,10 +1,11 @@
+<div class ="home">
 <div class="dashboard-container">
   <header class="dashboard-header">
+    <img class="logo" [src]="logoPath" alt="logo" />
     <h1 class="page-title">Welcome to the ERP Dashboard</h1>
     <p class="subtitle">Real-time financial overview and project analytics.</p>
   </header>
 
-  <!-- Loading/Error Indicators -->
   <div *ngIf="loadingProjects" class="loading-indicator">
     <p>Loading projects and financial summaries...</p>
     <div class="spinner"></div>
@@ -13,160 +14,181 @@
     <p>Error loading projects. Please try again later.</p>
   </div>
 
-  <!-- 1. Global Summary Cards Section -->
-  <section class="section project-cards-section" *ngIf="!loadingProjects && !errorProjects">
+  <!-- NEW: GLOBAL SUMMARY CARDS AT THE TOP -->
+  <section class="section global-summary-cards" *ngIf="!loadingProjects && !errorProjects">
     <h2 class="section-title">Global Financial Summary</h2>
-    <div class="cards-grid">
-      
-      <!-- Total Revenue Card -->
-      <div class="project-card animated-card revenue-card">
-        <div class="card-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V5m0 14v-3m-6 0h12a2 2 0 002-2V7a2 2 0 00-2-2H6a2 2 0 00-2 2v10a2 2 0 002 2z" />
-          </svg>
+    <div class="summary-cards-container">
+      <div class="summary-cards">
+        <div class="card animated-card revenue-card">
+          <h3>Total Revenue</h3>
+          <p class="amount">{{ totalRevenue | currency:'USD':'symbol':'1.2-2' }}</p>
+          <p class="muted">Across all projects</p>
         </div>
-        <div class="card-content">
-          <h3 class="card-title">Total Revenue</h3>
-          <p class="card-metric value-positive">{{ totalRevenue | currency:'USD':'symbol':'1.2-2' }}</p>
-          <p class="card-detail">Across all projects</p>
+        <div class="card animated-card expense-card">
+          <h3>Total Expenses</h3>
+          <p class="amount">{{ totalExpenses | currency:'USD':'symbol':'1.2-2' }}</p>
+          <p class="muted">Across all projects</p>
         </div>
-      </div>
-
-      <!-- Total Expenses Card -->
-      <div class="project-card animated-card expense-card">
-        <div class="card-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 9V7a2 2 0 00-2-2H5a2 2 0 00-2 2v6a2 2 0 002 2h2m2 4h10a2 2 0 002-2v-6a2 2 0 00-2-2H9a2 2 0 00-2 2v6a2 2 0 002 2zm7-5a2 2 0 11-4 0 2 2 0 014 0z" />
-          </svg>
-        </div>
-        <div class="card-content">
-          <h3 class="card-title">Total Expenses</h3>
-          <p class="card-metric value-negative">{{ totalExpenses | currency:'USD':'symbol':'1.2-2' }}</p>
-          <p class="card-detail">Across all projects</p>
-        </div>
-      </div>
-
-      <!-- Net Profit Card -->
-      <div class="project-card animated-card net-profit-card" [class.value-positive]="totalNetProfit >= 0" [class.value-negative]="totalNetProfit < 0">
-        <div class="card-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M13 7h8m0 0v8m0-8l-8 8-4-4-6 6" />
-          </svg>
-        </div>
-        <div class="card-content">
-          <h3 class="card-title">Net Profit</h3>
-          <p class="card-metric" [class.value-positive]="totalNetProfit >= 0" [class.value-negative]="totalNetProfit < 0">
-            {{ totalNetProfit | currency:'USD':'symbol':'1.2-2' }}
-          </p>
-          <p class="card-detail">Global Summary</p>
+        <div class="card animated-card net-card" [class.positive]="totalNetProfit >= 0"
+          [class.negative]="totalNetProfit < 0">
+          <h3>Net Profit</h3>
+          <p class="amount">{{ totalNetProfit | currency:'USD':'symbol':'1.2-2' }}</p>
+          <p class="muted">Global Summary</p>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 2. Project Cards Section (Dynamic) -->
-  <section class="section project-cards-section" *ngIf="projects.length > 0">
+  <!-- GLOBAL CHARTS -->
+  <section class="section global-charts-section" *ngIf="!loadingProjects && !errorProjects">
+    <h2 class="section-title">Global Charts</h2>
+    <div class="global-charts-grid">
+      <div class="global-charts">
+        <div class="chart-card animated-card">
+          <h4>Revenue vs Expenses</h4>
+          <apx-chart *ngIf="globalBarChart" [series]="globalBarChart.series" [chart]="globalBarChart.chart"
+            [xaxis]="globalBarChart.xaxis!" [plotOptions]="globalBarChart!.plotOptions!">
+          </apx-chart>
+        </div>
+
+        <div class="chart-card animated-card">
+          <h4>Distribution</h4>
+          <apx-chart *ngIf="globalPieChart" [series]="globalPieChart.series" [chart]="globalPieChart.chart"
+            [labels]="globalPieChart!.labels!">
+          </apx-chart>
+        </div>
+
+        <div class="chart-card animated-card">
+          <h4>Revenue / Expense per Project</h4>
+          <apx-chart *ngIf="globalTrendChart" [series]="globalTrendChart.series" [chart]="globalTrendChart.chart"
+            [xaxis]="globalTrendChart!.xaxis!">
+          </apx-chart>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROJECTS LIST -->
+  <section class="section projects-section" *ngIf="projects.length > 0">
     <h2 class="section-title">Project Details</h2>
-    <div class="cards-grid">
-      <!-- Dynamic Project Cards -->
+
+    <div class="projects-grid">
       <div class="project-card animated-card" *ngFor="let project of projects">
-        <div class="card-icon">
-          <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 11H5m14 0a2 2 0 012 2v6a2 2 0 01-2 2H5a2 2 0 01-2-2v-6a2 2 0 012-2m14 0V9a2 2 0 00-2-2M5 11V9a2 2 0 012-2m0 0V5a2 2 0 012-2h6a2 2 0 012 2v2M7 7h10" />
-          </svg>
-        </div>
-        <div class="card-content">
-          <h3 class="card-title">{{ project.name }}</h3>
-          <p class="card-metric">
-            Net Profit: 
-            <span [class.value-positive]="getNetProfit(project) >= 0" [class.value-negative]="getNetProfit(project) < 0">
-              {{ getNetProfit(project) | currency:'USD':'symbol':'1.2-2' }}
-            </span>
-          </p>
-          <p class="card-detail">
-            <span *ngIf="project.loadingReports">Loading reports...</span>
-            <span *ngIf="project.errorReports" class="value-negative">Error fetching reports.</span>
-            <span *ngIf="!project.loadingReports && !project.errorReports">
-              Balanced: 
-              <span [class.status-active]="project.isBalanced" [class.value-negative]="!project.isBalanced">
-                {{ project.isBalanced ? 'Yes' : 'No' }}
+        <div class="card-head" (click)="toggleProject(project)">
+          <div class="left">
+            <div class="card-icon"></div>
+            <div>
+              <h3 class="project-name">{{ project.name }}</h3>
+              <p class="muted small">Net Profit:
+                <span [class.positive]="getNetProfit(project) >= 0" [class.negative]="getNetProfit(project) < 0">
+                  {{ getNetProfit(project) | currency:'USD':'symbol':'1.2-2' }}
+                </span>
+              </p>
+            </div>
+          </div>
+
+          <div class="right">
+            <p class="muted small">
+              <span *ngIf="project.loadingReports">Loading...</span>
+              <span *ngIf="project.errorReports" class="negative">Error</span>
+              <span *ngIf="!project.loadingReports && !project.errorReports">
+                Balanced: <strong [class.positive]="project.isBalanced" [class.negative]="!project.isBalanced">{{
+                  project.isBalanced ? 'Yes' : 'No' }}</strong>
               </span>
-            </span>
-          </p>
+            </p>
+            <button class="toggle-btn">{{ project.expanded ? 'Hide' : 'Details' }}</button>
+          </div>
+        </div>
+
+        <div class="card-body" [class.expanded]="project.expanded">
+          <div class="charts-row">
+            <div class="mini-chart">
+              <h5>Revenue vs Expense</h5>
+              <apx-chart *ngIf="project.barChart" [series]="project.barChart.series" [chart]="project.barChart.chart"
+                [xaxis]="project.barChart.xaxis" [plotOptions]="project.barChart.plotOptions">
+              </apx-chart>
+            </div>
+
+            <div class="mini-chart">
+              <h5>Distribution</h5>
+              <apx-chart *ngIf="project.pieChart" [series]="project.pieChart.series" [chart]="project.pieChart.chart"
+                [labels]="project.pieChart.labels">
+              </apx-chart>
+            </div>
+
+            <div class="mini-chart">
+              <h5>Debit vs Credit</h5>
+              <apx-chart *ngIf="project.balanceChart" [series]="project.balanceChart.series"
+                [chart]="project.balanceChart.chart" [xaxis]="project.balanceChart.xaxis">
+              </apx-chart>
+            </div>
+          </div>
+
+          <div class="trial-balance-table-wrapper">
+            <table class="trial-balance-table">
+              <thead>
+                <tr>
+                  <th>Account</th>
+                  <th>Type</th>
+                  <th class="text-right">Debit</th>
+                  <th class="text-right">Credit</th>
+                </tr>
+              </thead>
+              <tbody>
+                <tr *ngFor="let row of project.trialBalance">
+                  <td>{{ row.accountName }}</td>
+                  <td>{{ row.accountType || '-' }}</td>
+                  <td class="text-right">{{ row.debit | currency:'USD':'symbol':'1.2-2' }}</td>
+                  <td class="text-right">{{ row.credit | currency:'USD':'symbol':'1.2-2' }}</td>
+                </tr>
+                <tr *ngIf="!project.trialBalance || project.trialBalance.length === 0">
+                  <td colspan="4" class="text-center muted">No trial balance data</td>
+                </tr>
+              </tbody>
+            </table>
+          </div>
         </div>
       </div>
     </div>
   </section>
 
-  <!-- 3. Charts Section (Placeholders remain) -->
-  <section class="section charts-section">
-    <h2 class="section-title">Financial Visualizations</h2>
-    <div class="charts-grid">
-      <div class="chart-card animated-card">
-        <h3 class="chart-title">Revenue vs. Expenses (YTD)</h3>
-        <div class="chart-placeholder">
-          <p>Chart component placeholder (Implement your charting library here)</p>
-        </div>
-      </div>
-
-      <div class="chart-card animated-card">
-        <h3 class="chart-title">Account Distribution (Pie Chart)</h3>
-        <div class="chart-placeholder">
-          <p>Chart component placeholder (Implement your charting library here)</p>
-        </div>
-      </div>
-    </div>
-  </section>
-
-  <!-- 4. Trial Balance Section with Balance Design (Static placeholder for now, needs data binding) -->
+  <!-- TRIAL BALANCE GLOBAL -->
   <section class="section trial-balance-section">
     <h2 class="section-title">Trial Balance Status (Global)</h2>
+
     <div class="balance-design-wrapper">
       <div class="balance-scale">
-        <div class="scale-arm"></div>
+        <div class="scale-arm" [style.transform]="getScaleRotation()"></div>
         <div class="scale-base"></div>
-        
-        <!-- Left Pan: Debits -->
+
         <div class="scale-pan left-pan">
           <div class="pan-label">Total Debits</div>
-          <div class="pan-value value-debit">$1,250,000</div>
+          <div class="pan-value value-debit">{{ globalTotalDebit | currency:'USD':'symbol':'1.0-0' }}</div>
         </div>
-        
-        <!-- Right Pan: Credits -->
+
         <div class="scale-pan right-pan">
           <div class="pan-label">Total Credits</div>
-          <div class="pan-value value-credit">$1,250,000</div>
+          <div class="pan-value value-credit">{{ globalTotalCredit | currency:'USD':'symbol':'1.0-0' }}</div>
         </div>
       </div>
 
       <div class="balance-status-indicator">
         <div class="status-text">
           <span class="status-icon">
-            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-              <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
+            <svg viewBox="0 0 24 24">
+              <path d="M9 12l2 2 4-4" />
             </svg>
           </span>
-          <span class="status-message balanced">Trial Balance is Balanced</span>
+          <span class="status-message" [class.balanced]="isBalanced()">
+            {{ isBalanced() ? 'Trial Balance is Balanced' : 'Trial Balance Difference' }}
+          </span>
+
         </div>
-        <div class="balance-difference">Difference: $0.00</div>
+        <div class="balance-difference">Difference: {{ (globalTotalDebit - globalTotalCredit) |
+          currency:'USD':'symbol':'1.2-2' }}</div>
       </div>
     </div>
-
-    <!-- Detailed Trial Balance Table (Static placeholder) -->
-    <div class="trial-balance-table-wrapper animated-card">
-      <table class="trial-balance-table">
-        <thead>
-          <tr>
-            <th>Account Name</th>
-            <th>Account Type</th>
-            <th class="text-right">Debit</th>
-            <th class="text-right">Credit</th>
-          </tr>
-        </thead>
-        <tbody>
-          <tr><td colspan="4" class="text-center">Select a project to view detailed trial balance.</td></tr>
-        </tbody>
-      </table>
-    </div>
   </section>
+</div>
+
 </div>

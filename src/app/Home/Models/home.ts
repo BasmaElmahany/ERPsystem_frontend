@@ -1,3 +1,4 @@
+import { ApexAxisChartSeries, ApexNonAxisChartSeries, ApexChart, ApexXAxis, ApexTitleSubtitle, ApexPlotOptions, ApexStroke, ApexResponsive } from "ng-apexcharts";
 import { Project } from "../../Project/Models/project";
 
 export interface NavItem {
@@ -48,109 +49,131 @@ export interface trialbalance {
 }
 
 export interface BalanceSheet {
-  assets : number 
-  liabilities: number 
-  equity: number 
-  isBalanced: boolean 
+  assets: number
+  liabilities: number
+  equity: number
+  isBalanced: boolean
 }
 
 
 
 export interface CanvasConfig {
-    readonly heightMultiplier: number;
-    readonly circleCount: number;
-    readonly squareCount: number;
-    readonly timeIncrement: number;
+  readonly heightMultiplier: number;
+  readonly circleCount: number;
+  readonly squareCount: number;
+  readonly timeIncrement: number;
 }
 
 /**
  * Animation state
  */
 export interface AnimationState {
-    time: number;
-    animationId: number | null;
+  time: number;
+  animationId: number | null;
 }
 
 /**
  * Circle properties
  */
 export interface CircleProperties {
-    x: number;
-    y: number;
-    radius: number;
-    fillOpacity: number;
-    strokeOpacity: number;
+  x: number;
+  y: number;
+  radius: number;
+  fillOpacity: number;
+  strokeOpacity: number;
 }
 
 /**
  * Square properties
  */
 export interface SquareProperties {
-    x: number;
-    y: number;
-    size: number;
-    rotation: number;
-    fillOpacity: number;
-    strokeOpacity: number;
+  x: number;
+  y: number;
+  size: number;
+  rotation: number;
+  fillOpacity: number;
+  strokeOpacity: number;
 }
 
 /**
  * Color configuration
  */
 export interface ColorConfig {
-    readonly r: number;
-    readonly g: number;
-    readonly b: number;
+  readonly r: number;
+  readonly g: number;
+  readonly b: number;
 }
 
 /**
  * Animation configuration
  */
 export interface AnimationConfig {
-    readonly circleColor: ColorConfig;
-    readonly squareColor: ColorConfig;
-    readonly circleOpacityRange: {
-        readonly min: number;
-        readonly max: number;
-    };
-    readonly squareOpacityRange: {
-        readonly min: number;
-        readonly max: number;
-    };
+  readonly circleColor: ColorConfig;
+  readonly squareColor: ColorConfig;
+  readonly circleOpacityRange: {
+    readonly min: number;
+    readonly max: number;
+  };
+  readonly squareOpacityRange: {
+    readonly min: number;
+    readonly max: number;
+  };
 }
 
 /**
  * Feature card interface
  */
 export interface Feature {
-    title: string;
-    description: string;
-    icon: string;
+  title: string;
+  description: string;
+  icon: string;
 }
 
 /**
  * Statistics card interface
  */
 export interface Stat {
-    label: string;
-    value: string;
-    color: string;
+  label: string;
+  value: string;
+  color: string;
 }
 
 
+// home.ts (Models)
 
-// Extend the Project interface to hold fetched report data
 export interface ProjectSummary extends Project {
-  // Financial Reports fetched from HomeService
   incomeStatement?: IncomeStatment;
   balanceSheet?: BalanceSheet[];
   trialBalance?: trialbalance[];
-  
-  // Status flags for the dashboard UI
-  isBalanced?: boolean; // True if Trial Balance Debits == Credits
-  loadingReports: boolean; // True while reports are being fetched
-  errorReports: boolean; // True if there was an error fetching reports
+
+  isBalanced?: boolean;
+  loadingReports: boolean;
+  errorReports: boolean;
+
+  barChart?: {
+    series: any[];
+    chart: ApexChart;
+    xaxis: ApexXAxis;
+    labels: string[];
+    plotOptions: ApexPlotOptions;
+  };
+
+  pieChart?: {
+    series: any[];
+    chart: ApexChart;
+    labels: string[];
+  };
+
+  balanceChart?: {
+    series: any[];
+    chart: ApexChart;
+    xaxis: ApexXAxis;
+    plotOptions: ApexPlotOptions;
+    labels: string[];
+  };
+   expanded?: boolean;
 }
+
 
 
 export type ProjectReportResult = {
@@ -161,3 +184,18 @@ export type ProjectReportResult = {
     trialBalance: trialbalance[];
   } | null;
 };
+
+
+export type ApexBarChartOptions = {
+  series: ApexAxisChartSeries | ApexNonAxisChartSeries;
+  chart: ApexChart;
+  xaxis?: ApexXAxis;
+  title?: ApexTitleSubtitle;
+  plotOptions?: ApexPlotOptions;
+  stroke?: ApexStroke;
+  responsive?: ApexResponsive[];
+  labels?: string[];
+};
+
+
+
