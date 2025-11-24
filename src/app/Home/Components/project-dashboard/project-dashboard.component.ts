@@ -11,8 +11,10 @@ import {
   ProjectSummary,
   ProjectReportResult
 } from '../../Models/home';
-import { CommonModule, CurrencyPipe, NgFor, NgIf } from '@angular/common';
+import { CommonModule, CurrencyPipe, NgFor, NgIf, AsyncPipe } from '@angular/common';
 import { TranslatePipe } from '../../../Shared/Pipes/translate.pipe';
+import { Router } from '@angular/router';
+import { I18nService } from '../../../Shared/Services/i18n.service';
 
 import {
   NgApexchartsModule
@@ -23,7 +25,7 @@ import {
 @Component({
   selector: 'app-project-dashboard',
   standalone: true,
-  imports: [CommonModule, NgIf, NgFor, CurrencyPipe, NgApexchartsModule, TranslatePipe],
+  imports: [CommonModule, NgIf, NgFor, CurrencyPipe, NgApexchartsModule, TranslatePipe, AsyncPipe],
   templateUrl: './project-dashboard.component.html',
   styleUrls: ['./project-dashboard.component.scss']
 })
@@ -60,10 +62,17 @@ export class ProjectDashboardComponent implements OnInit {
   // local logo path (uploaded file)
   logoPath = '/assets/erp_dashboard_logo.png';
   Math = Math;
+  // language observable for navbar
+  currentLang$: any;
+
   constructor(
     private projectService: ProjectService,
-    private homeService: HomeService
-  ) { }
+    private homeService: HomeService,
+    private router: Router,
+    private i18n: I18nService
+  ) {
+    this.currentLang$ = this.i18n.currentLang$;
+  }
 
   ngOnInit(): void {
     this.loadProjects();
@@ -246,6 +255,18 @@ export class ProjectDashboardComponent implements OnInit {
 
   isBalanced() {
     return Math.abs(this.globalTotalDebit - this.globalTotalCredit) < 0.01;
+  }
+
+  goHome(): void {
+    this.router.navigate(['/projects']);
+  }
+
+  toggleLanguage(): void {
+    this.i18n.toggleLanguage();
+  }
+
+  gotoDashboard(): void {
+    this.router.navigate(['/dashboard']);
   }
 
 }

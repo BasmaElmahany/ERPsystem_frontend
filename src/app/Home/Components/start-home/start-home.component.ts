@@ -3,11 +3,10 @@
  * Vanilla TypeScript with Canvas animations and DOM manipulation
  */
 
-import { Component, AfterViewInit, OnDestroy, Output, EventEmitter } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { Component, AfterViewInit, OnDestroy } from '@angular/core';
+import { CommonModule, AsyncPipe } from '@angular/common';
 import { TranslatePipe } from '../../../Shared/Pipes/translate.pipe';
 import { Router } from '@angular/router';
-import { map, Observable } from 'rxjs';
 import { I18nService } from '../../../Shared/Services/i18n.service';
 
 // ============================================
@@ -629,20 +628,17 @@ window.addEventListener("beforeunload", () => {
 @Component({
     selector: 'app-start-home',
     standalone: true,
-    imports: [CommonModule, TranslatePipe],
+    imports: [CommonModule, TranslatePipe, AsyncPipe],
     templateUrl: './start-home.component.html',
     styleUrls: ['./start-home.component.scss'],
 })
 export class StartHomeComponent implements AfterViewInit, OnDestroy {
     private _styleEl: HTMLStyleElement | null = null;
- @Output() languageToggle = new EventEmitter<void>();
- currentLang$: Observable<string>;
-   isRTL$: Observable<boolean>;
-    constructor(private router: Router,private i18nService: I18nService) { 
-        this.currentLang$ = this.i18nService.currentLang$;
-        this.isRTL$ = this.i18nService.currentLang$.pipe(
-          map(lang => lang === 'ar')
-        );}
+    currentLang$: any;
+
+    constructor(private router: Router, private i18n: I18nService) {
+        this.currentLang$ = this.i18n.currentLang$;
+    }
 
     ngAfterViewInit(): void {
         // hide global sidebar while this page is active by adding a body class
@@ -729,6 +725,9 @@ export class StartHomeComponent implements AfterViewInit, OnDestroy {
         this.router.navigate(['/dashboard']);
     }
 
+    toggleLanguage(): void {
+        this.i18n.toggleLanguage();
+    }
 }
 
 export {
