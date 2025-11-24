@@ -25,8 +25,13 @@
         <div class="form-group">
           <label for="accountType">Account Type</label>
           <select id="accountType" formControlName="accountType">
+            <option value="">Select type</option>
             <option value="Asset">Asset</option>
+            <option value="Contra Asset">Contra Asset</option>
+            <option value="Current Asset">Current Asset</option>
             <option value="Liability">Liability</option>
+            <option value="Contra Liability">Contra Liability</option>
+            <option value="Current Liability">Current Liability</option>
             <option value="Equity">Equity</option>
             <option value="Revenue">Revenue</option>
             <option value="Expense">Expense</option>
@@ -60,9 +65,10 @@
       </div>
 
       <div class="form-row">
+        
         <div class="form-group">
-          <label for="openingBalance">Opening Balance</label>
-          <input id="openingBalance" type="number" formControlName="openingBalance" />
+          <label>Opening Balance</label>
+          <input type="number" formControlName="openingBalance" />
         </div>
       </div>
 

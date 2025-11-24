@@ -6,13 +6,14 @@ import ar from '../../../Shared/JsonFiles/ar.json';
 import { CommonModule } from '@angular/common';
 import { RouterModule } from '@angular/router';
 import { TranslatePipe } from '../../../Shared/Pipes/translate.pipe';
-import {NavItem , DashboardCard  ,Employee} from '../../Models/home'
+import { NavItem, DashboardCard, Employee } from '../../Models/home'
 import { SidebarComponent } from '../sidebar/sidebar.component';
+import { AuthService } from '../../../Auth/Services/auth.service';
 const translations: Record<Language, any> = { en, ar };
 @Component({
   selector: 'app-home',
   standalone: true,
-  imports: [CommonModule, RouterModule, TranslatePipe,SidebarComponent],
+  imports: [CommonModule, RouterModule, TranslatePipe, SidebarComponent],
   templateUrl: './home.component.html',
   styleUrl: './home.component.scss'
 })
@@ -26,45 +27,24 @@ export class HomeComponent implements OnInit, OnDestroy {
   sortDirection: 'asc' | 'desc' = 'asc';
 
   navItems: NavItem[] = [
-   // { icon: 'dashboard', key: 'MENU_DASHBOARD', route: '/dashboard' },
+
     { icon: 'people', key: 'MENU_EMPLOYEES', route: '/projects' },
-   // { icon: 'inventory', key: 'MENU_INVENTORY', route: '/inventory' },
-   // { icon: 'analytics', key: 'MENU_ANALYTICS', route: '/analytics' },
-    //{ icon: 'settings', key: 'MENU_SETTINGS', route: '/settings' },
-  ];
-/*
-  dashboardCards: DashboardCard[] = [
-    { key: 'CARD_TOTAL_EMPLOYEES', value: '1,250', icon: 'people', color: '#00e676', change: '+5% since last month' },
-    { key: 'CARD_OPEN_PROJECTS', value: '45', icon: 'folder', color: '#29b6f6', change: '-2% since last month' },
-    { key: 'CARD_REVENUE_Q3', value: '$1.2M', icon: 'attach_money', color: '#ff9800', change: '+12% since last quarter' },
-    { key: 'CARD_SUPPORT_TICKETS', value: '12', icon: 'support_agent', color: '#ef5350', change: 'New Low' },
-  ];
 
-  recentActivities: Activity[] = [
-    { timeKey: 'TIME_MINS_AGO', descriptionKey: 'ACTIVITY_PAYROLL_APPROVED' },
-    { timeKey: 'TIME_HOUR_AGO', descriptionKey: 'ACTIVITY_PROJECT_STARTED' },
-    { timeKey: 'TIME_HOURS_AGO', descriptionKey: 'ACTIVITY_INVENTORY_LOW' },
-    { timeKey: 'TIME_YESTERDAY', descriptionKey: 'ACTIVITY_REPORT_COMPLETED' },
   ];
+  userName: string | null = null;   
 
-  employees: Employee[] = [
-    { id: 101, name: 'Alice Johnson', title: 'Software Engineer', department: 'Engineering', status: 'Active', email: 'alice@corp.com' },
-    { id: 102, name: 'Bob Smith', title: 'Financial Analyst', department: 'Finance', status: 'On Leave', email: 'bob@corp.com' },
-    { id: 103, name: 'Charlie Brown', title: 'HR Manager', department: 'Human Resources', status: 'Active', email: 'charlie@corp.com' },
-    { id: 104, name: 'Diana Prince', title: 'Marketing Specialist', department: 'Marketing', status: 'Active', email: 'diana@corp.com' },
-    { id: 105, name: 'Eve Adams', title: 'Data Scientist', department: 'Engineering', status: 'Terminated', email: 'eve@corp.com' },
-  ];*/
 
-  constructor(private i18nService: I18nService) {
+  constructor(private i18nService: I18nService,  private authService: AuthService) {
     this.currentLang$ = this.i18nService.currentLang$;
     this.isRTL$ = this.i18nService.currentLang$.pipe(map(lang => lang === 'ar'));
   }
 
   ngOnInit(): void {
-  //  this.sortData('id');
+   const user = this.authService.getUserInfo();
+   this.userName =user?.['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || 'User';
   }
 
-  ngOnDestroy(): void {}
+  ngOnDestroy(): void { }
 
   toggleSidebar(): void {
     this.isSidebarOpen = !this.isSidebarOpen;
@@ -92,23 +72,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       map(lang => `${value} ${translations[lang][key]}`)
     );
   }
-/*
-  sortData(key: keyof Employee): void {
-    if (this.sortKey === key) {
-      this.sortDirection = this.sortDirection === 'asc' ? 'desc' : 'asc';
-    } else {
-      this.sortKey = key;
-      this.sortDirection = 'asc';
-    }
-
-    this.employees.sort((a, b) => {
-      const aValue = a[key];
-      const bValue = b[key];
-      const comparison = aValue > bValue ? 1 : aValue < bValue ? -1 : 0;
-      return this.sortDirection === 'asc' ? comparison : -comparison;
-    });
-  }
-*/
+  
   getStatusClass(status: Employee['status']): string {
     switch (status) {
       case 'Active': return 'status-active';
