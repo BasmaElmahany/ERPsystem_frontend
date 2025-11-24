@@ -12,6 +12,7 @@ import {
   ProjectReportResult
 } from '../../Models/home';
 import { CommonModule, CurrencyPipe, NgFor, NgIf } from '@angular/common';
+import { TranslatePipe } from '../../../Shared/Pipes/translate.pipe';
 
 import {
   NgApexchartsModule
@@ -22,7 +23,7 @@ import {
 @Component({
   selector: 'app-project-dashboard',
   standalone: true,
-  imports: [CommonModule, NgIf, NgFor, CurrencyPipe, NgApexchartsModule],
+  imports: [CommonModule, NgIf, NgFor, CurrencyPipe, NgApexchartsModule, TranslatePipe],
   templateUrl: './project-dashboard.component.html',
   styleUrls: ['./project-dashboard.component.scss']
 })
