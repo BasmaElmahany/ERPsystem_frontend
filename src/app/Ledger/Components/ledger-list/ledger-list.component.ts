@@ -26,11 +26,11 @@ export class LedgerListComponent implements OnInit, AfterViewInit {
   sortDirection: 'asc' | 'desc' = 'asc';
   startDate: string = '';
   endDate: string = '';
-  
+
   pageSize = 5;
   pageIndex = 0;
   pageSizeOptions = [5, 10, 20, 50];
-  
+
   groupedLedger: any[] = [];
 
   pieChartOptions: PieChartOptions = {
@@ -186,8 +186,16 @@ export class LedgerListComponent implements OnInit, AfterViewInit {
       series: totalDebits,
       chart: { type: 'pie', height: 400 },
       labels: names,
-      title: { text: 'إجمالي المدين لكل حساب', align: 'center' },
-      dataLabels: { enabled: true }
+      title: {
+        text: 'إجمالي المدين لكل حساب', align: 'center', style: {
+          color: '#ffffff'
+        }
+      },
+      dataLabels: {
+        enabled: true, style: {
+          colors: ['#ffffff']
+        }
+      }
     };
 
     this.barChartOptions = {
@@ -197,11 +205,25 @@ export class LedgerListComponent implements OnInit, AfterViewInit {
         { name: 'الرصيد', data: balances }
       ],
       chart: { type: 'line', height: 400 },
-      xaxis: { categories: names },
-      dataLabels: { enabled: false },
+      xaxis: {
+        categories: names, labels: {
+          style: {
+            colors: '#ffffff' // x-axis labels white
+          }
+        }
+      },
+      dataLabels: {
+        enabled: false, style: {
+          colors: ['#ffffff']
+        }
+      },
       stroke: { curve: 'smooth', width: 3 },
       markers: { size: 5 },
-      title: { text: 'مقارنة المدين / الدائن / الرصيد لكل حساب', align: 'center' }
+      title: {
+        text: 'مقارنة المدين / الدائن / الرصيد لكل حساب', align: 'center', style: {
+          color: '#ffffff'
+        }
+      }
     };
 
     this.updateCharts();
@@ -222,7 +244,7 @@ export class LedgerListComponent implements OnInit, AfterViewInit {
     const workbook = new ExcelJS.Workbook();
 
     // =============================
-    // 1️⃣ شيت إجمالي الحسابات
+    // 1️⃣ Sheet: إجمالي الحسابات
     // =============================
     const summarySheet = workbook.addWorksheet('إجمالي الحسابات', {
       views: [{ rightToLeft: true }]
@@ -241,6 +263,8 @@ export class LedgerListComponent implements OnInit, AfterViewInit {
     };
 
     summarySheet.addRow([]);
+
+    // Header
     const summaryHeader = summarySheet.addRow([
       'اسم الحساب',
       'إجمالي مدين',
@@ -259,7 +283,7 @@ export class LedgerListComponent implements OnInit, AfterViewInit {
     });
 
     // =============================
-    // 2️⃣ عمل جروب للحسابات
+    // 2️⃣ Group by account
     // =============================
     const groups = new Map<string, any[]>();
 
@@ -268,22 +292,31 @@ export class LedgerListComponent implements OnInit, AfterViewInit {
       groups.get(item.accountName)!.push(item);
     });
 
+    // للتجميع النهائي
+    let sheetTotalDebit = 0;
+    let sheetTotalCredit = 0;
+    let sheetTotalBalance = 0;
+
     // =============================
-    // 3️⃣ تعبئة شيت الإجمالي + إنشاء شيت لكل حساب
+    // 3️⃣ Fill summary & Create sheets
     // =============================
     groups.forEach((entries, accountName) => {
-      // إجمالي الحساب
       let totalDebit = 0;
       let totalCredit = 0;
-      let finalBalance = 0;
 
       entries.forEach(j => {
         totalDebit += j.debit;
         totalCredit += j.credit;
-        finalBalance = j.balance;
       });
 
-      // 🟦 صف الإجمالي في Sheet الإجمالي
+      const finalBalance = totalDebit - totalCredit;
+
+      // إضافة للترصيد النهائي
+      sheetTotalDebit += totalDebit;
+      sheetTotalCredit += totalCredit;
+      sheetTotalBalance += finalBalance;
+
+      // صف الإجمالي في شيت الإجمالي
       const row = summarySheet.addRow([
         accountName,
         totalDebit,
@@ -297,7 +330,7 @@ export class LedgerListComponent implements OnInit, AfterViewInit {
       });
 
       // =============================
-      // 4️⃣ إنشاء شيت لكل حساب
+      // 4️⃣ Create sheet for account
       // =============================
       const sheet = workbook.addWorksheet(accountName.substring(0, 31), {
         views: [{ rightToLeft: true }]
@@ -332,14 +365,16 @@ export class LedgerListComponent implements OnInit, AfterViewInit {
         cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1976D2' } };
       });
 
-      // البيانات التفصيلية
-        entries.forEach(j => {
+      // التفاصيل
+      entries.forEach(j => {
         const dataRow = sheet.addRow([
           j.description,
           j.debit,
           j.credit,
           j.balance,
-          new Date(j.date).toLocaleDateString(this.i18n.currentLang === 'ar' ? 'ar-EG' : 'en-US')
+          new Date(j.date).toLocaleDateString(
+            this.i18n.currentLang === 'ar' ? 'ar-EG' : 'en-US'
+          )
         ]);
 
         dataRow.eachCell(cell => {
@@ -358,7 +393,7 @@ export class LedgerListComponent implements OnInit, AfterViewInit {
       });
 
       // =============================
-      // 5️⃣ صف الإجمالي في شيت الحساب
+      // 5️⃣ Total row for account sheet
       // =============================
       const totalRow = sheet.addRow([
         'الإجمالي',
@@ -380,7 +415,33 @@ export class LedgerListComponent implements OnInit, AfterViewInit {
     });
 
     // =============================
-    // 6️⃣ Auto width
+    // 6️⃣ Add Final Total Row in Summary Sheet
+    // =============================
+    summarySheet.addRow([]);
+
+    const finalRow = summarySheet.addRow([
+      'الإجمالي الكلي',
+      sheetTotalDebit,
+      sheetTotalCredit,
+      sheetTotalBalance
+    ]);
+
+    finalRow.eachCell(cell => {
+      cell.font = { bold: true, size: 13, color: { argb: 'FFFFFFFF' } };
+      cell.alignment = { horizontal: 'center' };
+      cell.fill = {
+        type: 'pattern',
+        pattern: 'solid',
+        fgColor: { argb: 'FF263238' }
+      };
+    });
+
+    finalRow.getCell(2).numFmt = '#,##0.00';
+    finalRow.getCell(3).numFmt = '#,##0.00';
+    finalRow.getCell(4).numFmt = '#,##0.00';
+
+    // =============================
+    // 7️⃣ Auto width
     // =============================
     workbook.worksheets.forEach(ws => {
       ws.columns?.forEach(column => {
@@ -397,7 +458,7 @@ export class LedgerListComponent implements OnInit, AfterViewInit {
     });
 
     // =============================
-    // 7️⃣ حفظ الملف
+    // 8️⃣ Save File
     // =============================
     workbook.xlsx.writeBuffer().then(buffer => {
       saveAs(
@@ -434,7 +495,7 @@ export class LedgerListComponent implements OnInit, AfterViewInit {
     return Object.values(grouped);
   }
 
-  
+
 
 
 
