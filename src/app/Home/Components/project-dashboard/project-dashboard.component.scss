@@ -331,13 +331,24 @@ html, body {
   border-radius: 8px;
 }
 
-/* =========================
-   TRIAL BALANCE TABLE
-========================= */
 .trial-balance-table-wrapper {
   background: rgba(0, 0, 0, 0.22);
   padding: 10px;
   border-radius: 8px;
+
+  &.rtl {
+    direction: rtl;
+
+    .text-right {
+      text-align: left !important; // flip alignment for RTL
+    }
+  }
+}
+
+.table-scroll {
+  max-height: 400px;
+  overflow-y: auto;
+  display: block;
 }
 
 .trial-balance-table {
@@ -346,10 +357,31 @@ html, body {
   color: #dfeefb;
 }
 
+.trial-balance-table thead {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+  position: sticky;
+  top: 0;
+  background: rgba(0,0,0,1);
+  z-index: 10;
+}
+
+.trial-balance-table tbody {
+  display: block;
+  width: 100%;
+}
+
+.trial-balance-table tbody tr {
+  display: table;
+  width: 100%;
+  table-layout: fixed;
+}
+
 .trial-balance-table th,
 .trial-balance-table td {
   padding: 8px 10px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  border-bottom: 1px solid rgba(255, 255, 255,1);
   text-align: left;
 }
 
@@ -357,6 +389,11 @@ html, body {
   color: #fff;
   font-size: 0.85rem;
 }
+
+.text-right {
+  text-align: right;
+}
+
 
 /* =========================
    BALANCE DESIGN / SCALE

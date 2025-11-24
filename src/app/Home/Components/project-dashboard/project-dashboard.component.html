@@ -16,197 +16,205 @@
   </div>
 </nav>
 
-<div class ="home">
-<div class="dashboard-container">
-  <header class="dashboard-header">
-    <img class="logo" [src]="logoPath" alt="logo" />
-    <h1 class="page-title">{{ 'DASHBOARD_WELCOME' | translate | async }}</h1>
-    <p class="subtitle">{{ 'DASHBOARD_SUBTITLE' | translate | async }}</p>
-  </header>
+<div class="home">
+  <div class="dashboard-container">
+    <header class="dashboard-header">
+      <img class="logo" [src]="logoPath" alt="logo" />
+      <h1 class="page-title">{{ 'DASHBOARD_WELCOME' | translate | async }}</h1>
+      <p class="subtitle">{{ 'DASHBOARD_SUBTITLE' | translate | async }}</p>
+    </header>
 
-  <div *ngIf="loadingProjects" class="loading-indicator">
-    <p>{{ 'LOADING_PROJECTS_SUMMARY' | translate | async }}</p>
-    <div class="spinner"></div>
-  </div>
-  <div *ngIf="errorProjects" class="error-indicator">
-    <p>{{ 'ERROR_LOADING_PROJECTS' | translate | async }}</p>
-  </div>
+    <div *ngIf="loadingProjects" class="loading-indicator">
+      <p>{{ 'LOADING_PROJECTS_SUMMARY' | translate | async }}</p>
+      <div class="spinner"></div>
+    </div>
+    <div *ngIf="errorProjects" class="error-indicator">
+      <p>{{ 'ERROR_LOADING_PROJECTS' | translate | async }}</p>
+    </div>
 
-  <!-- NEW: GLOBAL SUMMARY CARDS AT THE TOP -->
-  <section class="section global-summary-cards" *ngIf="!loadingProjects && !errorProjects">
-    <h2 class="section-title">{{ 'GLOBAL_FINANCIAL_SUMMARY' | translate | async }}</h2>
-    <div class="summary-cards-container">
-      <div class="summary-cards">
-        <div class="card animated-card revenue-card">
-          <h3>{{ 'TOTAL_REVENUE' | translate | async }}</h3>
-          <p class="amount">{{ totalRevenue | currency:'USD':'symbol':'1.2-2' }}</p>
-          <p class="muted">{{ 'ACROSS_ALL_PROJECTS' | translate | async }}</p>
-        </div>
-        <div class="card animated-card expense-card">
-          <h3>{{ 'TOTAL_EXPENSES' | translate | async }}</h3>
-          <p class="amount">{{ totalExpenses | currency:'USD':'symbol':'1.2-2' }}</p>
-          <p class="muted">{{ 'ACROSS_ALL_PROJECTS' | translate | async }}</p>
-        </div>
-        <div class="card animated-card net-card" [class.positive]="totalNetProfit >= 0"
-          [class.negative]="totalNetProfit < 0">
-          <h3>{{ 'NET_PROFIT' | translate | async }}</h3>
-          <p class="amount">{{ totalNetProfit | currency:'USD':'symbol':'1.2-2' }}</p>
-          <p class="muted">{{ 'GLOBAL_SUMMARY' | translate | async }}</p>
+    <!-- NEW: GLOBAL SUMMARY CARDS AT THE TOP -->
+    <section class="section global-summary-cards" *ngIf="!loadingProjects && !errorProjects">
+      <h2 class="section-title">{{ 'GLOBAL_FINANCIAL_SUMMARY' | translate | async }}</h2>
+      <div class="summary-cards-container">
+        <div class="summary-cards">
+          <div class="card animated-card revenue-card">
+            <h3>{{ 'TOTAL_REVENUE' | translate | async }}</h3>
+            <p class="amount">{{ totalRevenue | currency:'EGP':'symbol':'1.2-2' }}</p>
+            <p class="muted">{{ 'ACROSS_ALL_PROJECTS' | translate | async }}</p>
+          </div>
+          <div class="card animated-card expense-card">
+            <h3>{{ 'TOTAL_EXPENSES' | translate | async }}</h3>
+            <p class="amount">{{ totalExpenses | currency:'EGP':'symbol':'1.2-2' }}</p>
+            <p class="muted">{{ 'ACROSS_ALL_PROJECTS' | translate | async }}</p>
+          </div>
+          <div class="card animated-card net-card" [class.positive]="totalNetProfit >= 0"
+            [class.negative]="totalNetProfit < 0">
+            <h3>{{ 'NET_PROFIT' | translate | async }}</h3>
+            <p class="amount">{{ totalNetProfit | currency:'EGP':'symbol':'1.2-2' }}</p>
+            <p class="muted">{{ 'GLOBAL_SUMMARY' | translate | async }}</p>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- GLOBAL CHARTS -->
-  <section class="section global-charts-section" *ngIf="!loadingProjects && !errorProjects">
-    <h2 class="section-title">{{ 'GLOBAL_CHARTS' | translate | async }}</h2>
-    <div class="global-charts-grid">
-      <div class="global-charts">
-        <div class="chart-card animated-card">
-          <h4>{{ 'REVENUE_VS_EXPENSES' | translate | async }}</h4>
-          <apx-chart *ngIf="globalBarChart" [series]="globalBarChart.series" [chart]="globalBarChart.chart"
-            [xaxis]="globalBarChart.xaxis!" [plotOptions]="globalBarChart!.plotOptions!">
-          </apx-chart>
-        </div>
+    <!-- GLOBAL CHARTS -->
+    <section class="section global-charts-section" *ngIf="!loadingProjects && !errorProjects">
+      <h2 class="section-title">{{ 'GLOBAL_CHARTS' | translate | async }}</h2>
+      <div class="global-charts-grid">
+        <div class="global-charts">
+          <div class="chart-card animated-card">
+            <h4>{{ 'REVENUE_VS_EXPENSES' | translate | async }}</h4>
+            <apx-chart *ngIf="globalBarChart" [series]="globalBarChart.series" [chart]="globalBarChart.chart"
+              [xaxis]="globalBarChart.xaxis!" [plotOptions]="globalBarChart!.plotOptions!">
+            </apx-chart>
+          </div>
 
-        <div class="chart-card animated-card">
-          <h4>{{ 'DISTRIBUTION' | translate | async }}</h4>
-          <apx-chart *ngIf="globalPieChart" [series]="globalPieChart.series" [chart]="globalPieChart.chart"
-            [labels]="globalPieChart!.labels!">
-          </apx-chart>
-        </div>
+          <div class="chart-card animated-card">
+            <h4>{{ 'DISTRIBUTION' | translate | async }}</h4>
+            <apx-chart *ngIf="globalPieChart" [series]="globalPieChart.series" [chart]="globalPieChart.chart"
+              [labels]="globalPieChart!.labels!">
+            </apx-chart>
+          </div>
 
-        <div class="chart-card animated-card">
-          <h4>{{ 'REVENUE_EXPENSE_PER_PROJECT' | translate | async }}</h4>
-          <apx-chart *ngIf="globalTrendChart" [series]="globalTrendChart.series" [chart]="globalTrendChart.chart"
-            [xaxis]="globalTrendChart!.xaxis!">
-          </apx-chart>
+          <div class="chart-card animated-card">
+            <h4>{{ 'REVENUE_EXPENSE_PER_PROJECT' | translate | async }}</h4>
+            <apx-chart *ngIf="globalTrendChart" [series]="globalTrendChart.series" [chart]="globalTrendChart.chart"
+              [xaxis]="globalTrendChart!.xaxis!">
+            </apx-chart>
+          </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- PROJECTS LIST -->
-  <section class="section projects-section" *ngIf="projects.length > 0">
-    <h2 class="section-title">{{ 'PROJECT_DETAILS' | translate | async }}</h2>
+    <!-- PROJECTS LIST -->
+    <section class="section projects-section" *ngIf="projects.length > 0">
+      <h2 class="section-title">{{ 'PROJECT_DETAILS' | translate | async }}</h2>
 
-    <div class="projects-grid">
-      <div class="project-card animated-card" *ngFor="let project of projects">
-        <div class="card-head" (click)="toggleProject(project)">
-          <div class="left">
-            <div class="card-icon"></div>
-            <div>
-              <h3 class="project-name">{{ project.name }}</h3>
-              <p class="muted small">{{ 'NET_PROFIT' | translate | async }}:
-                <span [class.positive]="getNetProfit(project) >= 0" [class.negative]="getNetProfit(project) < 0">
-                  {{ getNetProfit(project) | currency:'USD':'symbol':'1.2-2' }}
+      <div class="projects-grid">
+        <div class="project-card animated-card" *ngFor="let project of projects">
+          <div class="card-head" (click)="toggleProject(project)">
+            <div class="left">
+              <div class="card-icon"></div>
+              <div>
+                <h3 class="project-name">{{ project.name }}</h3>
+                <p class="muted small">{{ 'NET_PROFIT' | translate | async }}:
+                  <span [class.positive]="getNetProfit(project) >= 0" [class.negative]="getNetProfit(project) < 0">
+                    {{ getNetProfit(project) | currency:'EGP':'symbol':'1.2-2' }}
+                  </span>
+                </p>
+              </div>
+            </div>
+
+            <div class="right">
+              <p class="muted small">
+                <span *ngIf="project.loadingReports">{{ 'LOADING' | translate | async }}</span>
+                <span *ngIf="project.errorReports" class="negative">{{ 'ERROR' | translate | async }}</span>
+                <span *ngIf="!project.loadingReports && !project.errorReports">
+                  {{ 'BALANCED_LABEL' | translate | async }}: <strong [class.positive]="project.isBalanced"
+                    [class.negative]="!project.isBalanced">{{
+                    project.isBalanced ? ( 'YES' | translate | async ) : ( 'NO' | translate | async ) }}</strong>
                 </span>
               </p>
+              <button class="toggle-btn">{{ project.expanded ? ( 'HIDE' | translate | async ) : ( 'DETAILS' | translate
+                | async ) }}</button>
             </div>
           </div>
 
-          <div class="right">
-              <p class="muted small">
-              <span *ngIf="project.loadingReports">{{ 'LOADING' | translate | async }}</span>
-              <span *ngIf="project.errorReports" class="negative">{{ 'ERROR' | translate | async }}</span>
-              <span *ngIf="!project.loadingReports && !project.errorReports">
-                {{ 'BALANCED_LABEL' | translate | async }}: <strong [class.positive]="project.isBalanced" [class.negative]="!project.isBalanced">{{
-                  project.isBalanced ? ( 'YES' | translate | async ) : ( 'NO' | translate | async ) }}</strong>
-              </span>
-            </p>
-            <button class="toggle-btn">{{ project.expanded ? ( 'HIDE' | translate | async ) : ( 'DETAILS' | translate | async ) }}</button>
-          </div>
-        </div>
+          <div class="card-body" [class.expanded]="project.expanded">
+            <div class="charts-row">
+              <div class="mini-chart">
+                <h5>{{ 'REVENUE_VS_EXPENSE' | translate | async }}</h5>
+                <apx-chart *ngIf="project.barChart" [series]="project.barChart.series" [chart]="project.barChart.chart"
+                  [xaxis]="project.barChart.xaxis" [plotOptions]="project.barChart.plotOptions">
+                </apx-chart>
+              </div>
 
-        <div class="card-body" [class.expanded]="project.expanded">
-          <div class="charts-row">
-            <div class="mini-chart">
-              <h5>{{ 'REVENUE_VS_EXPENSE' | translate | async }}</h5>
-              <apx-chart *ngIf="project.barChart" [series]="project.barChart.series" [chart]="project.barChart.chart"
-                [xaxis]="project.barChart.xaxis" [plotOptions]="project.barChart.plotOptions">
-              </apx-chart>
+              <div class="mini-chart">
+                <h5>{{ 'DISTRIBUTION' | translate | async }}</h5>
+                <apx-chart *ngIf="project.pieChart" [series]="project.pieChart.series" [chart]="project.pieChart.chart"
+                  [labels]="project.pieChart.labels">
+                </apx-chart>
+              </div>
+
+              <div class="mini-chart">
+                <h5>{{ 'DEBIT_VS_CREDIT' | translate | async }}</h5>
+                <apx-chart *ngIf="project.balanceChart" [series]="project.balanceChart.series"
+                  [chart]="project.balanceChart.chart" [xaxis]="project.balanceChart.xaxis">
+                </apx-chart>
+              </div>
             </div>
 
-            <div class="mini-chart">
-              <h5>{{ 'DISTRIBUTION' | translate | async }}</h5>
-              <apx-chart *ngIf="project.pieChart" [series]="project.pieChart.series" [chart]="project.pieChart.chart"
-                [labels]="project.pieChart.labels">
-              </apx-chart>
+            <div class="trial-balance-table-wrapper" [ngClass]="{'rtl': currentLang === 'ar'}">
+              <div class="table-scroll">
+                <table class="trial-balance-table">
+                  <thead>
+                    <tr>
+                      <th>{{ 'ACCOUNT_NAME' | translate | async }}</th>
+                      <th>{{ 'TYPE' | translate | async }}</th>
+                      <th class="text-right">{{ 'DEBIT' | translate | async }}</th>
+                      <th class="text-right">{{ 'CREDIT' | translate | async }}</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr *ngFor="let row of project.trialBalance">
+                      <td>{{ row.accountName | translate | async}}</td>
+                      <td>{{ accountTypeTranslationMap[row.accountType] | translate | async }}</td>
+                      <td class="text-right">{{ row.debit | currency:'EGP':'symbol':'1.2-2' }}</td>
+                      <td class="text-right">{{ row.credit | currency:'EGP':'symbol':'1.2-2' }}</td>
+                    </tr>
+                    <tr *ngIf="!project.trialBalance || project.trialBalance.length === 0">
+                      <td colspan="4" class="text-center muted">{{ 'NO_TRIAL_BALANCE_DATA' | translate | async }}</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
 
-            <div class="mini-chart">
-              <h5>{{ 'DEBIT_VS_CREDIT' | translate | async }}</h5>
-              <apx-chart *ngIf="project.balanceChart" [series]="project.balanceChart.series"
-                [chart]="project.balanceChart.chart" [xaxis]="project.balanceChart.xaxis">
-              </apx-chart>
-            </div>
-          </div>
 
-          <div class="trial-balance-table-wrapper">
-            <table class="trial-balance-table">
-              <thead>
-                <tr>
-                  <th>{{ 'ACCOUNT' | translate | async }}</th>
-                  <th>{{ 'TYPE' | translate | async }}</th>
-                  <th class="text-right">{{ 'DEBIT' | translate | async }}</th>
-                  <th class="text-right">{{ 'CREDIT' | translate | async }}</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr *ngFor="let row of project.trialBalance">
-                  <td>{{ row.accountName }}</td>
-                  <td>{{ row.accountType || '-' }}</td>
-                  <td class="text-right">{{ row.debit | currency:'USD':'symbol':'1.2-2' }}</td>
-                  <td class="text-right">{{ row.credit | currency:'USD':'symbol':'1.2-2' }}</td>
-                </tr>
-                <tr *ngIf="!project.trialBalance || project.trialBalance.length === 0">
-                  <td colspan="4" class="text-center muted">{{ 'NO_TRIAL_BALANCE_DATA' | translate | async }}</td>
-                </tr>
-              </tbody>
-            </table>
           </div>
         </div>
       </div>
-    </div>
-  </section>
+    </section>
 
-  <!-- TRIAL BALANCE GLOBAL -->
-  <section class="section trial-balance-section">
-    <h2 class="section-title">{{ 'TRIAL_BALANCE_STATUS_GLOBAL' | translate | async }}</h2>
+    <!-- TRIAL BALANCE GLOBAL -->
+    <section class="section trial-balance-section">
+      <h2 class="section-title">{{ 'TRIAL_BALANCE_STATUS_GLOBAL' | translate | async }}</h2>
 
-    <div class="balance-design-wrapper">
-      <div class="balance-scale">
-        <div class="scale-arm" [style.transform]="getScaleRotation()"></div>
-        <div class="scale-base"></div>
+      <div class="balance-design-wrapper">
+        <div class="balance-scale">
+          <div class="scale-arm" [style.transform]="getScaleRotation()"></div>
+          <div class="scale-base"></div>
 
-        <div class="scale-pan left-pan">
-          <div class="pan-label">{{ 'TOTAL_DEBITS' | translate | async }}</div>
-          <div class="pan-value value-debit">{{ globalTotalDebit | currency:'USD':'symbol':'1.0-0' }}</div>
+          <div class="scale-pan left-pan">
+            <div class="pan-label">{{ 'TOTAL_DEBITS' | translate | async }}</div>
+            <div class="pan-value value-debit">{{ globalTotalDebit | currency:'EGP':'symbol':'1.0-0' }}</div>
+          </div>
+
+          <div class="scale-pan right-pan">
+            <div class="pan-label">{{ 'TOTAL_CREDITS' | translate | async }}</div>
+            <div class="pan-value value-credit">{{ globalTotalCredit | currency:'EGP':'symbol':'1.0-0' }}</div>
+          </div>
         </div>
 
-        <div class="scale-pan right-pan">
-          <div class="pan-label">{{ 'TOTAL_CREDITS' | translate | async }}</div>
-          <div class="pan-value value-credit">{{ globalTotalCredit | currency:'USD':'symbol':'1.0-0' }}</div>
-        </div>
-      </div>
-
-      <div class="balance-status-indicator">
-        <div class="status-text">
-          <span class="status-icon">
-            <svg viewBox="0 0 24 24">
-              <path d="M9 12l2 2 4-4" />
-            </svg>
-          </span>
+        <div class="balance-status-indicator">
+          <div class="status-text">
+            <span class="status-icon">
+              <svg viewBox="0 0 24 24">
+                <path d="M9 12l2 2 4-4" />
+              </svg>
+            </span>
             <span class="status-message" [class.balanced]="isBalanced()">
-            {{ isBalanced() ? ( 'TRIAL_BALANCE_BALANCED' | translate | async ) : ( 'TRIAL_BALANCE_DIFFERENCE' | translate | async ) }}
+              {{ isBalanced() ? ( 'TRIAL_BALANCE_BALANCED' | translate | async ) : ( 'TRIAL_BALANCE_DIFFERENCE' |
+              translate | async ) }}
             </span>
 
+          </div>
+          <div class="balance-difference">{{ 'DIFFERENCE' | translate | async }}: {{ (globalTotalDebit -
+            globalTotalCredit) |
+            currency:'EGP':'symbol':'1.2-2' }}</div>
         </div>
-        <div class="balance-difference">{{ 'DIFFERENCE' | translate | async }}: {{ (globalTotalDebit - globalTotalCredit) |
-          currency:'USD':'symbol':'1.2-2' }}</div>
       </div>
-    </div>
-  </section>
-</div>
+    </section>
+  </div>
 
 </div>

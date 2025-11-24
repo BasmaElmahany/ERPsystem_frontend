@@ -27,7 +27,8 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/erp_dashboard_logo.png"
             ],
             "styles": [
               "@angular/material/prebuilt-themes/purple-green.css",
@@ -91,7 +92,8 @@
             "inlineStyleLanguage": "scss",
             "assets": [
               "src/favicon.ico",
-              "src/assets"
+              "src/assets",
+              "src/erp_dashboard_logo.png"
             ],
             "styles": [
               "@angular/material/prebuilt-themes/purple-green.css",

@@ -1,5 +1,6 @@
 {
   "APP_NAME": "System",
+  "ALL_PROJECTS" : "All Projects",
   "Logo" : "Finance",
   "LOGOUT": "Logout",
   "DASHBOARD_OVERVIEW": "Dashboard Overview",
@@ -66,17 +67,13 @@
   "CREATE_JOURNAL_TITLE": "Create New Journal",
   "CREATE_JOURNAL_DESC": "Fill in the details below to create a new journal entry.",
   "JOURNAL_INFORMATION": "Journal Information",
-  "ENTRY_NUMBER_PLACEHOLDER": "e.g. JV-0001",
   "LINE_DESCRIPTION": "Line Description",
   "LINE_DESCRIPTION_PLACEHOLDER": "Optional note",
-  "REMOVE_LINE": "Remove",
-  "ADD_LINE": "Add Line",
   "TOTAL_DEBIT": "Total Debit",
   "TOTAL_CREDIT": "Total Credit",
   "CREATE_JOURNAL": "Create Journal",
   "SELECT_ACCOUNT": "Select account",
   "LINE_DESCRIPTION_LABEL": "Line Description",
-  "LINE_DESCRIPTION_PLACEHOLDER": "Optional note",
   "CREATE_JOURNAL_SUCCESS": "Journal created successfully",
   "CREATE_JOURNAL_FAIL": "Failed to create Journal: {{msg}}",
   "UPDATE_JOURNAL_SUCCESS": "Journal updated successfully",
@@ -255,4 +252,6 @@
   "CONFIRM_DELETE_TITLE": "Confirm Delete",
   "CONFIRM_DELETE_BODY": "Are you sure you want to delete \"{{name}}\"? This account will be permanently removed.",
   "DELETE": "Delete"
+  
+  
 }
