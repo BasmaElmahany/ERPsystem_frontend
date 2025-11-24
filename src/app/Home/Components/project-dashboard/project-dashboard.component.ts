@@ -321,6 +321,10 @@ export class ProjectDashboardComponent implements OnInit {
     'Expense': 'EXPENSE'
   };
 
+  goToStartHome(): void {
+    this.router.navigate(['/start-home']);
+  }
+
 }
 
 

@@ -4,7 +4,7 @@
     <button class="lang-toggle" (click)="toggleLanguage()">
       {{ (currentLang$ | async) === 'en' ? 'عربي' : 'EN' }}
     </button>
-    <div class="logo">
+    <div class="logo" role="button" tabindex="0" (click)="goToStartHome()" (keydown.enter)="goToStartHome()">
       <div class="logo-icon">ERP</div>
       <span class="logo-text">{{ 'Logo' | translate | async }}</span>
     </div>
