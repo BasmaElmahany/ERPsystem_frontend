@@ -1,3 +1,43 @@
+/* Import Google Material Icons and Inter font */
+@import url('https://fonts.googleapis.com/icon?family=Material+Icons');
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ============================================
+   VARIABLES & THEME CONFIGURATION
+   ============================================ */
+
+// Color Palette - Dark Theme
+$primary-color: #00e676; // Vibrant Green/Teal
+$primary-dark: #00c853;
+$primary-light: #69f0ae;
+$secondary-color: #90a4ae; // Muted light gray
+$secondary-dark: #607d8b;
+$accent-color: #29b6f6; // Light Blue
+$accent-warm: #ff9800; // Orange
+$accent-danger: #ef5350; // Red
+$success-color: #4caf50;
+$warning-color: #ffc107;
+$danger-color: #f44336;
+
+// Background Palette
+$background-dark: #0f1419; // Ultra dark background
+$background-secondary: #1a2a3a; // Deep dark background
+$sidebar-bg: #101a24; // Even darker sidebar
+$card-bg: #1e2d3d; // Card background
+$card-hover-bg: #2a3d4d; // Card hover background
+$table-row-bg: #1a2d3d; // Table row background
+$table-row-hover-bg: #253d4d; // Table row hover background
+$text-light: #f0f4f8; // Off-white text
+$text-secondary: #b0bec5; // Secondary text
+$border-color: rgba(255, 255, 255, 0.08);
+$border-color-light: rgba(255, 255, 255, 0.12);
+
+// Transitions & Animations
+$transition-speed: 0.3s;
+$transition-smooth: 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+$transition-elastic: 0.5s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+
+
 /* ============================================
    ERP/Finance Dashboard - Complete CSS
    ============================================ */
@@ -1016,3 +1056,27 @@ footer {
 
 .scroll-btn.up { transform: rotate(0deg); }
 .scroll-btn.down { transform: rotate(0deg); }
+
+ .lang-toggle {
+      background: linear-gradient(135deg, rgba($primary-color, 0.1), rgba($accent-color, 0.05));
+      border: 1.5px solid $primary-color;
+      color: $primary-color;
+      padding: 8px 14px;
+      border-radius: 8px;
+      cursor: pointer;
+      font-weight: 600;
+      font-size: 0.85rem;
+      transition: all $transition-smooth;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+
+      &:hover {
+        background: rgba($primary-color, 0.15);
+        box-shadow: 0 0 15px rgba($primary-color, 0.3);
+        transform: translateY(-2px);
+      }
+
+      &:active {
+        transform: translateY(0);
+      }
+    }

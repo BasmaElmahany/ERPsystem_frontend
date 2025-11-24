@@ -1,3 +1,21 @@
+<!-- Shared navbar (from start-home) -->
+<nav>
+  <div class="nav-container">
+    <button class="lang-toggle" (click)="toggleLanguage()">
+      {{ (currentLang$ | async) === 'en' ? 'عربي' : 'EN' }}
+    </button>
+    <div class="logo">
+      <div class="logo-icon">ERP</div>
+      <span class="logo-text">{{ 'Logo' | translate | async }}</span>
+    </div>
+    <div class="nav-links">
+      <a (click)="gotoDashboard()" role="button" class="link-button">{{ 'MENU_DASHBOARD' | translate | async }}</a>
+      <!-- <a href="#pricing">{{ 'MENU_SETTINGS' | translate | async }}</a> -->
+    </div>
+    <button class="btn btn-primary" (click)="goHome()">{{ 'NAV_GET_STARTED' | translate | async }}</button>
+  </div>
+</nav>
+
 <div class ="home">
 <div class="dashboard-container">
   <header class="dashboard-header">

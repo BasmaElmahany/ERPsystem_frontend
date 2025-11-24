@@ -5,6 +5,7 @@ import { JournalLinesComponent } from './Journals/Components/journal-lines/journ
 export const routes: Routes = [
   { path: 'login', loadComponent: () => import('./Auth/Components/login/login.component').then(m => m.LoginComponent) },
   { path: 'register', loadComponent: () => import('./Auth/Components/register/register.component').then(m => m.RegisterComponent) },
+    { path: 'dashboard', loadComponent: () => import('./Home/Components/project-dashboard/project-dashboard.component').then(m => m.ProjectDashboardComponent) },
   { path: '', redirectTo: 'login', pathMatch: 'full' } ,// optional default
   {
     path: '',
@@ -13,6 +14,8 @@ export const routes: Routes = [
       { path: '', redirectTo: 'projects', pathMatch: 'full' },
       // start-home page (opened after login)
       { path: 'start-home', loadComponent: () => import('./Home/Components/start-home/start-home.component').then(m => m.StartHomeComponent) },
+      // project dashboard
+    
      
 
       {

@@ -4,9 +4,10 @@
  */
 
 import { Component, AfterViewInit, OnDestroy } from '@angular/core';
-import { CommonModule } from '@angular/common';
+import { CommonModule, AsyncPipe } from '@angular/common';
 import { TranslatePipe } from '../../../Shared/Pipes/translate.pipe';
 import { Router } from '@angular/router';
+import { I18nService } from '../../../Shared/Services/i18n.service';
 
 // ============================================
 // TYPE DEFINITIONS
@@ -627,14 +628,17 @@ window.addEventListener("beforeunload", () => {
 @Component({
     selector: 'app-start-home',
     standalone: true,
-    imports: [CommonModule, TranslatePipe],
+    imports: [CommonModule, TranslatePipe, AsyncPipe],
     templateUrl: './start-home.component.html',
     styleUrls: ['./start-home.component.scss'],
 })
 export class StartHomeComponent implements AfterViewInit, OnDestroy {
     private _styleEl: HTMLStyleElement | null = null;
+    currentLang$: any;
 
-    constructor(private router: Router) {}
+    constructor(private router: Router, private i18n: I18nService) {
+        this.currentLang$ = this.i18n.currentLang$;
+    }
 
     ngAfterViewInit(): void {
         // hide global sidebar while this page is active by adding a body class
@@ -716,6 +720,10 @@ export class StartHomeComponent implements AfterViewInit, OnDestroy {
     gotoDashboard(): void {
         // navigate to the project dashboard route
         this.router.navigate(['/dashboard']);
+    }
+
+    toggleLanguage(): void {
+        this.i18n.toggleLanguage();
     }
 }
 

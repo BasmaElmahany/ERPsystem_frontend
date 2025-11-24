@@ -1,14 +1,17 @@
 <!-- Navigation -->
 <nav>
     <div class="nav-container">
+            <button class="lang-toggle" (click)="toggleLanguage()">
+                {{ (currentLang$ | async) === 'en' ? 'عربي' : 'EN' }}
+            </button>
             <div class="logo">
                 <div class="logo-icon">ERP</div>
                 <span class="logo-text">{{ 'Logo' | translate | async }}</span>
             </div>
             <div class="nav-links">
-                <!-- <a href="#features">{{ 'FEATURES' | translate | async }}</a> -->
+                <a href="#features">{{ 'FEATURES' | translate | async }}</a>
                 <a (click)="gotoDashboard()" role="button" class="link-button">{{ 'MENU_DASHBOARD' | translate | async }}</a>
-                <a href="#pricing">{{ 'MENU_SETTINGS' | translate | async }}</a>
+                <!-- <a href="#pricing">{{ 'MENU_SETTINGS' | translate | async }}</a> -->
             </div>
             <button class="btn btn-primary" (click)="goHome()">{{ 'NAV_GET_STARTED' | translate | async }}</button>
     </div>
@@ -33,10 +36,10 @@
             </div>
 
             <div class="hero-buttons">
-                <button class="btn btn-primary">
+                <!-- <button class="btn btn-primary">
                     {{ 'BTN_START_TRIAL' | translate | async }}
                     <span>→</span>
-                </button>
+                </button> -->
                 <button class="btn btn-secondary">{{ 'BTN_WATCH_DEMO' | translate | async }}</button>
             </div>
 
