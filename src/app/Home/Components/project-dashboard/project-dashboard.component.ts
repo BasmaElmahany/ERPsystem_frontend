@@ -37,9 +37,9 @@ export class ProjectDashboardComponent implements OnInit {
     name: '',
     loadingReports: true,
     errorReports: false,
-    barChart: { series: [], chart: { type: 'bar' }, xaxis: { categories: [] }, labels: [], plotOptions: {} },
-    pieChart: { series: [], chart: { type: 'pie' }, labels: [] },
-    balanceChart: { series: [], chart: { type: 'bar' }, xaxis: { categories: [] }, plotOptions: {}, labels: [] },
+    barChart: { series: [], chart: { type: 'bar' }, xaxis: { categories: [] }, labels: [], plotOptions: {}, dataLabels: { style: { colors: ['#ffffff'] } } },
+    pieChart: { series: [], chart: { type: 'pie' }, labels: [], dataLabels: { style: { colors: ['#ffffff'] } } },
+    balanceChart: { series: [], chart: { type: 'bar' }, xaxis: { categories: [] }, plotOptions: {}, labels: [], dataLabels: { style: { colors: ['#ffffff'] } } },
     isBalanced: false
   };
 
@@ -64,7 +64,7 @@ export class ProjectDashboardComponent implements OnInit {
   Math = Math;
   // language observable for navbar
   currentLang$: any;
-
+  currentLang: any;
   constructor(
     private projectService: ProjectService,
     private homeService: HomeService,
@@ -113,6 +113,7 @@ export class ProjectDashboardComponent implements OnInit {
       })
     ).subscribe(
       (results: ProjectReportResult[]) => {
+        console.log(results);
         this.loadingProjects = false;
         this.totalRevenue = 0;
         this.totalExpenses = 0;
@@ -145,57 +146,100 @@ export class ProjectDashboardComponent implements OnInit {
             this.globalTotalCredit += totalCredit;
 
             // ===== Project Charts =====
+            // Translate labels dynamically
+            const revenueLabel = this.i18n.instant('REVENUE');
+            const expenseLabel = this.i18n.instant('EXPENSE');
+            const debitLabel = this.i18n.instant('DEBIT');
+            const creditLabel = this.i18n.instant('CREDIT');
+
             project.barChart = {
               series: [
-                { name: 'Revenue', data: [incomeStatement.totalRevenue ?? 0] },
-                { name: 'Expense', data: [incomeStatement.totalExpense ?? 0] }
+                { name: revenueLabel, data: [incomeStatement.totalRevenue ?? 0] },
+                { name: expenseLabel, data: [incomeStatement.totalExpense ?? 0] }
               ],
-              chart: { type: 'bar', height: 160, animations: { enabled: true, easing: 'easeout', speed: 600 } },
-              xaxis: { categories: [''] },
+              chart: {
+                type: 'bar',
+                height: 160,
+                animations: { enabled: true, easing: 'easeout', speed: 600 },
+                background: 'transparent'
+              },
+              xaxis: {
+                categories: [''],
+                labels: { style: { colors: ['#ffffff'] } } // x-axis labels white
+              },
               plotOptions: { bar: { horizontal: false, columnWidth: '55%' } },
-              labels: ['Revenue', 'Expense']
+              dataLabels: { style: { colors: ['#ffffff'] } },
+              labels: [revenueLabel, expenseLabel],
+              title: { style: { color: '#ffffff' } },
+              legend: { labels: { colors: '#ffffff' } },
+              tooltip: { style: { fontSize: '14px'/*, color: '#ffffff' */ } }
             };
 
             project.pieChart = {
               series: [incomeStatement.totalRevenue ?? 0, incomeStatement.totalExpense ?? 0],
-              chart: { type: 'pie', height: 160, animations: { enabled: true, easing: 'easeout', speed: 600 } },
-              labels: ['Revenue', 'Expense']
+              chart: {
+                type: 'pie',
+                height: 160,
+                animations: { enabled: true, easing: 'easeout', speed: 600 },
+                background: 'transparent'
+              },
+              labels: [revenueLabel, expenseLabel],
+              dataLabels: { style: { colors: ['#ffffff'] } },
+              legend: { labels: { colors: '#ffffff' } },
+              title: { style: { color: '#ffffff' } },
+              tooltip: { style: { fontSize: '14px' } }//, color: '#ffffff' } }
             };
 
             project.balanceChart = {
-              series: [{ name: 'Amount', data: [totalDebit, totalCredit] }],
-              chart: { type: 'bar', height: 140, animations: { enabled: true, easing: 'easeout', speed: 600 } },
-              xaxis: { categories: ['Debit', 'Credit'] },
+              series: [{ name: this.i18n.instant('AMOUNT') || 'Amount', data: [totalDebit, totalCredit] }],
+              chart: {
+                type: 'bar',
+                height: 140,
+                animations: { enabled: true, easing: 'easeout', speed: 600 },
+                background: 'transparent'
+              },
+              xaxis: {
+                categories: [debitLabel, creditLabel],
+                labels: { style: { colors: ['#ffffff'] } }
+              },
               plotOptions: { bar: { horizontal: false, columnWidth: '55%' } },
-              labels: ['Debit', 'Credit']
+              dataLabels: { style: { colors: ['#ffffff'] } },
+              labels: [debitLabel, creditLabel],
+              title: { style: { color: '#ffffff' } },
+              legend: { labels: { colors: '#ffffff' } },
+              tooltip: { style: { fontSize: '14px'/* color: '#ffffff'*/ } }
             };
           } else {
             project.errorReports = true;
           }
         });
-
+        const revenueLabel = this.i18n.instant('REVENUE');
+        const expenseLabel = this.i18n.instant('EXPENSE');
+        const totalRevenueLabel = this.i18n.instant('TOTAL_REVENUE');
+        const totalExpensesLabel = this.i18n.instant('TOTAL_EXPENSES');
+        const allProjectsLabel = this.i18n.instant('ALL_PROJECTS');
         // ===== Global Charts =====
         this.globalBarChart = {
           series: [
-            { name: 'Revenue', data: [this.totalRevenue] },
-            { name: 'Expense', data: [this.totalExpenses] }
+            { name: revenueLabel, data: [this.totalRevenue] },
+            { name: expenseLabel, data: [this.totalExpenses] }
           ],
           chart: { type: 'bar', height: 220, animations: { enabled: true, easing: 'easeout', speed: 700 } },
-          xaxis: { categories: ['All Projects'] }, // make sure this is defined
+          xaxis: { categories: [allProjectsLabel] }, // make sure this is defined
           plotOptions: { bar: { horizontal: false, columnWidth: '45%' } }, // define plotOptions
-          labels: ['Revenue', 'Expense'] // define labels
+          labels: [revenueLabel, expenseLabel] // define labels
         };
 
         this.globalPieChart = {
           series: [this.totalRevenue, this.totalExpenses],
           chart: { type: 'pie', height: 240, animations: { enabled: true, easing: 'easeout', speed: 700 } },
-          labels: ['Total Revenue', 'Total Expenses']
+          labels: [totalRevenueLabel, totalExpensesLabel]
         };
 
         this.globalTrendChart = {
           series: [
-            { name: 'Revenue', data: results.map(r => r.reports?.incomeStatement?.totalRevenue ?? 0) },
-            { name: 'Expense', data: results.map(r => r.reports?.incomeStatement?.totalExpense ?? 0) }
+            { name: revenueLabel, data: results.map(r => r.reports?.incomeStatement?.totalRevenue ?? 0) },
+            { name: expenseLabel, data: results.map(r => r.reports?.incomeStatement?.totalExpense ?? 0) }
           ],
           chart: { type: 'line', height: 200, animations: { enabled: true, easing: 'easeout', speed: 700 } },
           xaxis: { categories: this.projects.map(p => p.name) }, // must exist
@@ -214,11 +258,7 @@ export class ProjectDashboardComponent implements OnInit {
     );
   }
 
-  fetchProjectReports(projectName: string): Observable<{
-    incomeStatement: IncomeStatment,
-    balanceSheet: BalanceSheet[],
-    trialBalance: trialbalance[]
-  }> {
+  fetchProjectReports(projectName: string): Observable<{ incomeStatement: IncomeStatment, balanceSheet: BalanceSheet[], trialBalance: trialbalance[] }> {
     return forkJoin({
       incomeStatement: this.homeService.getIncomeStatement(projectName),
       balanceSheet: this.homeService.getBalanceSheet(projectName),
@@ -268,6 +308,18 @@ export class ProjectDashboardComponent implements OnInit {
   gotoDashboard(): void {
     this.router.navigate(['/dashboard']);
   }
+  // component.ts
+  accountTypeTranslationMap: { [key: string]: string } = {
+    'Asset': 'ASSET',
+    'Contra Asset': 'CONTRA_ASSET',
+    'Current Asset': 'CURRENT_ASSET',
+    'Liability': 'LIABILITY',
+    'Contra Liability': 'CONTRA_LIABILITY',
+    'Current Liability': 'CURRENT_LIABILITY',
+    'Equity': 'EQUITY',
+    'Revenue': 'REVENUE',
+    'Expense': 'EXPENSE'
+  };
 
   goToStartHome(): void {
     this.router.navigate(['/start-home']);

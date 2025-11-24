@@ -716,7 +716,8 @@ export class StartHomeComponent implements AfterViewInit, OnDestroy {
         // navigate to main dashboard (projects) — adjusts to your routing default
         this.router.navigate(['/projects']);
     }
-    gotoDashboard(): void {
+   
+   gotoDashboard(): void {
         // navigate to the project dashboard route
         this.router.navigate(['/dashboard']);
     }

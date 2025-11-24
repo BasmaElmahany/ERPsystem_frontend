@@ -1,4 +1,4 @@
-import { ApexAxisChartSeries, ApexNonAxisChartSeries, ApexChart, ApexXAxis, ApexTitleSubtitle, ApexPlotOptions, ApexStroke, ApexResponsive } from "ng-apexcharts";
+import { ApexAxisChartSeries, ApexNonAxisChartSeries, ApexChart, ApexXAxis, ApexTitleSubtitle, ApexPlotOptions, ApexStroke, ApexResponsive, ApexDataLabels, ApexLegend, ApexTooltip } from "ng-apexcharts";
 import { Project } from "../../Project/Models/project";
 
 export interface NavItem {
@@ -156,12 +156,21 @@ export interface ProjectSummary extends Project {
     xaxis: ApexXAxis;
     labels: string[];
     plotOptions: ApexPlotOptions;
+    dataLabels?: ApexDataLabels
+    title?: ApexTitleSubtitle,
+    legend?: ApexLegend,
+    tooltip?: ApexTooltip
+
   };
 
   pieChart?: {
     series: any[];
     chart: ApexChart;
     labels: string[];
+    dataLabels?: ApexDataLabels,
+    title?: ApexTitleSubtitle
+    legend?: ApexLegend,
+    tooltip?: ApexTooltip
   };
 
   balanceChart?: {
@@ -170,8 +179,12 @@ export interface ProjectSummary extends Project {
     xaxis: ApexXAxis;
     plotOptions: ApexPlotOptions;
     labels: string[];
+    dataLabels?: ApexDataLabels,
+    title?: ApexTitleSubtitle
+    legend?: ApexLegend,
+    tooltip? : ApexTooltip
   };
-   expanded?: boolean;
+  expanded?: boolean;
 }
 
 
@@ -195,6 +208,7 @@ export type ApexBarChartOptions = {
   stroke?: ApexStroke;
   responsive?: ApexResponsive[];
   labels?: string[];
+  dataLabels?: ApexDataLabels
 };
 
 
