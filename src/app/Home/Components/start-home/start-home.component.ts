@@ -725,6 +725,11 @@ export class StartHomeComponent implements AfterViewInit, OnDestroy {
     toggleLanguage(): void {
         this.i18n.toggleLanguage();
     }
+
+    goToStartHome(): void {
+        // navigate to the landing/start-home route
+        this.router.navigate(['/start-home']);
+    }
 }
 
 export {

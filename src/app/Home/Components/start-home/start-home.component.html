@@ -4,7 +4,7 @@
             <button class="lang-toggle" (click)="toggleLanguage()">
                 {{ (currentLang$ | async) === 'en' ? 'عربي' : 'EN' }}
             </button>
-            <div class="logo">
+            <div class="logo" role="button" tabindex="0" (click)="goToStartHome()" (keydown.enter)="goToStartHome()">
                 <div class="logo-icon">ERP</div>
                 <span class="logo-text">{{ 'Logo' | translate | async }}</span>
             </div>
@@ -148,5 +148,5 @@
 <!-- Floating scroll controls (bottom-right) -->
 <div class="scroll-controls" aria-hidden="false">
     <button class="scroll-btn up" (click)="scrollUp()" aria-label="Scroll up">▲</button>
-    <button class="scroll-btn down" (click)="scrollDown()" aria-label="Scroll down">▼</button>
+    <!-- <button class="scroll-btn down" (click)="scrollDown()" aria-label="Scroll down">▼</button> -->
 </div>

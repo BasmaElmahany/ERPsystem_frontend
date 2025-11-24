@@ -308,6 +308,8 @@ nav {
     gap: 0.5rem;
 }
 
+.logo { cursor: pointer; }
+
 .logo-icon {
     width: 2rem;
     height: 2rem;
@@ -794,13 +796,25 @@ canvas {
    ============================================ */
 
 footer {
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    background: rgba(0, 0, 0, 0.5);
-    backdrop-filter: blur(4px);
-    padding: 2rem 1rem;
+    position: fixed;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    z-index: 60;
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    background: rgba(0, 0, 0, 0.75);
+    backdrop-filter: blur(6px);
+    padding: 0.75rem 1rem;
     text-align: center;
     color: #9ca3af;
     font-size: 0.875rem;
+}
+
+/* Add bottom padding to the host so page content isn't hidden behind the fixed footer */
+:host {
+    display: block;
+    padding-bottom: 72px; /* matches footer height + spacing */
 }
 
 /* ============================================

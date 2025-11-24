@@ -269,6 +269,10 @@ export class ProjectDashboardComponent implements OnInit {
     this.router.navigate(['/dashboard']);
   }
 
+  goToStartHome(): void {
+    this.router.navigate(['/start-home']);
+  }
+
 }
 
 
