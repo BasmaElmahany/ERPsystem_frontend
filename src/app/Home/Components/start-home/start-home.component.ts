@@ -724,6 +724,10 @@ export class StartHomeComponent implements AfterViewInit, OnDestroy {
         console.log("button click")
     this.languageToggle.emit();
   }
+   gotoDashboard(): void {
+        // navigate to the project dashboard route
+        this.router.navigate(['/dashboard']);
+    }
 
 }
 
