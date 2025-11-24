@@ -38,7 +38,18 @@ export class LedgerListComponent implements OnInit, AfterViewInit {
     chart: { type: 'pie', height: 400 },
     labels: [],
     dataLabels: { enabled: true },
-    title: { text: '', align: 'center' }
+    title: { text: '', align: 'center' },
+    legend: {
+        labels: {
+          colors: '#ffffff' // legend text white
+        }
+      },
+      tooltip: {
+        style: {
+          fontSize: '14px',
+          
+        }
+      }
   };
 
   barChartOptions: BarChartOptions = {
@@ -48,7 +59,19 @@ export class LedgerListComponent implements OnInit, AfterViewInit {
     dataLabels: { enabled: false },
     stroke: { width: 2 },
     markers: { size: 3 },
-    title: { text: '', align: 'center' }
+    title: { text: '', align: 'center' },
+    
+      legend: {
+        labels: {
+          colors: '#ffffff' // legend text white
+        }
+      },
+      tooltip: {
+        style: {
+          fontSize: '14px',
+         // color: '#ffffff' // tooltip text white
+        }
+      }
   };
 
   @ViewChild(MatPaginator) paginator!: MatPaginator;
@@ -195,6 +218,18 @@ export class LedgerListComponent implements OnInit, AfterViewInit {
         enabled: true, style: {
           colors: ['#ffffff']
         }
+      },
+
+      legend: {
+        labels: {
+          colors: '#ffffff' // legend text white
+        }
+      },
+      tooltip: {
+        style: {
+          fontSize: '14px',
+         // color: '#ffffff' // tooltip text white
+        }
       }
     };
 
@@ -217,11 +252,26 @@ export class LedgerListComponent implements OnInit, AfterViewInit {
           colors: ['#ffffff']
         }
       },
-      stroke: { curve: 'smooth', width: 3 },
+      stroke: {
+        curve: 'smooth', width: 3,
+        colors: ['#ffffff']
+      },
       markers: { size: 5 },
       title: {
         text: 'مقارنة المدين / الدائن / الرصيد لكل حساب', align: 'center', style: {
           color: '#ffffff'
+        }
+      },
+      
+      legend: {
+        labels: {
+          colors: '#ffffff' // legend text white
+        }
+      },
+      tooltip: {
+        style: {
+          fontSize: '14px',
+         // color: '#ffffff' // tooltip text white
         }
       }
     };
