@@ -61,7 +61,7 @@
             {{ project.name }}
           </td>
           <td class="description-cell">{{ project.description }}</td>
-          <td class="date-cell">{{ project.createdAt | date:'medium' }}</td>
+          <td class="date-cell">{{ formatDate(project.createdAt) }}</td>
           <td class="actions-cell">
             <button class="action-button accounts-button" (click)="openAccounts(project)">
               <i class="material-icons">account_balance</i>

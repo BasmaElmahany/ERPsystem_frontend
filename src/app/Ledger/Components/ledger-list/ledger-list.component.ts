@@ -6,6 +6,7 @@ import { ActivatedRoute } from '@angular/router';
 import * as ExcelJS from 'exceljs';
 import { saveAs } from 'file-saver';
 import { ChartComponent } from 'ng-apexcharts';
+import { I18nService } from '../../../Shared/Services/i18n.service';
 
 @Component({
   selector: 'app-ledger-list',
@@ -54,7 +55,37 @@ export class LedgerListComponent implements OnInit, AfterViewInit {
   @ViewChild('pieChart') pieChart!: ChartComponent;
   @ViewChild('barChart') barChart!: ChartComponent;
 
-  constructor(private service: LedgerService, private route: ActivatedRoute) { }
+  constructor(private service: LedgerService, private route: ActivatedRoute, private i18n: I18nService) { }
+
+  // Map backend account type values to translation keys
+  private accountTypeKeyMap: { [key: string]: string } = {
+    'asset': 'ASSET',
+    'contra asset': 'CONTRA_ASSET',
+    'current asset': 'CURRENT_ASSET',
+    'liability': 'LIABILITY',
+    'contra liability': 'CONTRA_LIABILITY',
+    'current liability': 'CURRENT_LIABILITY',
+    'equity': 'EQUITY',
+    'revenue': 'REVENUE',
+    'expense': 'EXPENSE'
+  };
+
+  translateAccountType(type?: string): string {
+    if (!type) return '';
+    const key = this.accountTypeKeyMap[type.trim().toLowerCase()] || type;
+    return this.i18n.instant(key);
+  }
+
+  formatDate(dateInput: string | Date | undefined): string {
+    if (!dateInput) return '';
+    const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+    try {
+      const locale = this.i18n.currentLang === 'ar' ? 'ar-EG' : 'en-US';
+      return new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'short', day: 'numeric' }).format(date);
+    } catch (e) {
+      return date.toLocaleDateString();
+    }
+  }
 
   ngOnInit(): void {
     this.projectName = this.route.snapshot.paramMap.get('project') || '';
@@ -302,13 +333,13 @@ export class LedgerListComponent implements OnInit, AfterViewInit {
       });
 
       // البيانات التفصيلية
-      entries.forEach(j => {
+        entries.forEach(j => {
         const dataRow = sheet.addRow([
           j.description,
           j.debit,
           j.credit,
           j.balance,
-          new Date(j.date).toLocaleDateString('ar-EG')
+          new Date(j.date).toLocaleDateString(this.i18n.currentLang === 'ar' ? 'ar-EG' : 'en-US')
         ]);
 
         dataRow.eachCell(cell => {

@@ -133,6 +133,17 @@ export class ListComponent implements OnInit {
     });
   }
 
+  formatDate(dateInput: string | Date | undefined): string {
+    if (!dateInput) return '';
+    const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+    try {
+      const locale = this.i18n.currentLang === 'ar' ? 'ar-EG' : 'en-US';
+      return new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'short', day: 'numeric' }).format(date);
+    } catch (e) {
+      return date.toLocaleDateString();
+    }
+  }
+
 
 
   openDeleteModal(project: Project): void {

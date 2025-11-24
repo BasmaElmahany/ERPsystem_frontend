@@ -8,7 +8,7 @@
             <div class="table-container" *ngIf="!loading; else loadingTpl">
 
                 <div class="table-header">
-                    <h2>General Ledger</h2>
+                    <h2>{{ 'GENERAL_LEDGER' | translate | async }}</h2>
 
                     <div class="header-actions">
 
@@ -51,7 +51,7 @@
                                 </th>
 
                                 <th (click)="sortData('description')" class="sortable">
-                                    Description
+                                    {{ 'DESCRIPTION' | translate | async }}
                                     <span *ngIf="sortKey === 'description'">
                                         {{ sortDirection === 'asc' ? '▲' : '▼' }}
                                     </span>
@@ -88,14 +88,14 @@
                         </thead>
 
                         <tbody>
-                            <tr *ngFor="let j of paginatedledger; let i = index">
+                                <tr *ngFor="let j of paginatedledger; let i = index">
                                 <td>{{ j.accountName }}</td>
-                                <td>{{ j.accountType }}</td>
+                                <td>{{ translateAccountType(j.accountType) }}</td>
                                 <td>{{ j.description }}</td>
                                 <td>{{ j.debit }}</td>
                                 <td>{{ j.credit }}</td>
                                 <td>{{ j.balance }}</td>
-                                <td>{{ j.date | date: 'mediumDate' }}</td>
+                                <td>{{ formatDate(j.date) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -126,7 +126,7 @@
         </mat-tab>
 
         <!-- ================= TAB 2: Charts ================= -->
-        <mat-tab label="Charts Summary">
+        <mat-tab label="{{ 'TAB_CHARTS_SUMMARY' | translate | async }}">
 
             <div class="charts-tab-container">
 

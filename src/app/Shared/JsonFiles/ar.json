@@ -112,6 +112,8 @@
   "TOTALS": "الإجماليات",
   "LOADING_JOURNAL_DETAILS": "جارٍ تحميل تفاصيل القيد...",
   "FAILED_FETCH_JOURNAL_LINES": "فشل جلب تفاصيل القيد",
+  "JOURNAL_LINES": "أسطر القيد",
+  "ACCOUNT": "الحساب",
 
   "GENERAL_LEDGER": "الدفتر العام",
   "TAB_CHARTS_SUMMARY": "ملخّص الرسوم",
@@ -190,9 +192,38 @@
   "CURRENCY_LABEL": "العملة",
   "OPENING_BALANCE_LABEL": "الرصيد الافتتاحي",
   "CURRENCY_PLACEHOLDER": "مثال: EGP",
+  "CURRENCY_EGP": "جنيه مصري (EGP)",
+  "CURRENCY_USD": "دولار أمريكي (USD)",
+  "CURRENCY_EUR": "يورو (EUR)",
   "CREATE_ACCOUNT": "إنشاء حساب",
   "UPDATE_ACCOUNT": "تحديث الحساب",
   "CREATE_ACCOUNT_BTN": "إنشاء الحساب"
   ,
-  "FAILED_LOAD_ACCOUNTS": "فشل تحميل الحسابات"
+  "FAILED_LOAD_ACCOUNTS": "فشل تحميل الحسابات",
+  "CHART_OF_ACCOUNTS": "دليل الحسابات",
+  "NEW_ACCOUNT": "حساب جديد",
+  "SEARCH_ACCOUNTS_PLACEHOLDER": "🔍 ابحث في الحسابات...",
+  "TABLE_HEADER_CODE": "الرمز",
+  "TABLE_HEADER_TYPE": "النوع",
+  "TABLE_HEADER_PARENT": "الحساب الرئيسي",
+  "TABLE_HEADER_IS_DETAIL": "حساب تفصيلي",
+  "TABLE_HEADER_ACTIONS": "إجراءات",
+  "SHOWING_ACCOUNTS": "عرض {{count}} حساب من مخطط مشروع {{projectName}}",
+  "LOADING_CHART_OF_ACCOUNTS": "جارٍ تحميل دليل الحسابات...",
+  "ITEMS_PER_PAGE": "عناصر في الصفحة",
+  "PAGINATOR_NEXT_PAGE": "الصفحة التالية",
+  "PAGINATOR_PREVIOUS_PAGE": "الصفحة السابقة",
+  "PAGINATOR_FIRST_PAGE": "الصفحة الأولى",
+  "PAGINATOR_LAST_PAGE": "الصفحة الأخيرة",
+  "PAGINATOR_RANGE": "{{start}} - {{end}} من {{length}}",
+  "ACCOUNT_ADDED_SUCCESS": "تم إضافة الحساب بنجاح",
+  "ACCOUNT_CREATE_FAIL": "فشل إنشاء الحساب: {{status}} {{msg}}",
+  "ACCOUNT_UPDATE_SUCCESS": "تم تحديث الحساب بنجاح",
+  "ACCOUNT_UPDATE_FAIL": "فشل تحديث الحساب",
+  "ACCOUNT_DELETE_SUCCESS": "تم حذف الحساب \"{{name}}\" بنجاح.",
+  "ACCOUNT_DELETE_FAIL": "فشل حذف الحساب: {{msg}}"
+  ,
+  "CONFIRM_DELETE_TITLE": "تأكيد الحذف",
+  "CONFIRM_DELETE_BODY": "هل أنت متأكد أنك تريد حذف \"{{name}}\"؟ سيتم حذف هذا الحساب نهائيًا.",
+  "DELETE": "حذف"
 }

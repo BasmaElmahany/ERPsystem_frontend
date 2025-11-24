@@ -18,7 +18,8 @@ import { MatCardModule } from '@angular/material/card';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { AccountRouteModule } from './accounts-route.module';
 import { SharedTranslationsModule } from '../Shared/shared-translations.module';
-import { MatPaginator } from '@angular/material/paginator';
+import { MatPaginatorModule, MatPaginatorIntl } from '@angular/material/paginator';
+import { CustomMatPaginatorIntl } from '../Shared/Services/custom-paginator-intl';
 
 
 
@@ -34,11 +35,11 @@ import { MatPaginator } from '@angular/material/paginator';
     FormsModule,
     ReactiveFormsModule,
     AccountRouteModule,
-    MatPaginator ,
     // ✅ All material modules go here
     MatDialogModule,
     MatTooltipModule,
     MatButtonModule,
+    MatPaginatorModule,
     MatInputModule,
     MatFormFieldModule,
     MatIconModule,

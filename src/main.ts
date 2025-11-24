@@ -9,6 +9,8 @@ import { provideAnimationsAsync } from '@angular/platform-browser/animations/asy
 import { routes } from './app/app.routes';
 import { ProjectModule } from './app/Project/project.module';
 import { SharedTranslationsModule } from './app/Shared/shared-translations.module';
+import { MatPaginatorIntl } from '@angular/material/paginator';
+import { CustomMatPaginatorIntl } from './app/Shared/Services/custom-paginator-intl';
 
 bootstrapApplication(AppComponent, {
   providers: [
@@ -26,6 +28,9 @@ bootstrapApplication(AppComponent, {
         progressBar: true
       })
     ),
+
+    // Provide paginator translations app-wide
+    { provide: MatPaginatorIntl, useClass: CustomMatPaginatorIntl },
 
     provideAnimationsAsync()
   ]
