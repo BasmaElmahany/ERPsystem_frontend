@@ -1,8 +1,5 @@
 <div class="erp-layout" [class.sidebar-closed]="!isSidebarOpen">
-  <app-sidebar
-    [isOpen]="isSidebarOpen"
-    [navItems]="navItems"
-    (languageToggle)="toggleLanguage()">
+  <app-sidebar [isOpen]="isSidebarOpen" [navItems]="navItems" (languageToggle)="toggleLanguage()">
   </app-sidebar>
 
   <div class="main-content-area">
@@ -11,7 +8,17 @@
         <button class="menu-toggle" (click)="toggleSidebar()">
           <i class="material-icons">menu</i>
         </button>
+        <!-- Back & Forward buttons -->
+        <button class="nav-btn" (click)="goBack()">
+          <i class="material-icons">arrow_back</i>
+        </button>
+
+
         <h1 class="page-title">{{ 'DASHBOARD_OVERVIEW' | translate | async }}</h1>
+      
+        <button class="nav-btn" (click)="goForward()">
+          <i class="material-icons">arrow_forward</i>
+        </button>
       </div>
 
       <div class="nav-right">
@@ -19,7 +26,7 @@
           {{ (currentLang$ | async) === 'en' ? 'عربي' : 'EN' }}
         </button>
 
-      <!--  <i class="material-icons nav-icon">notifications</i>-->
+        <!--  <i class="material-icons nav-icon">notifications</i>-->
         <i class="material-icons nav-icon">account_circle</i>
         <span class="user-name">{{userName}}</span>
       </div>
@@ -28,7 +35,7 @@
     <!-- 2.2. Dashboard Content -->
     <main class="dashboard-content">
 
-    <router-outlet></router-outlet>
+      <router-outlet></router-outlet>
     </main>
   </div>
 </div>

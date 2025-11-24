@@ -1,4 +1,4 @@
-import { ApexAxisChartSeries, ApexNonAxisChartSeries, ApexChart, ApexXAxis, ApexTitleSubtitle, ApexPlotOptions, ApexStroke, ApexResponsive, ApexDataLabels, ApexLegend, ApexTooltip } from "ng-apexcharts";
+import { ApexAxisChartSeries, ApexNonAxisChartSeries, ApexChart, ApexXAxis, ApexTitleSubtitle, ApexPlotOptions, ApexStroke, ApexResponsive, ApexDataLabels, ApexLegend, ApexTooltip, ApexYAxis } from "ng-apexcharts";
 import { Project } from "../../Project/Models/project";
 
 export interface NavItem {
@@ -154,36 +154,38 @@ export interface ProjectSummary extends Project {
     series: any[];
     chart: ApexChart;
     xaxis: ApexXAxis;
+    yaxis?: ApexYAxis;
     labels: string[];
     plotOptions: ApexPlotOptions;
-    dataLabels?: ApexDataLabels
-    title?: ApexTitleSubtitle,
-    legend?: ApexLegend,
-    tooltip?: ApexTooltip
-
+    dataLabels?: ApexDataLabels;
+    title?: ApexTitleSubtitle;
+    legend?: ApexLegend;
+    tooltip?: ApexTooltip;
   };
 
   pieChart?: {
     series: any[];
     chart: ApexChart;
     labels: string[];
-    dataLabels?: ApexDataLabels,
-    title?: ApexTitleSubtitle
-    legend?: ApexLegend,
-    tooltip?: ApexTooltip
+    dataLabels?: ApexDataLabels;
+    title?: ApexTitleSubtitle;
+    legend?: ApexLegend;
+    tooltip?: ApexTooltip;
   };
 
   balanceChart?: {
     series: any[];
     chart: ApexChart;
     xaxis: ApexXAxis;
+    yaxis?: ApexYAxis;
     plotOptions: ApexPlotOptions;
     labels: string[];
-    dataLabels?: ApexDataLabels,
-    title?: ApexTitleSubtitle
-    legend?: ApexLegend,
-    tooltip? : ApexTooltip
+    dataLabels?: ApexDataLabels;
+    title?: ApexTitleSubtitle;
+    legend?: ApexLegend;
+    tooltip?: ApexTooltip;
   };
+
   expanded?: boolean;
 }
 
@@ -203,13 +205,15 @@ export type ApexBarChartOptions = {
   series: ApexAxisChartSeries | ApexNonAxisChartSeries;
   chart: ApexChart;
   xaxis?: ApexXAxis;
+  yaxis?: ApexYAxis;                    // ← Missing
   title?: ApexTitleSubtitle;
   plotOptions?: ApexPlotOptions;
   stroke?: ApexStroke;
   responsive?: ApexResponsive[];
   labels?: string[];
-  dataLabels?: ApexDataLabels
+  dataLabels?: ApexDataLabels;
+  legend?: ApexLegend;                  // ← Missing
+  tooltip?: ApexTooltip;                // ← Missing
 };
-
 
 

@@ -9,6 +9,8 @@ import { TranslatePipe } from '../../../Shared/Pipes/translate.pipe';
 import { NavItem, DashboardCard, Employee } from '../../Models/home'
 import { SidebarComponent } from '../sidebar/sidebar.component';
 import { AuthService } from '../../../Auth/Services/auth.service';
+import { Location } from '@angular/common';
+
 const translations: Record<Language, any> = { en, ar };
 @Component({
   selector: 'app-home',
@@ -31,17 +33,17 @@ export class HomeComponent implements OnInit, OnDestroy {
     { icon: 'people', key: 'MENU_EMPLOYEES', route: '/projects' },
 
   ];
-  userName: string | null = null;   
+  userName: string | null = null;
 
 
-  constructor(private i18nService: I18nService,  private authService: AuthService) {
+  constructor(private i18nService: I18nService, private authService: AuthService, private location: Location) {
     this.currentLang$ = this.i18nService.currentLang$;
     this.isRTL$ = this.i18nService.currentLang$.pipe(map(lang => lang === 'ar'));
   }
 
   ngOnInit(): void {
-   const user = this.authService.getUserInfo();
-   this.userName =user?.['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || 'User';
+    const user = this.authService.getUserInfo();
+    this.userName = user?.['http://schemas.xmlsoap.org/ws/2005/05/identity/claims/name'] || 'User';
   }
 
   ngOnDestroy(): void { }
@@ -72,7 +74,7 @@ export class HomeComponent implements OnInit, OnDestroy {
       map(lang => `${value} ${translations[lang][key]}`)
     );
   }
-  
+
   getStatusClass(status: Employee['status']): string {
     switch (status) {
       case 'Active': return 'status-active';
@@ -80,5 +82,13 @@ export class HomeComponent implements OnInit, OnDestroy {
       case 'Terminated': return 'status-terminated';
       default: return '';
     }
+  }
+
+  goBack(): void {
+    this.location.back();
+  }
+
+  goForward(): void {
+    this.location.forward();
   }
 }

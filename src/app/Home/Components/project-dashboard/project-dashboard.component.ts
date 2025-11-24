@@ -161,19 +161,27 @@ export class ProjectDashboardComponent implements OnInit {
                 type: 'bar',
                 height: 160,
                 animations: { enabled: true, easing: 'easeout', speed: 600 },
-                background: 'transparent'
+                background: 'transparent',
+                toolbar: { show: false },
+                foreColor: '#ffffff' // sets text color for axes, tooltip, legend
               },
               xaxis: {
                 categories: [''],
-                labels: { style: { colors: ['#ffffff'] } } // x-axis labels white
+                labels: { style: { colors: ['#ffffff'] } }
+              },
+              yaxis: {
+                labels: { style: { colors: ['#ffffff'] } }
               },
               plotOptions: { bar: { horizontal: false, columnWidth: '55%' } },
               dataLabels: { style: { colors: ['#ffffff'] } },
               labels: [revenueLabel, expenseLabel],
               title: { style: { color: '#ffffff' } },
               legend: { labels: { colors: '#ffffff' } },
-              tooltip: { style: { fontSize: '14px'/*, color: '#ffffff' */ } }
+              tooltip: {
+                style: { fontSize: '14px'/*, color: '#ffffff'*/ }
+              }
             };
+
 
             project.pieChart = {
               series: [incomeStatement.totalRevenue ?? 0, incomeStatement.totalExpense ?? 0],
@@ -181,25 +189,35 @@ export class ProjectDashboardComponent implements OnInit {
                 type: 'pie',
                 height: 160,
                 animations: { enabled: true, easing: 'easeout', speed: 600 },
-                background: 'transparent'
+                background: 'transparent',
+                toolbar: { show: false },
+                foreColor: '#ffffff' // sets text color for axes, tooltip, legend
               },
               labels: [revenueLabel, expenseLabel],
               dataLabels: { style: { colors: ['#ffffff'] } },
               legend: { labels: { colors: '#ffffff' } },
               title: { style: { color: '#ffffff' } },
-              tooltip: { style: { fontSize: '14px' } }//, color: '#ffffff' } }
+              tooltip: { style: { fontSize: '14px'/*, color: '#ffffff'*/ } }
             };
 
+
             project.balanceChart = {
-              series: [{ name: this.i18n.instant('AMOUNT') || 'Amount', data: [totalDebit, totalCredit] }],
+              series: [
+                { name: this.i18n.instant('AMOUNT') || 'Amount', data: [totalDebit, totalCredit] }
+              ],
               chart: {
                 type: 'bar',
                 height: 140,
                 animations: { enabled: true, easing: 'easeout', speed: 600 },
-                background: 'transparent'
+                background: 'transparent',
+                toolbar: { show: false },
+                foreColor: '#ffffff' // sets text color for axes, tooltip, legend
               },
               xaxis: {
                 categories: [debitLabel, creditLabel],
+                labels: { style: { colors: ['#ffffff'] } }
+              },
+              yaxis: {
                 labels: { style: { colors: ['#ffffff'] } }
               },
               plotOptions: { bar: { horizontal: false, columnWidth: '55%' } },
@@ -207,8 +225,9 @@ export class ProjectDashboardComponent implements OnInit {
               labels: [debitLabel, creditLabel],
               title: { style: { color: '#ffffff' } },
               legend: { labels: { colors: '#ffffff' } },
-              tooltip: { style: { fontSize: '14px'/* color: '#ffffff'*/ } }
+              tooltip: { style: { fontSize: '14px'/*, color: '#ffffff'*/ } }
             };
+
           } else {
             project.errorReports = true;
           }
@@ -224,7 +243,12 @@ export class ProjectDashboardComponent implements OnInit {
             { name: revenueLabel, data: [this.totalRevenue] },
             { name: expenseLabel, data: [this.totalExpenses] }
           ],
-          chart: { type: 'bar', height: 220, animations: { enabled: true, easing: 'easeout', speed: 700 } },
+          chart: {
+            type: 'bar', height: 220, animations: { enabled: true, easing: 'easeout', speed: 700 },
+            background: 'transparent',
+            toolbar: { show: false },
+            foreColor: '#ffffff'
+          },
           xaxis: { categories: [allProjectsLabel] }, // make sure this is defined
           plotOptions: { bar: { horizontal: false, columnWidth: '45%' } }, // define plotOptions
           labels: [revenueLabel, expenseLabel] // define labels
@@ -232,20 +256,44 @@ export class ProjectDashboardComponent implements OnInit {
 
         this.globalPieChart = {
           series: [this.totalRevenue, this.totalExpenses],
-          chart: { type: 'pie', height: 240, animations: { enabled: true, easing: 'easeout', speed: 700 } },
-          labels: [totalRevenueLabel, totalExpensesLabel]
+          chart: {
+            type: 'pie', height: 240, animations: { enabled: true, easing: 'easeout', speed: 700 },
+            background: 'transparent',
+            toolbar: { show: false },
+            foreColor: '#ffffff'
+          },
+          labels: [totalRevenueLabel, totalExpensesLabel],
+          dataLabels: { style: { colors: ['#ffffff'] } },
+          legend: { labels: { colors: '#ffffff' } },
+          title: { style: { color: '#ffffff' } },
+          tooltip: { style: { fontSize: '14px'/*, color: '#ffffff' */ } }
         };
+
 
         this.globalTrendChart = {
           series: [
             { name: revenueLabel, data: results.map(r => r.reports?.incomeStatement?.totalRevenue ?? 0) },
             { name: expenseLabel, data: results.map(r => r.reports?.incomeStatement?.totalExpense ?? 0) }
           ],
-          chart: { type: 'line', height: 200, animations: { enabled: true, easing: 'easeout', speed: 700 } },
-          xaxis: { categories: this.projects.map(p => p.name) }, // must exist
-          plotOptions: {}, // provide empty object
-          labels: [] // optional for line chart, can be empty
+          chart: {
+            type: 'line', height: 200, animations: { enabled: true, easing: 'easeout', speed: 700 },
+            background: 'transparent',
+            toolbar: { show: false },
+            foreColor: '#ffffff'
+          },
+          xaxis: {
+            categories: this.projects.map(p => p.name),
+            labels: { style: { colors: ['#ffffff'] } }
+          },
+          yaxis: {
+            labels: { style: { colors: ['#ffffff'] } }
+          },
+          dataLabels: { style: { colors: ['#ffffff'] } },
+          legend: { labels: { colors: '#ffffff' } },
+          title: { style: { color: '#ffffff' } },
+          tooltip: { style: { fontSize: '14px'/*, color: '#ffffff' */ } }
         };
+
 
         // compute net profit
         this.totalNetProfit = this.totalRevenue - this.totalExpenses;

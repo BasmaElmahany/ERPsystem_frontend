@@ -1459,3 +1459,15 @@ body[dir="rtl"] {
 html {
   scroll-behavior: smooth;
 }
+.nav-btn {
+  background: transparent;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  margin: 0 4px;
+  font-size: 20px;
+}
+
+.nav-btn:hover {
+  color: #ffd700; // highlight on hover
+}
