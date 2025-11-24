@@ -985,3 +985,34 @@ footer {
     display: inline-block;
     transform: translateY(0);
 }
+
+/* Floating controls at bottom-right for manual up/down scrolling */
+.scroll-controls {
+    position: fixed;
+    right: 18px;
+    bottom: 18px;
+    z-index: 95;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+}
+
+.scroll-btn {
+    width: 44px;
+    height: 44px;
+    border-radius: 8px;
+    border: 0;
+    background: linear-gradient(180deg, rgba(255,255,255,0.04), rgba(255,255,255,0.02));
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+    box-shadow: 0 8px 18px rgba(0,0,0,0.4);
+    transition: transform 0.12s ease, box-shadow 0.12s ease, background 0.12s ease;
+}
+
+.scroll-btn:hover { transform: translateY(-3px); box-shadow: 0 14px 30px rgba(0,0,0,0.5); }
+
+.scroll-btn:active { transform: translateY(0); }
+
+.scroll-btn.up { transform: rotate(0deg); }
+.scroll-btn.down { transform: rotate(0deg); }

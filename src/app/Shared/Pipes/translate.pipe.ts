@@ -16,11 +16,20 @@ const translations: Record<Language, any> = { en, ar };
 export class TranslatePipe implements PipeTransform {
   constructor(private i18nService: I18nService) {}
 
-  transform(key: string): Observable<string> {
+  transform(key: string, params?: Record<string, any>): Observable<string> {
     return this.i18nService.currentLang$.pipe(
       map(lang => {
-        const translation = translations[lang][key];
-        return translation || key; // Return key if translation is missing
+        let translation = translations[lang][key] || key;
+
+        if (params && typeof translation === 'string') {
+          Object.keys(params).forEach(k => {
+            const val = params[k] == null ? '' : String(params[k]);
+            // replace {{key}} and {{ key }} occurrences
+            translation = translation.replace(new RegExp(`{{\\s*${k}\\s*}}`, 'g'), val);
+          });
+        }
+
+        return translation;
       })
     );
   }

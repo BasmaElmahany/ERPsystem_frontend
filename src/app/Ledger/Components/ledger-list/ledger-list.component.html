@@ -3,17 +3,17 @@
     <mat-tab-group (selectedTabChange)="onTabChange($event)">
 
         <!-- ================= TAB 1: Ledger Table ================= -->
-        <mat-tab label="General Ledger">
+        <mat-tab label="{{ 'GENERAL_LEDGER' | translate | async }}">
 
             <div class="table-container" *ngIf="!loading; else loadingTpl">
 
                 <div class="table-header">
-                    <h2>General Ledger</h2>
+                    <h2>{{ 'GENERAL_LEDGER' | translate | async }}</h2>
 
                     <div class="header-actions">
 
                         <!-- 🔍 Search -->
-                        <input type="text" placeholder="🔍 Search journals..." [(ngModel)]="searchTerm"
+                        <input type="text" placeholder="{{ 'SEARCH_LEDGER_PLACEHOLDER' | translate | async }}" [(ngModel)]="searchTerm"
                             (input)="applySearch()" class="search-input" />
 
                         <!-- 🗓 Date Range Filters -->
@@ -25,7 +25,7 @@
 
                         <button class="export-button" (click)="exportToExcel()">
                             <i class="material-icons">download</i>
-                            Export To Excel
+                            {{ 'EXPORT_TO_EXCEL' | translate | async }}
                         </button>
 
                     </div>
@@ -37,49 +37,49 @@
                         <thead>
                             <tr>
                                 <th (click)="sortData('accountName')" class="sortable">
-                                    Account Name
+                                    {{ 'ACCOUNT_NAME' | translate | async }}
                                     <span *ngIf="sortKey === 'accountName'">
                                         {{ sortDirection === 'asc' ? '▲' : '▼' }}
                                     </span>
                                 </th>
 
                                 <th (click)="sortData('accountType')" class="sortable">
-                                    Type
+                                    {{ 'TYPE' | translate | async }}
                                     <span *ngIf="sortKey === 'accountType'">
                                         {{ sortDirection === 'asc' ? '▲' : '▼' }}
                                     </span>
                                 </th>
 
                                 <th (click)="sortData('description')" class="sortable">
-                                    Description
+                                    {{ 'DESCRIPTION' | translate | async }}
                                     <span *ngIf="sortKey === 'description'">
                                         {{ sortDirection === 'asc' ? '▲' : '▼' }}
                                     </span>
                                 </th>
 
                                 <th (click)="sortData('debit')" class="sortable">
-                                    Debit
+                                    {{ 'DEBIT' | translate | async }}
                                     <span *ngIf="sortKey === 'debit'">
                                         {{ sortDirection === 'asc' ? '▲' : '▼' }}
                                     </span>
                                 </th>
 
                                 <th (click)="sortData('credit')" class="sortable">
-                                    Credit
+                                    {{ 'CREDIT' | translate | async }}
                                     <span *ngIf="sortKey === 'credit'">
                                         {{ sortDirection === 'asc' ? '▲' : '▼' }}
                                     </span>
                                 </th>
 
                                 <th (click)="sortData('balance')" class="sortable">
-                                    Balance
+                                    {{ 'BALANCE' | translate | async }}
                                     <span *ngIf="sortKey === 'balance'">
                                         {{ sortDirection === 'asc' ? '▲' : '▼' }}
                                     </span>
                                 </th>
 
                                 <th (click)="sortData('date')" class="sortable">
-                                    Date
+                                    {{ 'DATE' | translate | async }}
                                     <span *ngIf="sortKey === 'date'">
                                         {{ sortDirection === 'asc' ? '▲' : '▼' }}
                                     </span>
@@ -88,14 +88,14 @@
                         </thead>
 
                         <tbody>
-                            <tr *ngFor="let j of paginatedledger; let i = index">
+                                <tr *ngFor="let j of paginatedledger; let i = index">
                                 <td>{{ j.accountName }}</td>
-                                <td>{{ j.accountType }}</td>
+                                <td>{{ translateAccountType(j.accountType) }}</td>
                                 <td>{{ j.description }}</td>
                                 <td>{{ j.debit }}</td>
                                 <td>{{ j.credit }}</td>
                                 <td>{{ j.balance }}</td>
-                                <td>{{ j.date | date: 'mediumDate' }}</td>
+                                <td>{{ formatDate(j.date) }}</td>
                             </tr>
                         </tbody>
                     </table>
@@ -109,7 +109,7 @@
 
                 <div class="table-footer">
                     <p>
-                        Showing {{ ledger.length }} ledger entries from {{ projectName | titlecase }} project
+                        {{ 'SHOWING_LEDGER' | translate:{count: ledger.length, projectName: (projectName | titlecase)} | async }}
                     </p>
                 </div>
 
@@ -119,14 +119,14 @@
             <ng-template #loadingTpl>
                 <div class="table-container text-center">
                     <mat-spinner diameter="48"></mat-spinner>
-                    <p>Loading ledger entries...</p>
+                    <p>{{ 'LOADING_LEDGER' | translate | async }}</p>
                 </div>
             </ng-template>
 
         </mat-tab>
 
         <!-- ================= TAB 2: Charts ================= -->
-        <mat-tab label="Charts Summary">
+        <mat-tab label="{{ 'TAB_CHARTS_SUMMARY' | translate | async }}">
 
             <div class="charts-tab-container">
 

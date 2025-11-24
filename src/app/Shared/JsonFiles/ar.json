@@ -38,4 +38,192 @@
   "STATUS_ON_LEAVE": "في إجازة",
   "STATUS_TERMINATED": "منهي الخدمة",
   "TABLE_FOOTER_RECORDS": "عرض {{count}} سجل."
+  ,
+  "NAV_GET_STARTED": "ابدأ الآن",
+  "HERO_BADGE": "✨ نظام تخطيط موارد المؤسسات",
+  "HERO_TITLE": "التميز المالي",
+  "HERO_TITLE_SIMPLIFIED": "ببساطة",
+  "HERO_DESCRIPTION": "قم بتبسيط عملياتك المالية باستخدام لوحة تحكم ERP الذكية. تحليلات في الوقت الفعلي، تدفقات عمل مؤتمتة، ورؤى قابلة للتنفيذ في متناول يدك.",
+  "BTN_START_TRIAL": "ابدأ تجربة مجانية",
+  "BTN_WATCH_DEMO": "شاهد العرض",
+  "CHART_TITLE_REVENUE": "اتجاه الإيرادات",
+  "CHART_MONTHLY_GROWTH": "النمو الشهري",
+  "FEATURES_TITLE_MAIN": "ميزات قوية للتمويل الحديث",
+  "FEATURES_SUBTITLE": "كل ما تحتاجه لإدارة أموالك بكفاءة",
+  "FEATURE_REALTIME": "تحليلات في الوقت الحقيقي",
+  "FEATURE_BUDGET": "تخطيط الميزانية",
+  "FEATURE_GROWTH": "رؤى النمو",
+  "CTA_TITLE": "هل أنت مستعد لتحويل عملياتك المالية؟",
+  "CTA_SUBTITLE": "انضم إلى آلاف الشركات التي تستخدم نظامنا لتبسيط العمليات",
+  "CTA_START_JOURNEY": "ابدأ رحلتك",
+  "FOOTER_COPY": "© 2024 لوحة تحكم النظام. كل الحقوق محفوظة."
+  ,
+  "JOURNAL_ENTRIES": "قيود اليومية",
+  "SEARCH_JOURNALS_PLACEHOLDER": "🔍 ابحث في القيود...",
+  "NEW_JOURNAL": "قيد جديد",
+  "CREATE_JOURNAL_TITLE": "إنشاء قيد جديد",
+  "CREATE_JOURNAL_DESC": "املأ التفاصيل أدناه لإنشاء قيد جديد.",
+  "JOURNAL_INFORMATION": "معلومات القيد",
+  "ENTRY_NUMBER_PLACEHOLDER": "مثال: JV-0001",
+  "LINE_DESCRIPTION": "وصف السطر",
+  "LINE_DESCRIPTION_PLACEHOLDER": "ملاحظة اختيارية",
+  "REMOVE_LINE": "إزالة",
+  "ADD_LINE": "إضافة سطر",
+  "TOTAL_DEBIT": "إجمالي المدين",
+  "TOTAL_CREDIT": "إجمالي الدائن",
+  "CREATE_JOURNAL": "إنشاء قيد",
+  "SELECT_ACCOUNT": "اختر حسابًا",
+  "LINE_DESCRIPTION_LABEL": "وصف السطر",
+  "LINE_DESCRIPTION_PLACEHOLDER": "ملاحظة اختيارية",
+  "CREATE_JOURNAL_SUCCESS": "تم إنشاء القيد بنجاح",
+  "CREATE_JOURNAL_FAIL": "فشل إنشاء القيد: {{msg}}",
+  "UPDATE_JOURNAL_SUCCESS": "تم تحديث القيد بنجاح",
+  "UPDATE_JOURNAL_FAIL": "فشل تحديث القيد: {{msg}}",
+  "DELETE_JOURNAL_SUCCESS": "تم حذف القيد بنجاح",
+  "DELETE_JOURNAL_FAIL": "فشل حذف القيد: {{msg}}",
+  "POST_JOURNAL_SUCCESS": "تم ترحيل القيد بنجاح",
+  "POST_JOURNAL_FAIL": "فشل ترحيل القيد: {{msg}}",
+  "UNPOST_JOURNAL_SUCCESS": "تم إلغاء ترحيل القيد بنجاح",
+  "UNPOST_JOURNAL_FAIL": "فشل إلغاء ترحيل القيد: {{msg}}",
+  "EDIT_JOURNAL_TITLE": "تعديل قيد",
+  "EDIT_JOURNAL_DESC": "قم بتحديث معلومات القيد وتعديل الأسطر حسب الحاجة.",
+  "ENTRY_NUMBER_PLACEHOLDER": "مثال: JV-0001",
+  "DESCRIPTION_PLACEHOLDER": "أدخل الوصف",
+  "REMOVE_LINE": "إزالة",
+  "ADD_LINE": "إضافة سطر",
+  "SAVE_CHANGES": "حفظ التغييرات",
+  "AT_LEAST_ONE_LINE_REQUIRED": "مطلوب سطر قيد واحد على الأقل.",
+  "DEBITS_CREDITS_MUST_EQUAL": "⚠️ يجب أن يتساوى المدين والدائن قبل الحفظ!",
+  "FILL_REQUIRED_FIELDS": "يرجى ملء جميع الحقول المطلوبة قبل الحفظ.",
+  "EXPORT_TO_EXCEL": "تصدير إلى إكسل",
+  "ENTRY_NUMBER": "رقم القيد",
+  "DATE": "التاريخ",
+  "DESCRIPTION": "الوصف",
+  "STATUS": "الحالة",
+  "ACTIONS": "إجراءات",
+  "POSTED": "مُرحّل",
+  "UNPOSTED": "غير مُرحّل",
+  "POST": "ترحيل",
+  "UNPOST": "إلغاء ترحيل",
+  "VIEW": "عرض",
+  "SHOWING_JOURNALS": "عرض {{count}} قيد من مشروع {{projectName}}",
+  "LOADING_JOURNALS": "جارٍ تحميل قيود اليومية...",
+  "JOURNAL_NO": "رقم القيد",
+  "TOTALS": "الإجماليات",
+  "LOADING_JOURNAL_DETAILS": "جارٍ تحميل تفاصيل القيد...",
+  "FAILED_FETCH_JOURNAL_LINES": "فشل جلب تفاصيل القيد",
+  "JOURNAL_LINES": "أسطر القيد",
+  "ACCOUNT": "الحساب",
+
+  "GENERAL_LEDGER": "الدفتر العام",
+  "TAB_CHARTS_SUMMARY": "ملخّص الرسوم",
+  "SEARCH_LEDGER_PLACEHOLDER": "🔍 ابحث في الدفتر...",
+  "ACCOUNT_NAME": "اسم الحساب",
+  "TYPE": "النوع",
+  "DEBIT": "مدين",
+  "CREDIT": "دائن",
+  "BALANCE": "الرصيد",
+  "SHOWING_LEDGER": "عرض {{count}} قيد دفتر من مشروع {{projectName}}",
+  "LOADING_LEDGER": "جارٍ تحميل قيود الدفتر...",
+
+  "PROJECTS_DIRECTORY": "دليل المشروعات",
+  "PROJECTS_COUNT": "{{count}} مشروع",
+  "NEW_PROJECT": "مشروع جديد",
+  "LOADING_PROJECTS": "جارٍ تحميل المشروعات...",
+  "NO_PROJECTS_FOUND": "لا توجد مشروعات.",
+  "ID": "الرقم",
+  "NAME": "الاسم",
+  "CREATED_AT": "تاريخ الإنشاء",
+  "ACCOUNTS": "الحسابات",
+  "JOURNALS": "القيود",
+  "LEDGER": "الدفتر",
+  "SHOWING_PROJECTS": "عرض {{count}} مشروع"
+  ,
+  "CREATE_PROJECT_TITLE": "إنشاء مشروع جديد",
+  "CREATE_PROJECT_DESC": "املأ التفاصيل أدناه لإنشاء مشروع جديد.",
+  "EDIT_PROJECT": "تعديل المشروع",
+  "EDIT_PROJECT_DESC": "املأ التفاصيل أدناه لتحديث المشروع.",
+  "PROJECT_INFORMATION": "معلومات المشروع",
+  "PROJECT_NAME_LABEL": "اسم المشروع",
+  "PROJECT_NAME_PLACEHOLDER": "مثال: تحسين نظام ERP",
+  "PROJECT_NAME_REQUIRED": "اسم المشروع مطلوب.",
+  "NAME_MIN_LENGTH": "يجب أن يكون الاسم 3 أحرف على الأقل.",
+  "PROJECT_DESCRIPTION_LABEL": "وصف المشروع",
+  "PROJECT_DESCRIPTION_PLACEHOLDER": "أدخل وصفًا تفصيليًا للمشروع",
+  "DESCRIPTION_REQUIRED": "الوصف مطلوب.",
+  "CANCEL": "إلغاء",
+  "CREATE_PROJECT": "إنشاء",
+  "UPDATE_PROJECT": "تحديث",
+  "CREATE_PROJECT_BTN": "إنشاء المشروع"
+  ,
+  "PROJECT_CREATE_FAIL": "فشل إنشاء المشروع: {{status}} {{msg}}",
+  "CLOSE": "إغلاق",
+  "PROJECT_DELETE_SUCCESS": "تم حذف المشروع \"{{name}}\" بنجاح.",
+  "PROJECT_DELETE_FAIL": "فشل حذف المشروع: {{msg}}",
+  "PROJECT_DELETE_SERVER_ERROR": "خطأ في الخادم: لم يتم حذف المشروع",
+  "PROJECT_UPDATE_SUCCESS": "تم تحديث المشروع بنجاح",
+  "PROJECT_UPDATE_FAIL": "فشل تحديث المشروع: {{msg}}"
+  ,
+  "CREATE_ACCOUNT_TITLE": "إنشاء حساب جديد",
+  "CREATE_ACCOUNT_DESC": "املأ التفاصيل أدناه لإنشاء حساب جديد.",
+  "EDIT_ACCOUNT": "تعديل الحساب",
+  "EDIT_ACCOUNT_DESC": "املأ التفاصيل أدناه لتحديث الحساب.",
+  "ACCOUNT_INFORMATION": "معلومات الحساب",
+  "ACCOUNT_CODE_LABEL": "رمز الحساب",
+  "ACCOUNT_CODE_PLACEHOLDER": "مثال: 1001",
+  "ACCOUNT_NAME_LABEL": "اسم الحساب",
+  "ACCOUNT_NAME_PLACEHOLDER": "مثال: النقد في الصندوق",
+  "ACCOUNT_TYPE_LABEL": "نوع الحساب",
+  "SELECT_TYPE": "اختر النوع",
+  "ASSET": "أصل",
+  "CONTRA_ASSET": "مقابل أصل",
+  "CURRENT_ASSET": "أصل متداول",
+  "LIABILITY": "التزام",
+  "CONTRA_LIABILITY": "مقابل التزام",
+  "CURRENT_LIABILITY": "التزام متداول",
+  "EQUITY": "حقوق الملكية",
+  "REVENUE": "إيراد",
+  "EXPENSE": "مصروف",
+  "PARENT_ACCOUNT_LABEL": "الحساب الرئيسي",
+  "NO_PARENT": "— بدون رئيسي —",
+  "IS_DETAIL_LABEL": "هل حساب تفصيلي",
+  "YES": "نعم",
+  "NO": "لا",
+  "CURRENCY_LABEL": "العملة",
+  "OPENING_BALANCE_LABEL": "الرصيد الافتتاحي",
+  "CURRENCY_PLACEHOLDER": "مثال: EGP",
+  "CURRENCY_EGP": "جنيه مصري (EGP)",
+  "CURRENCY_USD": "دولار أمريكي (USD)",
+  "CURRENCY_EUR": "يورو (EUR)",
+  "CREATE_ACCOUNT": "إنشاء حساب",
+  "UPDATE_ACCOUNT": "تحديث الحساب",
+  "CREATE_ACCOUNT_BTN": "إنشاء الحساب"
+  ,
+  "FAILED_LOAD_ACCOUNTS": "فشل تحميل الحسابات",
+  "CHART_OF_ACCOUNTS": "دليل الحسابات",
+  "NEW_ACCOUNT": "حساب جديد",
+  "SEARCH_ACCOUNTS_PLACEHOLDER": "🔍 ابحث في الحسابات...",
+  "TABLE_HEADER_CODE": "الرمز",
+  "TABLE_HEADER_TYPE": "النوع",
+  "TABLE_HEADER_PARENT": "الحساب الرئيسي",
+  "TABLE_HEADER_IS_DETAIL": "حساب تفصيلي",
+  "TABLE_HEADER_ACTIONS": "إجراءات",
+  "SHOWING_ACCOUNTS": "عرض {{count}} حساب من مخطط مشروع {{projectName}}",
+  "LOADING_CHART_OF_ACCOUNTS": "جارٍ تحميل دليل الحسابات...",
+  "ITEMS_PER_PAGE": "عناصر في الصفحة",
+  "PAGINATOR_NEXT_PAGE": "الصفحة التالية",
+  "PAGINATOR_PREVIOUS_PAGE": "الصفحة السابقة",
+  "PAGINATOR_FIRST_PAGE": "الصفحة الأولى",
+  "PAGINATOR_LAST_PAGE": "الصفحة الأخيرة",
+  "PAGINATOR_RANGE": "{{start}} - {{end}} من {{length}}",
+  "ACCOUNT_ADDED_SUCCESS": "تم إضافة الحساب بنجاح",
+  "ACCOUNT_CREATE_FAIL": "فشل إنشاء الحساب: {{status}} {{msg}}",
+  "ACCOUNT_UPDATE_SUCCESS": "تم تحديث الحساب بنجاح",
+  "ACCOUNT_UPDATE_FAIL": "فشل تحديث الحساب",
+  "ACCOUNT_DELETE_SUCCESS": "تم حذف الحساب \"{{name}}\" بنجاح.",
+  "ACCOUNT_DELETE_FAIL": "فشل حذف الحساب: {{msg}}"
+  ,
+  "CONFIRM_DELETE_TITLE": "تأكيد الحذف",
+  "CONFIRM_DELETE_BODY": "هل أنت متأكد أنك تريد حذف \"{{name}}\"؟ سيتم حذف هذا الحساب نهائيًا.",
+  "DELETE": "حذف"
 }

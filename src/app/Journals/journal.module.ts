@@ -23,6 +23,7 @@ import { UnpostLedgerComponent } from './Components/unpost-ledger/unpost-ledger.
 
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { JournalLinesComponent } from './Components/journal-lines/journal-lines.component';
+import { SharedTranslationsModule } from '../Shared/shared-translations.module';
 
 
 @NgModule({
@@ -53,6 +54,7 @@ import { JournalLinesComponent } from './Components/journal-lines/journal-lines.
     MatCardModule,
     MatToolbarModule,
     MatPaginatorModule
+    ,SharedTranslationsModule
   ],
   exports: [JournalListComponent]
 })

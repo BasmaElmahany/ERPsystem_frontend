@@ -4,6 +4,7 @@ import { ChartOfAccount } from '../../Models/ChartOfAccount';
 import { ActivatedRoute, Router } from '@angular/router';
 import { MatDialog } from '@angular/material/dialog';
 import { MatSnackBar } from '@angular/material/snack-bar';
+import { I18nService } from '../../../Shared/Services/i18n.service';
 import { CreateComponent } from '../create/create.component';
 import { EditComponent } from '../edit/edit.component';
 import { DeleteComponent } from '../delete/delete.component';
@@ -33,8 +34,27 @@ export class ListComponent implements OnInit {
 
   searchTerm = '';
 
+  // Map backend account type values to translation keys
+  private accountTypeKeyMap: { [key: string]: string } = {
+    'asset': 'ASSET',
+    'contra asset': 'CONTRA_ASSET',
+    'current asset': 'CURRENT_ASSET',
+    'liability': 'LIABILITY',
+    'contra liability': 'CONTRA_LIABILITY',
+    'current liability': 'CURRENT_LIABILITY',
+    'equity': 'EQUITY',
+    'revenue': 'REVENUE',
+    'expense': 'EXPENSE'
+  };
+
+  translateAccountType(type?: string): string {
+    if (!type) return '';
+    const key = this.accountTypeKeyMap[type.trim().toLowerCase()] || type;
+    return this.i18n.instant(key);
+  }
+
   constructor(private service: ChartOfAccountsService, private route: ActivatedRoute, private dialog: MatDialog,
-    private snackBar: MatSnackBar, private router: Router) { }
+    private snackBar: MatSnackBar, private router: Router, private i18n: I18nService) { }
 
   ngOnInit(): void {
     // 🟢 Read project name from route parameter
@@ -110,16 +130,16 @@ sortData(key: keyof ChartOfAccount): void {
       if (result) {
         console.log('Attempting to create account:', result);
         this.service.create(this.projectName, result).subscribe({
-          next: (createdAccount) => {
+            next: (createdAccount) => {
             console.log('تم إضافة الحساب بنجاح:', createdAccount);
-            this.snackBar.open("Account Added Successfully");
+            this.snackBar.open(this.i18n.instant('ACCOUNT_ADDED_SUCCESS'), this.i18n.instant('CLOSE'), { duration: 4000 });
             this.loadAccounts();
           },
           error: (error) => {
             console.error('Error creating Account:', error);
             const status = error?.status;
             const serverMessage = error?.error?.message || error?.message || 'Unknown error';
-            this.snackBar.open(`Failed to create Account: ${status || ''} ${serverMessage}`, 'Close', { duration: 6000 });
+            this.snackBar.open(this.i18n.instant('ACCOUNT_CREATE_FAIL', { status: status || '', msg: serverMessage }), this.i18n.instant('CLOSE'), { duration: 6000 });
           }
         });
       }
@@ -147,17 +167,17 @@ sortData(key: keyof ChartOfAccount): void {
 
           this.service.update(this.projectName, account.id, result).subscribe({
             next: () => {
-              this.snackBar.open("Account updated successfully", "Close");
+              this.snackBar.open(this.i18n.instant('ACCOUNT_UPDATE_SUCCESS'), this.i18n.instant('CLOSE'), { duration: 4000 });
               this.loadAccounts();
             },
             error: (err) => {
-              this.snackBar.open("Failed to update account", "Close");
+              this.snackBar.open(this.i18n.instant('ACCOUNT_UPDATE_FAIL'), this.i18n.instant('CLOSE'), { duration: 6000 });
               console.error(err);
             }
           });
         });
       },
-      error: (err) => console.error("Failed to load DTO", err),
+      error: (err) => console.error('Failed to load DTO', err),
       complete: () => (this.loading = false)
     });
   }
@@ -179,13 +199,13 @@ sortData(key: keyof ChartOfAccount): void {
           return;
         }
         this.service.delete(this.projectName, this.selectedAccount.id).subscribe({
-          next: () => {
-            this.snackBar.open(`Account "${this.selectedAccount?.accountName}" deleted successfully.`, 'Close', { duration: 4000 });
+            next: () => {
+            this.snackBar.open(this.i18n.instant('ACCOUNT_DELETE_SUCCESS', { name: this.selectedAccount?.accountName }), this.i18n.instant('CLOSE'), { duration: 4000 });
             this.loadAccounts();
           },
           error: (err) => {
             console.error('Failed to delete Account', err);
-            this.snackBar.open(`Failed to delete Account: ${err?.statusText}`, 'Close', { duration: 6000 });
+            this.snackBar.open(this.i18n.instant('ACCOUNT_DELETE_FAIL', { msg: err?.statusText || '' }), this.i18n.instant('CLOSE'), { duration: 6000 });
           }
         });
       }

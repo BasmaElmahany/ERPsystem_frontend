@@ -1,15 +1,15 @@
 <div class="table-container" *ngIf="!loading; else loadingTpl">
   <div class="table-header">
-    <h2>Chart of Accounts</h2>
-    <span class="employee-count">{{ accounts.length }} Accounts</span>
+    <h2>{{ 'CHART_OF_ACCOUNTS' | translate | async }}</h2>
+    <span class="employee-count">{{ accounts.length }} {{ 'ACCOUNTS' | translate | async }}</span>
     <button class="create-button" (click)="openCreateModal()">
       <i class="material-icons">add</i>
-      New Account
+      {{ 'NEW_ACCOUNT' | translate | async }}
     </button>
   </div>
 
   <div class="table-wrapper scroll-area">
-          <input type="text" [(ngModel)]="searchTerm" (input)="applySearch()" placeholder="🔍 Search accounts..."
+          <input type="text" [(ngModel)]="searchTerm" (input)="applySearch()" placeholder="{{ 'SEARCH_ACCOUNTS_PLACEHOLDER' | translate | async }}"
         class="search-input" />
         <br>
          <br>
@@ -17,32 +17,32 @@
       <thead>
         <tr>
           <th (click)="sortData('id')" class="sortable">
-            ID
+            {{ 'TABLE_HEADER_ID' | translate | async }}
             <span class="sort-icon" *ngIf="sortKey === 'id'">
               {{ sortDirection === 'asc' ? '▲' : '▼' }}
             </span>
           </th>
           <th (click)="sortData('accountCode')" class="sortable">
-            Code
+            {{ 'TABLE_HEADER_CODE' | translate | async }}
             <span class="sort-icon" *ngIf="sortKey === 'accountCode'">
               {{ sortDirection === 'asc' ? '▲' : '▼' }}
             </span>
           </th>
           <th (click)="sortData('accountName')" class="sortable">
-            Account Name
+            {{ 'TABLE_HEADER_NAME' | translate | async }}
             <span class="sort-icon" *ngIf="sortKey === 'accountName'">
               {{ sortDirection === 'asc' ? '▲' : '▼' }}
             </span>
           </th>
           <th (click)="sortData('accountType')" class="sortable">
-            Type
+            {{ 'TABLE_HEADER_TYPE' | translate | async }}
             <span class="sort-icon" *ngIf="sortKey === 'accountType'">
               {{ sortDirection === 'asc' ? '▲' : '▼' }}
             </span>
           </th>
-          <th>Parent Account</th>
-          <th>Is Detail</th>
-          <th>Actions</th>
+          <th>{{ 'TABLE_HEADER_PARENT' | translate | async }}</th>
+          <th>{{ 'TABLE_HEADER_IS_DETAIL' | translate | async }}</th>
+          <th>{{ 'TABLE_HEADER_ACTIONS' | translate | async }}</th>
 
         </tr>
       </thead>
@@ -63,22 +63,21 @@
                 'status-on-leave': acc.accountType === 'Expense',
                 'status-terminated': acc.accountType === 'Liability'
               }">
-              {{ acc.accountType }}
+              {{ translateAccountType(acc.accountType) }}
             </span>
           </td>
           <td>{{ acc.parentAccountId || '—' }}</td>
-          <td>
+            <td>
             <span class="status-badge" [ngClass]="{
                 'status-active': acc.isDetail,
                 'status-on-leave': !acc.isDetail
               }">
-              {{ acc.isDetail ? 'Yes' : 'No' }}
+              {{ acc.isDetail ? ('YES' | translate | async) : ('NO' | translate | async) }}
             </span>
           </td>
           <td class="actions-cell">
             <button class="action-button edit-button" (click)="openEditModal(acc)">
               <i class="material-icons">edit</i>
-
             </button>
             <button mat-icon-button color="warn" (click)="openDeleteModal(acc)">
               <mat-icon>delete</mat-icon>
@@ -98,13 +97,13 @@
   </div>
 
   <div class="table-footer">
-    <p>Showing {{ accounts.length }} records from {{ projectName | titlecase }} project schema</p>
+    <p>{{ 'SHOWING_ACCOUNTS' | translate:{count: accounts.length, projectName: (projectName | titlecase)} | async }}</p>
   </div>
 </div>
 
 <ng-template #loadingTpl>
   <div class="table-container text-center">
     <mat-spinner diameter="48"></mat-spinner>
-    <p>Loading chart of accounts...</p>
+    <p>{{ 'LOADING_CHART_OF_ACCOUNTS' | translate | async }}</p>
   </div>
 </ng-template>

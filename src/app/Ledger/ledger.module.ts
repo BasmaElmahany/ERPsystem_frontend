@@ -17,6 +17,7 @@ import { LedgerListComponent } from './Components/ledger-list/ledger-list.compon
 import { LedgerRoutingModule } from './ledger-routing.module';
 import { MatTabsModule } from '@angular/material/tabs'; // <-- Import MatTabsModule
 import { NgApexchartsModule } from 'ng-apexcharts'; // <-- ApexCharts module
+import { SharedTranslationsModule } from '../Shared/shared-translations.module';
 
 @NgModule({
   declarations: [LedgerListComponent],
@@ -39,7 +40,8 @@ import { NgApexchartsModule } from 'ng-apexcharts'; // <-- ApexCharts module
         MatToolbarModule,
         MatPaginatorModule,
         MatTabsModule  ,NgApexchartsModule 
-         
+          ,
+          SharedTranslationsModule
        
   ], 
   

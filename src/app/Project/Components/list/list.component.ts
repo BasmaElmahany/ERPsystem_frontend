@@ -7,6 +7,7 @@ import { Project } from '../../Models/project';
 import { Router } from '@angular/router';
 import { UpdateComponent } from '../update/update.component';
 import { DeleteComponent } from '../delete/delete.component';
+import { I18nService } from '../../../Shared/Services/i18n.service';
 
 @Component({
   selector: 'app-list',
@@ -22,7 +23,7 @@ export class ListComponent implements OnInit {
   sortKey: 'id' | 'name' | 'description' | 'createdAt' = 'id';
   sortDirection: 'asc' | 'desc' = 'asc';
 
-  constructor(private dialog: MatDialog, private projectService: ProjectService, private snackBar: MatSnackBar,private router: Router){}
+  constructor(private dialog: MatDialog, private projectService: ProjectService, private snackBar: MatSnackBar,private router: Router, private i18n: I18nService){}
 
   ngOnInit(): void {
     this.loadProjects();
@@ -57,8 +58,9 @@ export class ListComponent implements OnInit {
             const status = error?.status;
             const serverMessage = error?.error?.message || error?.message || 'Unknown error';
 
-            // User-friendly snackbar
-            this.snackBar.open(`Failed to create project: ${status || ''} ${serverMessage}`, 'Close', { duration: 6000 });
+            // User-friendly localized snackbar
+            const message = this.i18n.instant('PROJECT_CREATE_FAIL', { status: status || '', msg: serverMessage });
+            this.snackBar.open(message, this.i18n.instant('CLOSE') || 'Close', { duration: 6000 });
           }
         });
       }
@@ -131,6 +133,17 @@ export class ListComponent implements OnInit {
     });
   }
 
+  formatDate(dateInput: string | Date | undefined): string {
+    if (!dateInput) return '';
+    const date = typeof dateInput === 'string' ? new Date(dateInput) : dateInput;
+    try {
+      const locale = this.i18n.currentLang === 'ar' ? 'ar-EG' : 'en-US';
+      return new Intl.DateTimeFormat(locale, { year: 'numeric', month: 'short', day: 'numeric' }).format(date);
+    } catch (e) {
+      return date.toLocaleDateString();
+    }
+  }
+
 
 
   openDeleteModal(project: Project): void {
@@ -147,29 +160,19 @@ export class ListComponent implements OnInit {
         next: (res) => {
 
           if (res.success) {
-            this.snackBar.open(
-              `Project "${project.name}" deleted successfully.`,
-              'Close',
-              { duration: 4000 }
-            );
+            const msg = this.i18n.instant('PROJECT_DELETE_SUCCESS', { name: project.name });
+            this.snackBar.open(msg, this.i18n.instant('CLOSE') || 'Close', { duration: 4000 });
             this.loadProjects();
           } else {
-            this.snackBar.open(
-              `Failed to delete project: ${res.message}`,
-              'Close',
-              { duration: 6000 }
-            );
+            const msg = this.i18n.instant('PROJECT_DELETE_FAIL', { msg: res.message });
+            this.snackBar.open(msg, this.i18n.instant('CLOSE') || 'Close', { duration: 6000 });
           }
 
         },
         error: (err) => {
           // This only triggers if server/network is down
           console.error('Unexpected error deleting project', err);
-          this.snackBar.open(
-            `Server error: Could not delete project`,
-            'Close',
-            { duration: 6000 }
-          );
+          this.snackBar.open(this.i18n.instant('PROJECT_DELETE_SERVER_ERROR'), this.i18n.instant('CLOSE') || 'Close', { duration: 6000 });
         }
       });
     }
@@ -191,11 +194,11 @@ export class ListComponent implements OnInit {
       this.projectService.updateProject(this.selectedProject.id, result).subscribe({
         next: (updatedProject) => {
           this.loadProjects();
-          this.snackBar.open('Project updated successfully', 'Close', { duration: 4000 });
+          this.snackBar.open(this.i18n.instant('PROJECT_UPDATE_SUCCESS'), this.i18n.instant('CLOSE') || 'Close', { duration: 4000 });
         },
         error: (error) => {
           console.error('Error updating project:', error);
-          this.snackBar.open(`Failed to update project: ${error?.statusText}`, 'Close', { duration: 6000 });
+          this.snackBar.open(this.i18n.instant('PROJECT_UPDATE_FAIL', { msg: error?.statusText }), this.i18n.instant('CLOSE') || 'Close', { duration: 6000 });
         }
       });
     }

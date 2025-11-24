@@ -1,8 +1,6 @@
 import { Component, EventEmitter, Inject, Output } from '@angular/core';
-import { FormBuilder, FormGroup, Validators, ReactiveFormsModule } from '@angular/forms';
+import { FormBuilder, FormGroup, Validators } from '@angular/forms';
 import { MAT_DIALOG_DATA, MatDialogRef } from '@angular/material/dialog';
-import { AsyncPipe } from '@angular/common';
-import { TranslatePipe } from '../../../Shared/Pipes/translate.pipe';
 
 @Component({
   selector: 'app-update',
