@@ -1,178 +1,295 @@
-/* ==========================================================================
-   Global Dashboard Styles (Continuing the dark theme)
-   ========================================================================== */
+/* =========================
+   DASHBOARD CONTAINER
+========================= */
+html, body {
+  margin: 0;
+  padding: 0;
+  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
+  font-family: 'Inter', Arial, sans-serif;
+  color: #e6eef3;
+  /* The issue was likely caused by a combination of min-height: 100% and fixed inner heights.
+     Setting height: 100% on html/body and allowing the content to overflow should fix it. */
+  /* height: 100%; - Removed to allow content to dictate height and enable scrolling */
+  overflow-y: auto;
+}
+
+.home {
+ max-height: 100vh;  // make full page scrollable
+  overflow-y: auto;
+  padding: 20px; /* horizontal scroll if table is wider than container */
+  /* Remove min-height: 100% to allow content to dictate height */
+}
 
 .dashboard-container {
-  min-height: 100vh;
-  padding: 40px;
-  background: linear-gradient(to bottom right, #0f2027, #203a43, #2c5364);
-  color: #e0e0e0;
-  font-family: 'Arial', sans-serif;
+  min-height: auto; /* Ensure content dictates height */
+  display: flex;
+  flex-direction: column;
+  padding: 30px;
+  /* Remove min-height: 100% to allow content to dictate height */
 }
-
+/* =========================
+   HEADER
+========================= */
 .dashboard-header {
   text-align: center;
-  margin-bottom: 50px;
+  margin-bottom: 28px;
 }
 
-.page-title {
-  font-size: 3rem;
-  font-weight: 800;
-  color: #ffffff;
-  text-shadow: 0 0 10px rgba(0, 123, 255, 0.5);
+.dashboard-header img.logo {
+  height: 64px;
+  border-radius: 8px;
+  display: block;
+  margin: 0 auto 10px;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.4);
 }
 
-.subtitle {
-  font-size: 1.2rem;
-  color: #a0a0a0;
-}
-
-.section {
-  margin-bottom: 60px;
-}
-
+/* =========================
+   SECTION TITLES
+========================= */
 .section-title {
-  font-size: 2rem;
-  font-weight: 600;
-  color: #ffffff;
-  border-bottom: 2px solid #007bff;
+  font-size: 1.8rem;
+  margin-bottom: 18px;
+  color: #fff;
+  border-bottom: 2px solid rgba(0, 123, 255, 0.14);
   padding-bottom: 10px;
-  margin-bottom: 30px;
   display: inline-block;
 }
 
-/* ==========================================================================
-   Card Styles (Translucent/Animated)
-   ========================================================================== */
-
-.animated-card {
-  background: rgba(255, 255, 255, 0.08); /* Translucent background */
-  backdrop-filter: blur(5px);
-  border-radius: 12px;
-  padding: 25px;
-  box-shadow: 0 4px 15px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease, box-shadow 0.3s ease;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.animated-card:hover {
-  transform: translateY(-5px);
-  box-shadow: 0 8px 25px rgba(0, 0, 0, 0.5);
-}
-
-/* Project Cards Grid */
-.cards-grid {
+/* =========================
+   GLOBAL GRID LAYOUT
+   - This class is now only for the charts, as summary cards are moved out.
+   - Renaming to global-charts-grid for clarity in the new structure.
+========================= */
+.global-charts-grid {
   display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-  gap: 25px;
+  gap: 18px;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Adjusted for charts only */
+  align-items: start;
+  margin-bottom: 30px;
+}
+
+/* =========================
+   GLOBAL CHARTS & PROJECTS GRID
+   - Removing max-height and overflow-y from global-charts and projects-grid
+     to ensure the main page scrolls, not just these sections.
+========================= */
+.global-charts,
+.projects-grid {
+  /* max-height: 400px; - REMOVED */
+  /* overflow-y: auto; - REMOVED */
+  padding-right: 0; /* Removed padding for scrollbar */
+  scrollbar-width: auto; /* Reset scrollbar settings */
+}
+
+.global-charts::-webkit-scrollbar,
+.projects-grid::-webkit-scrollbar {
+  width: auto; /* Reset scrollbar settings */
+}
+
+.global-charts::-webkit-scrollbar-thumb,
+.projects-grid::-webkit-scrollbar-thumb {
+  background: auto; /* Reset scrollbar settings */
+  border-radius: auto; /* Reset scrollbar settings */
+}
+
+.global-charts::-webkit-scrollbar-track,
+.projects-grid::-webkit-scrollbar-track {
+  background: auto; /* Reset scrollbar settings */
+}
+
+/* =========================
+   SUMMARY CARDS
+   - New layout for summary cards at the top
+========================= */
+.summary-cards-container {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 18px;
+  margin-bottom: 30px;
+}
+
+.summary-cards {
+  /* Removed grid layout as it's now handled by summary-cards-container */
+  display: contents; /* Allows children to participate in the parent grid */
+}
+
+.card {
+  padding: 18px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.04);
+  box-shadow: 0 8px 30px rgba(2, 6, 23, 0.6);
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 14px 40px rgba(2, 6, 23, 0.72);
+}
+
+.card h3 {
+  margin: 0 0 8px;
+  color: #cfe9ff;
+}
+
+.card .amount {
+  font-size: 1.6rem;
+  font-weight: 700;
+}
+
+.card .muted {
+  color: #9fb2c8;
+  margin-top: 6px;
+  font-size: 0.9rem;
+}
+
+.revenue-card .amount { color: #7ee08a; }
+.expense-card .amount { color: #ff8b8b; }
+.net-card.positive .amount { color: #7ee08a; }
+.net-card.negative .amount { color: #ff8b8b; }
+
+/* =========================
+   GLOBAL CHARTS GRID
+========================= */
+.global-charts {
+  display: grid;
+  grid-template-columns: 1fr; /* Force vertical stacking for charts */
+  gap: 12px;
+}
+
+.chart-card {
+  padding: 12px;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.25);
+}
+
+/* =========================
+   PROJECTS GRID
+========================= */
+.projects-grid {
+  display: grid;
+  gap: 14px;
 }
 
 .project-card {
+  border-radius: 12px;
+  overflow: hidden;
+}
+
+.card-head {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 14px;
+  cursor: pointer;
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+}
+
+.card-head .left {
+  display: flex;
+  gap: 12px;
   align-items: center;
 }
 
 .card-icon {
-  width: 50px;
-  height: 50px;
-  margin-right: 20px;
-  color: #007bff; /* Primary color for icons */
-}
-
-.card-icon svg {
-  width: 100%;
-  height: 100%;
-}
-
-.card-content {
-  flex-grow: 1;
-}
-
-.card-title {
-  font-size: 1.1rem;
-  color: #a0a0a0;
-  margin-bottom: 5px;
-}
-
-.card-metric {
-  font-size: 1.8rem;
-  font-weight: 700;
-  margin-bottom: 5px;
-}
-
-.card-detail {
-  font-size: 0.9rem;
-  color: #707070;
-}
-
-.status-active {
-  color: #28a745; /* Green for active status */
-  font-weight: 600;
-}
-
-.value-positive {
-  color: #28a745; /* Green for positive values (Revenue) */
-}
-
-.value-negative {
-  color: #dc3545; /* Red for negative values (Expenses) */
-}
-
-/* Specific Card Colors for visual distinction */
-.revenue-card .card-icon { color: #28a745; }
-.expense-card .card-icon { color: #dc3545; }
-
-/* ==========================================================================
-   Charts Section
-   ========================================================================== */
-
-.charts-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(450px, 1fr));
-  gap: 25px;
-}
-
-.chart-card {
-  min-height: 350px;
-  display: flex;
-  flex-direction: column;
-}
-
-.chart-title {
-  font-size: 1.3rem;
-  font-weight: 600;
-  margin-bottom: 15px;
-  color: #ffffff;
-}
-
-.chart-placeholder {
-  flex-grow: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  background: rgba(0, 0, 0, 0.2);
+  width: 48px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.03);
   border-radius: 8px;
-  color: #707070;
-  font-style: italic;
 }
 
-/* ==========================================================================
-   Trial Balance Section (Balance Design)
-   ========================================================================== */
+.project-name {
+  margin: 0;
+  font-size: 1.05rem;
+  color: #eaf6ff;
+}
 
+.muted.small {
+  color: #9fb2c8;
+  margin: 0;
+}
+
+.toggle-btn {
+  border: none;
+  background: rgba(255, 255, 255, 0.03);
+  color: #cfe9ff;
+  padding: 6px 10px;
+  border-radius: 8px;
+}
+
+/* =========================
+   CARD BODY COLLAPSE/EXPAND
+========================= */
+.card-body {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.45s cubic-bezier(.2, .9, .2, 1), padding 0.28s;
+  padding: 0 14px;
+}
+
+.card-body.expanded {
+  padding: 14px;
+  max-height: 900px;
+}
+
+/* =========================
+   MINI CHARTS ROW
+========================= */
+.charts-row {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(180px, 1fr));
+  gap: 12px;
+  margin-bottom: 12px;
+}
+
+.mini-chart {
+  background: rgba(255, 255, 255, 0.02);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+/* =========================
+   TRIAL BALANCE TABLE
+========================= */
+.trial-balance-table-wrapper {
+  background: rgba(0, 0, 0, 0.22);
+  padding: 10px;
+  border-radius: 8px;
+}
+
+.trial-balance-table {
+  width: 100%;
+  border-collapse: collapse;
+  color: #dfeefb;
+}
+
+.trial-balance-table th,
+.trial-balance-table td {
+  padding: 8px 10px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.04);
+  text-align: left;
+}
+
+.trial-balance-table th {
+  color: #fff;
+  font-size: 0.85rem;
+}
+
+/* =========================
+   BALANCE DESIGN / SCALE
+========================= */
 .balance-design-wrapper {
   display: flex;
   flex-direction: column;
   align-items: center;
-  margin-bottom: 40px;
+  gap: 18px;
+  margin-top: 18px;
 }
 
 .balance-scale {
   position: relative;
-  width: 80%;
-  max-width: 600px;
-  height: 150px;
-  margin-bottom: 30px;
+  width: 70%;
+  max-width: 560px;
+  height: 160px;
 }
 
 .scale-base {
@@ -180,169 +297,74 @@
   bottom: 0;
   left: 50%;
   transform: translateX(-50%);
-  width: 10px;
-  height: 100px;
-  background-color: #a0a0a0;
-  border-radius: 5px 5px 0 0;
+  width: 12px;
+  height: 110px;
+  background: #9fb2c8;
+  border-radius: 6px 6px 0 0;
 }
 
 .scale-arm {
   position: absolute;
-  top: 10px;
+  top: 18px;
   left: 50%;
-  transform: translateX(-50%) rotate(0deg); /* 0deg for balanced */
-  width: 100%;
-  height: 5px;
-  background-color: #a0a0a0;
-  transition: transform 1s ease-in-out;
   transform-origin: 50% 50%;
+  width: 100%;
+  height: 6px;
+  background: #9fb2c8;
+  border-radius: 6px;
+  transition: transform 1s ease-in-out;
 }
 
-/* Scale Pans (Debits and Credits) */
 .scale-pan {
   position: absolute;
-  top: 50px;
-  width: 150px;
-  height: 80px;
-  background: rgba(0, 123, 255, 0.15);
-  border: 2px solid #007bff;
+  top: 56px;
+  width: 170px;
+  height: 78px;
+  background: rgba(0, 123, 255, 0.08);
   border-radius: 8px;
   display: flex;
   flex-direction: column;
-  justify-content: center;
   align-items: center;
-  padding: 10px;
-  box-shadow: 0 0 15px rgba(0, 123, 255, 0.5);
+  justify-content: center;
+  border: 1px solid rgba(0, 123, 255, 0.12);
 }
 
-.left-pan {
-  left: 0;
-  transform: translateY(0); /* Adjust based on balance status */
-}
-
-.right-pan {
-  right: 0;
-  transform: translateY(0); /* Adjust based on balance status */
-}
+.left-pan { left: 0; }
+.right-pan { right: 0; }
 
 .pan-label {
+  color: #cfe9ff;
   font-size: 0.9rem;
-  color: #a0a0a0;
-  margin-bottom: 5px;
+  margin-bottom: 6px;
 }
 
 .pan-value {
-  font-size: 1.4rem;
+  font-size: 1.2rem;
   font-weight: 700;
 }
 
-.value-debit {
-  color: #007bff; /* Blue for Debits */
-}
+.value-debit { color: #7fb4ff; }
+.value-credit { color: #7ee08a; }
 
-.value-credit {
-  color: #28a745; /* Green for Credits */
-}
+/* =========================
+   HELPERS
+========================= */
+.positive { color: #7ee08a; font-weight: 700; }
+.negative { color: #ff8b8b; font-weight: 700; }
+.muted { color: #9fb2c8; }
 
-/* Balance Status Indicator */
-.balance-status-indicator {
-  text-align: center;
-  margin-top: 20px;
-}
-
-.status-text {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  font-weight: 600;
-}
-
-.status-icon {
-  width: 30px;
-  height: 30px;
-  margin-right: 10px;
-}
-
-.status-icon svg {
-  color: #28a745; /* Green for balanced */
-}
-
-.status-message.balanced {
-  color: #28a745;
-}
-
-.balance-difference {
-  font-size: 1rem;
-  color: #a0a0a0;
-  margin-top: 5px;
-}
-
-/* Trial Balance Table */
-.trial-balance-table-wrapper {
-  padding: 0;
-  overflow-x: auto;
-}
-
-.trial-balance-table {
-  width: 100%;
-  border-collapse: collapse;
-  font-size: 1rem;
-}
-
-.trial-balance-table th,
-.trial-balance-table td {
-  padding: 15px;
-  text-align: left;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
-}
-
-.trial-balance-table th {
-  background: rgba(0, 123, 255, 0.1);
-  font-weight: 600;
-  color: #ffffff;
-  text-transform: uppercase;
-  font-size: 0.9rem;
-}
-
-.trial-balance-table tbody tr:hover {
-  background: rgba(255, 255, 255, 0.05);
-}
-
-.text-right {
-  text-align: right;
-}
-
-/* Media Queries for Responsiveness */
+/* =========================
+   RESPONSIVE
+========================= */
 @media (max-width: 768px) {
   .dashboard-container {
-    padding: 20px;
-  }
-
-  .page-title {
-    font-size: 2rem;
-  }
-
-  .section-title {
-    font-size: 1.5rem;
-  }
-
-  .cards-grid, .charts-grid {
-    grid-template-columns: 1fr;
-  }
-
-  .balance-scale {
-    width: 100%;
-    height: 120px;
-  }
-
-  .scale-pan {
-    width: 45%;
-    height: 60px;
-    top: 40px;
-  }
-
-  .pan-value {
-    font-size: 1.2rem;
-  }
+  min-height: auto; /* Ensure content dictates height */ padding: 20px; }
+  .page-title { font-size: 2rem; }
+  .section-title { font-size: 1.5rem; }
+  .summary-cards-container { grid-template-columns: 1fr; } /* Stack cards on mobile */
+  .global-charts-grid { grid-template-columns: 1fr; } /* Stack charts on mobile */
+  .global-charts { grid-template-columns: 1fr; } /* Stack inner charts on mobile */
+  .balance-scale { width: 100%; height: 120px; }
+  .scale-pan { width: 45%; height: 60px; top: 40px; }
+  .pan-value { font-size: 1.2rem; }
 }

@@ -59,12 +59,10 @@
       </div>
       <div class="form-row">
         <div class="form-group">
-          <label for="currency">{{ 'CURRENCY_LABEL' | translate | async }}</label>
-          <select id="currency" formControlName="currency">
-            <option value="">{{ 'CURRENCY_PLACEHOLDER' | translate | async }}</option>
-            <option value="EGP">{{ 'CURRENCY_EGP' | translate | async }}</option>
-            <option value="USD">{{ 'CURRENCY_USD' | translate | async }}</option>
-            <option value="EUR">{{ 'CURRENCY_EUR' | translate | async }}</option>
+          <label>Currency</label>
+          <select formControlName="currency">
+            <option value="EGP">EGP</option>
+          
           </select>
         </div>
 

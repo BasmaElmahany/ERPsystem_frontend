@@ -358,9 +358,18 @@ body {
     width: 70px;
     min-width: 70px;
 
-    .logo-section {
+     .logo-section {
       justify-content: center;
-      padding: 24px 0;
+      padding: 20px 0;
+
+      .logo-icon {
+        font-size: 1.1rem !important;      // Shrink icon
+        text-shadow: 0 0 5px rgba($primary-color, 0.2);
+      }
+
+      .logo-text {
+        display: none;
+      }
     }
 
     .logo-text, .nav-label {
