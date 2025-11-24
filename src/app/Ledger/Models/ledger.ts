@@ -1,4 +1,4 @@
-import { ApexChart, ApexDataLabels, ApexMarkers, ApexNonAxisChartSeries, ApexStroke, ApexTitleSubtitle, ApexXAxis } from "ng-apexcharts";
+import { ApexChart, ApexDataLabels, ApexLegend, ApexMarkers, ApexNonAxisChartSeries, ApexStroke, ApexTitleSubtitle, ApexTooltip, ApexXAxis } from "ng-apexcharts";
 
 export interface generaledger {
     accountName: string;
@@ -16,6 +16,8 @@ export type PieChartOptions = {
   labels: string[];
   dataLabels: ApexDataLabels;
   title: ApexTitleSubtitle;
+  legend : ApexLegend,
+  tooltip : ApexTooltip
 };
 
 export type BarChartOptions = {
@@ -26,6 +28,7 @@ export type BarChartOptions = {
   title: ApexTitleSubtitle;
   stroke : ApexStroke;
   markers :ApexMarkers;
-  
+   legend : ApexLegend,
+  tooltip : ApexTooltip
 
 };
