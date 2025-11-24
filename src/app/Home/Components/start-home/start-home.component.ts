@@ -3,10 +3,12 @@
  * Vanilla TypeScript with Canvas animations and DOM manipulation
  */
 
-import { Component, AfterViewInit, OnDestroy } from '@angular/core';
+import { Component, AfterViewInit, OnDestroy, Output, EventEmitter } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { TranslatePipe } from '../../../Shared/Pipes/translate.pipe';
 import { Router } from '@angular/router';
+import { map, Observable } from 'rxjs';
+import { I18nService } from '../../../Shared/Services/i18n.service';
 
 // ============================================
 // TYPE DEFINITIONS
@@ -633,8 +635,14 @@ window.addEventListener("beforeunload", () => {
 })
 export class StartHomeComponent implements AfterViewInit, OnDestroy {
     private _styleEl: HTMLStyleElement | null = null;
-
-    constructor(private router: Router) {}
+ @Output() languageToggle = new EventEmitter<void>();
+ currentLang$: Observable<string>;
+   isRTL$: Observable<boolean>;
+    constructor(private router: Router,private i18nService: I18nService) { 
+        this.currentLang$ = this.i18nService.currentLang$;
+        this.isRTL$ = this.i18nService.currentLang$.pipe(
+          map(lang => lang === 'ar')
+        );}
 
     ngAfterViewInit(): void {
         // hide global sidebar while this page is active by adding a body class
@@ -712,11 +720,11 @@ export class StartHomeComponent implements AfterViewInit, OnDestroy {
         // navigate to main dashboard (projects) — adjusts to your routing default
         this.router.navigate(['/projects']);
     }
+    toggleLanguage(): void {
+        console.log("button click")
+    this.languageToggle.emit();
+  }
 
-    gotoDashboard(): void {
-        // navigate to the project dashboard route
-        this.router.navigate(['/dashboard']);
-    }
 }
 
 export {
