@@ -491,3 +491,60 @@ html, body {
   .scale-pan { width: 45%; height: 60px; top: 40px; }
   .pan-value { font-size: 1.2rem; }
 }
+
+/* =========================
+   AVAILABLE CASH CARD
+========================= */
+.cashflow-card {
+  margin-top: 18px;
+  padding: 16px;
+  border-radius: 12px;
+  background: rgba(255, 255, 255, 0.05);
+  backdrop-filter: blur(6px);
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 8px 28px rgba(0, 0, 0, 0.38);
+  transition: transform 0.28s ease, box-shadow 0.28s ease;
+}
+
+.cashflow-card:hover {
+  transform: translateY(-4px);
+  box-shadow: 0 14px 38px rgba(0, 0, 0, 0.45);
+}
+
+.icon-wrapper {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  background: linear-gradient(135deg, rgba(34,197,94,0.35), rgba(59,130,246,0.30));
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.6rem;
+  color: #fff;
+}
+
+.cashflow-details h4 {
+  margin: 0;
+  font-size: 1.1rem;
+  color: #cfe9ff;
+}
+
+.cash-amount {
+  margin: 4px 0;
+  font-size: 1.55rem;
+  font-weight: 700;
+  color: #7ee08a;
+}
+
+.cash-caption {
+  margin: 0;
+  font-size: 0.85rem;
+  color: #9fb2c8;
+}
+
+/* RTL Support */
+.rtl .cashflow-card {
+  direction: rtl;
+}

@@ -145,7 +145,7 @@ export interface ProjectSummary extends Project {
   incomeStatement?: IncomeStatment;
   balanceSheet?: BalanceSheet[];
   trialBalance?: trialbalance[];
-
+  availableCash?: number;
   isBalanced?: boolean;
   loadingReports: boolean;
   errorReports: boolean;
@@ -153,6 +153,7 @@ export interface ProjectSummary extends Project {
   barChart?: {
     series: any[];
     chart: ApexChart;
+    colors?: string[];
     xaxis: ApexXAxis;
     yaxis?: ApexYAxis;
     labels: string[];
@@ -166,6 +167,7 @@ export interface ProjectSummary extends Project {
   pieChart?: {
     series: any[];
     chart: ApexChart;
+    colors?: string[];
     labels: string[];
     dataLabels?: ApexDataLabels;
     title?: ApexTitleSubtitle;
@@ -176,6 +178,7 @@ export interface ProjectSummary extends Project {
   balanceChart?: {
     series: any[];
     chart: ApexChart;
+    colors?: string[];
     xaxis: ApexXAxis;
     yaxis?: ApexYAxis;
     plotOptions: ApexPlotOptions;
@@ -197,6 +200,7 @@ export type ProjectReportResult = {
     incomeStatement: IncomeStatment;
     balanceSheet: BalanceSheet[];
     trialBalance: trialbalance[];
+    availableCash: number;
   } | null;
 };
 
@@ -204,6 +208,7 @@ export type ProjectReportResult = {
 export type ApexBarChartOptions = {
   series: ApexAxisChartSeries | ApexNonAxisChartSeries;
   chart: ApexChart;
+  colors?: string[];
   xaxis?: ApexXAxis;
   yaxis?: ApexYAxis;                    // ← Missing
   title?: ApexTitleSubtitle;

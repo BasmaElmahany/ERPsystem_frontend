@@ -60,5 +60,14 @@ export class HomeService {
     );
   }
 
+  getAvailableCash(project: string): Observable<any> {
+    const encodedProject = encodeURIComponent(project);
+    return this.http.get<{ availableCash: any }>(
+      `${baseUrl}/${encodedProject}/reports/available-cash`,
+      { headers: this.getHeaders() }
+    ).pipe(
+      map(response => response.availableCash)
+    );
 
+  }
 }

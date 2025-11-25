@@ -170,6 +170,20 @@
               </div>
             </div>
 
+            <div class="cashflow-card">
+              <div class="icon-wrapper">
+                💰
+              </div>
+
+              <div class="cashflow-details">
+                <h4>{{ 'AVAILABLE_CASH' | translate | async }}</h4>
+                <p class="cash-amount">
+                  {{ project.availableCash | currency:'EGP':'symbol':'1.2-2' }}
+                </p>
+
+                <p class="cash-caption">{{ 'CASH_CAN_BE_USED_NOW' | translate | async }}</p>
+              </div>
+            </div>
 
           </div>
         </div>

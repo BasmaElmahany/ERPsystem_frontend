@@ -39,8 +39,9 @@
   "STATUS_ACTIVE": "Active",
   "STATUS_ON_LEAVE": "On Leave",
   "STATUS_TERMINATED": "Terminated",
-  "TABLE_FOOTER_RECORDS": "Displaying {{count}} records."
-  ,
+  "TABLE_FOOTER_RECORDS": "Displaying {{count}} records.",
+  "AVAILABLE_CASH":"Available Cash",
+  "CASH_CAN_BE_USED_NOW" :"Cash can be used now",
   "NAV_GET_STARTED": "Get Started",
   "HERO_BADGE": "✨ Next Generation ERP",
   "HERO_TITLE": "Financial Excellence",

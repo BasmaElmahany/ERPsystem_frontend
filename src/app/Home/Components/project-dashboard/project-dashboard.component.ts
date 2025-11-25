@@ -77,7 +77,229 @@ export class ProjectDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.loadProjects();
   }
-
+  /*
+  loadProjects(): void {
+    this.loadingProjects = true;
+    this.errorProjects = false;
+  
+    this.projectService.getProjects().pipe(
+      map(projects =>
+        projects.map(p => ({
+          ...p,
+          loadingReports: true,
+          errorReports: false,
+          isBalanced: false,
+          expanded: false, // for per-project details toggle
+          barChart: undefined,
+          pieChart: undefined,
+          balanceChart: undefined
+        }) as ProjectSummary)
+      ),
+      switchMap(projects => {
+        this.projects = projects;
+        if (projects.length === 0) return of([]);
+  
+        const reportObservables = projects.map(project =>
+          this.fetchProjectReports(project.name).pipe(
+            map(reports => ({ project, reports }) as ProjectReportResult),
+            catchError(err => {
+              console.error(`Report fetch error for ${project.name}`, err);
+              return of({ project, reports: null } as ProjectReportResult);
+            })
+          )
+        );
+  
+        return forkJoin(reportObservables);
+      })
+    ).subscribe(
+      (results: ProjectReportResult[]) => {
+        console.log(results);
+        this.loadingProjects = false;
+  
+        // Reset global totals
+        this.totalRevenue = 0;
+        this.totalExpenses = 0;
+        this.globalTotalDebit = 0;
+        this.globalTotalCredit = 0;
+  
+        // Loop through each project result
+        results.forEach(result => {
+          const projIndex = this.projects.findIndex(p => p.name === result.project.name);
+          if (projIndex === -1) return;
+  
+          const project = this.projects[projIndex];
+          project.loadingReports = false;
+  
+          if (!result.reports) {
+            project.errorReports = true;
+            return;
+          }
+  
+          const { incomeStatement, balanceSheet, trialBalance, availableCash } = result.reports;
+  
+          // Assign report data
+          project.incomeStatement = incomeStatement;
+          project.balanceSheet = balanceSheet;
+          project.trialBalance = trialBalance;
+          project.availableCash = availableCash ?? 0;
+  
+          // ===== Trial Balance Check =====
+          const totalDebit = trialBalance.reduce((sum, tb) => sum + tb.debit, 0);
+          const totalCredit = trialBalance.reduce((sum, tb) => sum + tb.credit, 0);
+          project.isBalanced = Math.abs(totalDebit - totalCredit) < 0.01;
+  
+          // Accumulate global totals
+          this.totalRevenue += incomeStatement.totalRevenue ?? 0;
+          this.totalExpenses += incomeStatement.totalExpense ?? 0;
+          this.globalTotalDebit += totalDebit;
+          this.globalTotalCredit += totalCredit;
+  
+          // ===== Labels =====
+          const revenueLabel = this.i18n.instant('REVENUE');
+          const expenseLabel = this.i18n.instant('EXPENSE');
+          const debitLabel = this.i18n.instant('DEBIT');
+          const creditLabel = this.i18n.instant('CREDIT');
+  
+          // ===== Project Charts =====
+          project.barChart = {
+            series: [
+              { name: revenueLabel, data: [incomeStatement.totalRevenue ?? 0] },
+              { name: expenseLabel, data: [incomeStatement.totalExpense ?? 0] }
+            ],
+            chart: {
+              type: 'bar',
+              height: 160,
+              animations: { enabled: true, easing: 'easeout', speed: 600 },
+              background: 'transparent',
+              toolbar: { show: false },
+              foreColor: '#ffffff'
+            },
+            colors: ['#3b82f6', '#ef4444'],
+            xaxis: { categories: [''], labels: { style: { colors: ['#ffffff'] } } },
+            yaxis: { labels: { style: { colors: ['#ffffff'] } } },
+            plotOptions: { bar: { horizontal: false, columnWidth: '55%' } },
+            dataLabels: { style: { colors: ['#ffffff'] } },
+            labels: [revenueLabel, expenseLabel],
+            title: { style: { color: '#ffffff' } },
+            legend: { labels: { colors: '#ffffff' } },
+            tooltip: { style: { fontSize: '14px' } }
+          };
+  
+          project.pieChart = {
+            series: [incomeStatement.totalRevenue ?? 0, incomeStatement.totalExpense ?? 0],
+            chart: {
+              type: 'pie',
+              height: 160,
+              animations: { enabled: true, easing: 'easeout', speed: 600 },
+              background: 'transparent',
+              toolbar: { show: false },
+              foreColor: '#ffffff'
+            },
+            colors: ['#3b82f6', '#ef4444'],
+            labels: [revenueLabel, expenseLabel],
+            dataLabels: { style: { colors: ['#ffffff'] } },
+            legend: { labels: { colors: '#ffffff' } },
+            title: { style: { color: '#ffffff' } },
+            tooltip: { style: { fontSize: '14px' } }
+          };
+  
+          project.balanceChart = {
+            series: [
+              { name: this.i18n.instant('AMOUNT') || 'Amount', data: [totalDebit, totalCredit] }
+            ],
+            chart: {
+              type: 'bar',
+              height: 140,
+              animations: { enabled: true, easing: 'easeout', speed: 600 },
+              background: 'transparent',
+              toolbar: { show: false },
+              foreColor: '#ffffff'
+            },
+            xaxis: { categories: [debitLabel, creditLabel], labels: { style: { colors: ['#ffffff'] } } },
+            yaxis: { labels: { style: { colors: ['#ffffff'] } } },
+            plotOptions: { bar: { horizontal: false, columnWidth: '55%' } },
+            dataLabels: { style: { colors: ['#ffffff'] } },
+            labels: [debitLabel, creditLabel],
+            title: { style: { color: '#ffffff' } },
+            legend: { labels: { colors: '#ffffff' } },
+            tooltip: { style: { fontSize: '14px' } }
+          };
+        });
+  
+        // ===== Global Charts Labels =====
+        const revenueLabel = this.i18n.instant('REVENUE');
+        const expenseLabel = this.i18n.instant('EXPENSE');
+        const totalRevenueLabel = this.i18n.instant('TOTAL_REVENUE');
+        const totalExpensesLabel = this.i18n.instant('TOTAL_EXPENSES');
+        const allProjectsLabel = this.i18n.instant('ALL_PROJECTS');
+  
+        // ===== Global Charts =====
+        this.globalBarChart = {
+          series: [
+            { name: revenueLabel, data: [this.totalRevenue] },
+            { name: expenseLabel, data: [this.totalExpenses] }
+          ],
+          chart: {
+            type: 'bar',
+            height: 220,
+            animations: { enabled: true, easing: 'easeout', speed: 700 },
+            background: 'transparent',
+            toolbar: { show: false },
+            foreColor: '#ffffff'
+          },
+          xaxis: { categories: [allProjectsLabel] },
+          plotOptions: { bar: { horizontal: false, columnWidth: '45%' } },
+          labels: [revenueLabel, expenseLabel]
+        };
+  
+        this.globalPieChart = {
+          series: [this.totalRevenue, this.totalExpenses],
+          chart: {
+            type: 'pie',
+            height: 240,
+            animations: { enabled: true, easing: 'easeout', speed: 700 },
+            background: 'transparent',
+            toolbar: { show: false },
+            foreColor: '#ffffff'
+          },
+          labels: [totalRevenueLabel, totalExpensesLabel],
+          dataLabels: { style: { colors: ['#ffffff'] } },
+          legend: { labels: { colors: '#ffffff' } },
+          title: { style: { color: '#ffffff' } },
+          tooltip: { style: { fontSize: '14px' } }
+        };
+  
+        this.globalTrendChart = {
+          series: [
+            { name: revenueLabel, data: results.map(r => r.reports?.incomeStatement?.totalRevenue ?? 0) },
+            { name: expenseLabel, data: results.map(r => r.reports?.incomeStatement?.totalExpense ?? 0) }
+          ],
+          chart: {
+            type: 'line',
+            height: 200,
+            animations: { enabled: true, easing: 'easeout', speed: 700 },
+            background: 'transparent',
+            toolbar: { show: false },
+            foreColor: '#ffffff'
+          },
+          xaxis: { categories: this.projects.map(p => p.name), labels: { style: { colors: ['#ffffff'] } } },
+          yaxis: { labels: { style: { colors: ['#ffffff'] } } },
+          dataLabels: { style: { colors: ['#ffffff'] } },
+          legend: { labels: { colors: '#ffffff' } },
+          title: { style: { color: '#ffffff' } },
+          tooltip: { style: { fontSize: '14px' } }
+        };
+  
+        // Compute net profit
+        this.totalNetProfit = this.totalRevenue - this.totalExpenses;
+      },
+      err => {
+        console.error('Error loading projects:', err);
+        this.loadingProjects = false;
+        this.errorProjects = true;
+      }
+    );
+  }*/
   loadProjects(): void {
     this.loadingProjects = true;
     this.errorProjects = false;
@@ -89,7 +311,7 @@ export class ProjectDashboardComponent implements OnInit {
           loadingReports: true,
           errorReports: false,
           isBalanced: false,
-          expanded: false, // for per-project details toggle
+          expanded: false,
           barChart: undefined,
           pieChart: undefined,
           balanceChart: undefined
@@ -115,11 +337,20 @@ export class ProjectDashboardComponent implements OnInit {
       (results: ProjectReportResult[]) => {
         console.log(results);
         this.loadingProjects = false;
+
+        // Reset global totals
         this.totalRevenue = 0;
         this.totalExpenses = 0;
         this.globalTotalDebit = 0;
         this.globalTotalCredit = 0;
 
+        // Colors for dark mode
+        const revenueColor = '#4ade80'; // bright green
+        const expenseColor = '#f87171'; // soft red
+        const debitColor = '#60a5fa';   // light blue
+        const creditColor = '#fbbf24';  // gold/yellow
+
+        // Loop through each project result
         results.forEach(result => {
           const projIndex = this.projects.findIndex(p => p.name === result.project.name);
           if (projIndex === -1) return;
@@ -127,175 +358,144 @@ export class ProjectDashboardComponent implements OnInit {
           const project = this.projects[projIndex];
           project.loadingReports = false;
 
-          if (result.reports) {
-            const { incomeStatement, balanceSheet, trialBalance } = result.reports;
-
-            project.incomeStatement = incomeStatement;
-            project.balanceSheet = balanceSheet;
-            project.trialBalance = trialBalance;
-
-            // ===== Trial Balance Check =====
-            const totalDebit = trialBalance.reduce((sum, tb) => sum + tb.debit, 0);
-            const totalCredit = trialBalance.reduce((sum, tb) => sum + tb.credit, 0);
-            project.isBalanced = Math.abs(totalDebit - totalCredit) < 0.01;
-
-            // accumulate global totals
-            this.totalRevenue += incomeStatement.totalRevenue ?? 0;
-            this.totalExpenses += incomeStatement.totalExpense ?? 0;
-            this.globalTotalDebit += totalDebit;
-            this.globalTotalCredit += totalCredit;
-
-            // ===== Project Charts =====
-            // Translate labels dynamically
-            const revenueLabel = this.i18n.instant('REVENUE');
-            const expenseLabel = this.i18n.instant('EXPENSE');
-            const debitLabel = this.i18n.instant('DEBIT');
-            const creditLabel = this.i18n.instant('CREDIT');
-
-            project.barChart = {
-              series: [
-                { name: revenueLabel, data: [incomeStatement.totalRevenue ?? 0] },
-                { name: expenseLabel, data: [incomeStatement.totalExpense ?? 0] }
-              ],
-              chart: {
-                type: 'bar',
-                height: 160,
-                animations: { enabled: true, easing: 'easeout', speed: 600 },
-                background: 'transparent',
-                toolbar: { show: false },
-                foreColor: '#ffffff' // sets text color for axes, tooltip, legend
-              },
-              xaxis: {
-                categories: [''],
-                labels: { style: { colors: ['#ffffff'] } }
-              },
-              yaxis: {
-                labels: { style: { colors: ['#ffffff'] } }
-              },
-              plotOptions: { bar: { horizontal: false, columnWidth: '55%' } },
-              dataLabels: { style: { colors: ['#ffffff'] } },
-              labels: [revenueLabel, expenseLabel],
-              title: { style: { color: '#ffffff' } },
-              legend: { labels: { colors: '#ffffff' } },
-              tooltip: {
-                style: { fontSize: '14px'/*, color: '#ffffff'*/ }
-              }
-            };
-
-
-            project.pieChart = {
-              series: [incomeStatement.totalRevenue ?? 0, incomeStatement.totalExpense ?? 0],
-              chart: {
-                type: 'pie',
-                height: 160,
-                animations: { enabled: true, easing: 'easeout', speed: 600 },
-                background: 'transparent',
-                toolbar: { show: false },
-                foreColor: '#ffffff' // sets text color for axes, tooltip, legend
-              },
-              labels: [revenueLabel, expenseLabel],
-              dataLabels: { style: { colors: ['#ffffff'] } },
-              legend: { labels: { colors: '#ffffff' } },
-              title: { style: { color: '#ffffff' } },
-              tooltip: { style: { fontSize: '14px'/*, color: '#ffffff'*/ } }
-            };
-
-
-            project.balanceChart = {
-              series: [
-                { name: this.i18n.instant('AMOUNT') || 'Amount', data: [totalDebit, totalCredit] }
-              ],
-              chart: {
-                type: 'bar',
-                height: 140,
-                animations: { enabled: true, easing: 'easeout', speed: 600 },
-                background: 'transparent',
-                toolbar: { show: false },
-                foreColor: '#ffffff' // sets text color for axes, tooltip, legend
-              },
-              xaxis: {
-                categories: [debitLabel, creditLabel],
-                labels: { style: { colors: ['#ffffff'] } }
-              },
-              yaxis: {
-                labels: { style: { colors: ['#ffffff'] } }
-              },
-              plotOptions: { bar: { horizontal: false, columnWidth: '55%' } },
-              dataLabels: { style: { colors: ['#ffffff'] } },
-              labels: [debitLabel, creditLabel],
-              title: { style: { color: '#ffffff' } },
-              legend: { labels: { colors: '#ffffff' } },
-              tooltip: { style: { fontSize: '14px'/*, color: '#ffffff'*/ } }
-            };
-
-          } else {
+          if (!result.reports) {
             project.errorReports = true;
+            return;
           }
+
+          const { incomeStatement, balanceSheet, trialBalance, availableCash } = result.reports;
+
+          // Assign report data
+          project.incomeStatement = incomeStatement;
+          project.balanceSheet = balanceSheet;
+          project.trialBalance = trialBalance;
+          project.availableCash = availableCash ?? 0;
+
+          // ===== Trial Balance Check =====
+          const totalDebit = trialBalance.reduce((sum, tb) => sum + tb.debit, 0);
+          const totalCredit = trialBalance.reduce((sum, tb) => sum + tb.credit, 0);
+          project.isBalanced = Math.abs(totalDebit - totalCredit) < 0.01;
+
+          // Accumulate global totals
+          this.totalRevenue += incomeStatement.totalRevenue ?? 0;
+          this.totalExpenses += incomeStatement.totalExpense ?? 0;
+          this.globalTotalDebit += totalDebit;
+          this.globalTotalCredit += totalCredit;
+
+          // ===== Labels =====
+          const revenueLabel = this.i18n.instant('REVENUE');
+          const expenseLabel = this.i18n.instant('EXPENSE');
+          const debitLabel = this.i18n.instant('DEBIT');
+          const creditLabel = this.i18n.instant('CREDIT');
+
+          // ===== Project Charts =====
+          project.barChart = {
+            series: [
+              { name: revenueLabel, data: [incomeStatement.totalRevenue ?? 0] },
+              { name: expenseLabel, data: [incomeStatement.totalExpense ?? 0] }
+            ],
+            chart: {
+              type: 'bar',
+              height: 160,
+              background: 'transparent',
+              toolbar: { show: true  },
+              foreColor: '#ffffff',
+              animations: { enabled: true, easing: 'easeout', speed: 600 }
+            },
+            colors: [revenueColor, expenseColor],
+            xaxis: { categories: [''], labels: { style: { colors: ['#ffffff'] } } },
+            yaxis: { labels: { style: { colors: ['#ffffff'] } } },
+            plotOptions: { bar: { horizontal: false, columnWidth: '55%' } },
+            dataLabels: { style: { colors: ['#ffffff'] } },
+            legend: { labels: { colors: '#ffffff' } },
+            tooltip: { enabled: false },
+            labels: ['']
+          };
+
+          project.pieChart = {
+            series: [incomeStatement.totalRevenue ?? 0, incomeStatement.totalExpense ?? 0],
+            chart: {
+              type: 'pie',
+              height: 160,
+              background: 'transparent',
+              toolbar: { show: false },
+              foreColor: '#ffffff',
+              animations: { enabled: true, easing: 'easeout', speed: 600 }
+            },
+            colors: [revenueColor, expenseColor],
+            labels: [revenueLabel, expenseLabel],
+            dataLabels: { style: { colors: ['#ffffff'] } },
+            legend: { labels: { colors: '#ffffff' } },
+            tooltip: { enabled: false },
+          };
+
+          project.balanceChart = {
+            series: [{ name: this.i18n.instant('AMOUNT') || 'Amount', data: [totalDebit, totalCredit] }],
+            chart: {
+              type: 'bar',
+              height: 140,
+              background: 'transparent',
+              toolbar: { show: false },
+              foreColor: '#ffffff',
+              animations: { enabled: true, easing: 'easeout', speed: 600 }
+            },
+            colors: [debitColor, creditColor],
+            xaxis: { categories: [debitLabel, creditLabel], labels: { style: { colors: ['#ffffff'] } } },
+            yaxis: { labels: { style: { colors: ['#ffffff'] } } },
+            plotOptions: { bar: { horizontal: false, columnWidth: '55%' } },
+            dataLabels: { style: { colors: ['#ffffff'] } },
+            legend: { labels: { colors: '#ffffff' } },
+            tooltip: { enabled: false },
+            labels: [''],
+          };
         });
+
+        // ===== Global Charts Labels =====
         const revenueLabel = this.i18n.instant('REVENUE');
         const expenseLabel = this.i18n.instant('EXPENSE');
         const totalRevenueLabel = this.i18n.instant('TOTAL_REVENUE');
         const totalExpensesLabel = this.i18n.instant('TOTAL_EXPENSES');
         const allProjectsLabel = this.i18n.instant('ALL_PROJECTS');
+
         // ===== Global Charts =====
         this.globalBarChart = {
           series: [
             { name: revenueLabel, data: [this.totalRevenue] },
             { name: expenseLabel, data: [this.totalExpenses] }
           ],
-          chart: {
-            type: 'bar', height: 220, animations: { enabled: true, easing: 'easeout', speed: 700 },
-            background: 'transparent',
-            toolbar: { show: false },
-            foreColor: '#ffffff'
-          },
-          xaxis: { categories: [allProjectsLabel] }, // make sure this is defined
-          plotOptions: { bar: { horizontal: false, columnWidth: '45%' } }, // define plotOptions
-          labels: [revenueLabel, expenseLabel] // define labels
+          chart: { type: 'bar', height: 220, background: 'transparent', toolbar: { show: false }, foreColor: '#ffffff' },
+          colors: [revenueColor, expenseColor],
+          xaxis: { categories: [allProjectsLabel], labels: { style: { colors: ['#ffffff'] } } },
+          plotOptions: { bar: { horizontal: false, columnWidth: '45%' } },
+          labels: [revenueLabel, expenseLabel]
         };
 
         this.globalPieChart = {
           series: [this.totalRevenue, this.totalExpenses],
-          chart: {
-            type: 'pie', height: 240, animations: { enabled: true, easing: 'easeout', speed: 700 },
-            background: 'transparent',
-            toolbar: { show: false },
-            foreColor: '#ffffff'
-          },
+          chart: { type: 'pie', height: 240, background: 'transparent', toolbar: { show: false }, foreColor: '#ffffff' },
+          colors: [revenueColor, expenseColor],
           labels: [totalRevenueLabel, totalExpensesLabel],
           dataLabels: { style: { colors: ['#ffffff'] } },
           legend: { labels: { colors: '#ffffff' } },
-          title: { style: { color: '#ffffff' } },
-          tooltip: { style: { fontSize: '14px'/*, color: '#ffffff' */ } }
-        };
+          tooltip: { enabled: false }
 
+        };
 
         this.globalTrendChart = {
           series: [
             { name: revenueLabel, data: results.map(r => r.reports?.incomeStatement?.totalRevenue ?? 0) },
             { name: expenseLabel, data: results.map(r => r.reports?.incomeStatement?.totalExpense ?? 0) }
           ],
-          chart: {
-            type: 'line', height: 200, animations: { enabled: true, easing: 'easeout', speed: 700 },
-            background: 'transparent',
-            toolbar: { show: false },
-            foreColor: '#ffffff'
-          },
-          xaxis: {
-            categories: this.projects.map(p => p.name),
-            labels: { style: { colors: ['#ffffff'] } }
-          },
-          yaxis: {
-            labels: { style: { colors: ['#ffffff'] } }
-          },
+          chart: { type: 'line', height: 200, background: 'transparent', toolbar: { show: false }, foreColor: '#ffffff', animations: { enabled: true, easing: 'easeout', speed: 700 } },
+          xaxis: { categories: this.projects.map(p => p.name), labels: { style: { colors: ['#ffffff'] } } },
+          yaxis: { labels: { style: { colors: ['#ffffff'] } } },
           dataLabels: { style: { colors: ['#ffffff'] } },
           legend: { labels: { colors: '#ffffff' } },
-          title: { style: { color: '#ffffff' } },
-          tooltip: { style: { fontSize: '14px'/*, color: '#ffffff' */ } }
+          tooltip: { enabled: false },
+          labels: [allProjectsLabel],
         };
 
-
-        // compute net profit
+        // Compute net profit
         this.totalNetProfit = this.totalRevenue - this.totalExpenses;
       },
       err => {
@@ -306,11 +506,17 @@ export class ProjectDashboardComponent implements OnInit {
     );
   }
 
-  fetchProjectReports(projectName: string): Observable<{ incomeStatement: IncomeStatment, balanceSheet: BalanceSheet[], trialBalance: trialbalance[] }> {
+
+
+  fetchProjectReports(projectName: string): Observable<{
+    incomeStatement: IncomeStatment, balanceSheet: BalanceSheet[], trialBalance: trialbalance[],
+    availableCash: number
+  }> {
     return forkJoin({
       incomeStatement: this.homeService.getIncomeStatement(projectName),
       balanceSheet: this.homeService.getBalanceSheet(projectName),
-      trialBalance: this.homeService.getTrailBalance(projectName)
+      trialBalance: this.homeService.getTrailBalance(projectName),
+      availableCash: this.homeService.getAvailableCash(projectName)
     });
   }
 
@@ -373,6 +579,82 @@ export class ProjectDashboardComponent implements OnInit {
     this.router.navigate(['/start-home']);
   }
 
+
+
+
+
+  //=========================================Charts Styles==============================================================================/
+
+
+
+  /*
+    // ألوان موحدة تناسب الخلفية الداكنة
+   DARK_THEME_COLORS = ['#3b82f6', '#ef4444', '#facc15', '#10b981', '#8b5cf6'];
+  
+   CHART_TEXT_COLOR = '#ffffff';
+  
+   getBarChart(seriesData: any[], categories: string[]) {
+    return {
+      series: seriesData,
+      chart: {
+        type: 'bar',
+        height: 180,
+        background: 'transparent',
+        toolbar: { show: false },
+        foreColor: this.CHART_TEXT_COLOR,
+        animations: { enabled: true, easing: 'easeout', speed: 600 }
+      },
+      colors: this.DARK_THEME_COLORS,
+      xaxis: { categories, labels: { style: { colors: [this.CHART_TEXT_COLOR] } } },
+      yaxis: { labels: { style: { colors: [this.CHART_TEXT_COLOR] } } },
+      plotOptions: { bar: { horizontal: false, columnWidth: '50%' } },
+      dataLabels: { style: { colors: [this.CHART_TEXT_COLOR] } },
+      legend: { labels: { colors: this.CHART_TEXT_COLOR } },
+      tooltip: { style: { fontSize: '14px' } },
+      title: { style: { color: this.CHART_TEXT_COLOR } }
+    };
+  }
+  
+   getPieChart(seriesData: number[], labels: string[]) {
+    return {
+      series: seriesData,
+      chart: {
+        type: 'pie',
+        height: 160,
+        background: 'transparent',
+        toolbar: { show: false },
+        foreColor: this.CHART_TEXT_COLOR,
+        animations: { enabled: true, easing: 'easeout', speed: 600 }
+      },
+      colors: this.DARK_THEME_COLORS,
+      labels,
+      dataLabels: { style: { colors: [this.CHART_TEXT_COLOR] } },
+      legend: { labels: { colors: this.CHART_TEXT_COLOR } },
+      tooltip: { style: { fontSize: '14px' } },
+      title: { style: { color: this.CHART_TEXT_COLOR } }
+    };
+  }
+  
+   getLineChart(seriesData: any[], categories: string[]) {
+    return {
+      series: seriesData,
+      chart: {
+        type: 'line',
+        height: 200,
+        background: 'transparent',
+        toolbar: { show: false },
+        foreColor: this.CHART_TEXT_COLOR,
+        animations: { enabled: true, easing: 'easeout', speed: 700 }
+      },
+      xaxis: { categories, labels: { style: { colors: [this.CHART_TEXT_COLOR] } } },
+      yaxis: { labels: { style: { colors: [this.CHART_TEXT_COLOR] } } },
+      dataLabels: { style: { colors: [this.CHART_TEXT_COLOR] } },
+      legend: { labels: { colors: this.CHART_TEXT_COLOR } },
+      tooltip: { style: { fontSize: '14px' } },
+      title: { style: { color: this.CHART_TEXT_COLOR } }
+    };
+  }
+  */
 }
 
 
