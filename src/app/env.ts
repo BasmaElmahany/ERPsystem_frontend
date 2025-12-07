@@ -1,1 +1,1 @@
-export const baseUrl="http://172.36.1.128:83/api"
+export const baseUrl="https://shusha.minya.gov.eg:8081/api"
