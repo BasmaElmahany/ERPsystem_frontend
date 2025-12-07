@@ -76,7 +76,7 @@
             </apx-chart>
           </div>
 
-       <!--   <div class="chart-card animated-card">
+          <!--   <div class="chart-card animated-card">
             <h4>{{ 'REVENUE_EXPENSE_PER_PROJECT' | translate | async }}</h4>
             <apx-chart *ngIf="globalTrendChart" [series]="globalTrendChart.series" [chart]="globalTrendChart.chart"
               [xaxis]="globalTrendChart!.xaxis!">
@@ -97,12 +97,18 @@
               <div class="card-icon"></div>
               <div>
                 <h3 class="project-name">{{ project.name }}</h3>
+
+
                 <p class="muted small">{{ 'NET_PROFIT' | translate | async }}:
                   <span [class.positive]="getNetProfit(project) >= 0" [class.negative]="getNetProfit(project) < 0">
                     {{ getNetProfit(project) | currency:'EGP':'symbol':'1.2-2' }}
                   </span>
                 </p>
               </div>
+              <button (click)="downloadGeneralBalance(project.name)">
+                تصدير الميزانية العامة
+              </button>
+
             </div>
 
             <div class="right">

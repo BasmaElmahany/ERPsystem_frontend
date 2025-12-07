@@ -19,6 +19,8 @@ import { I18nService } from '../../../Shared/Services/i18n.service';
 import {
   NgApexchartsModule
 } from 'ng-apexcharts';
+import * as ExcelJS from 'exceljs';
+import { saveAs } from 'file-saver';
 
 
 
@@ -62,6 +64,7 @@ export class ProjectDashboardComponent implements OnInit {
   // local logo path (uploaded file)
   logoPath = '/assets/erp_dashboard_logo.png';
   Math = Math;
+  generalb: any = null;
   // language observable for navbar
   currentLang$: any;
   currentLang: any;
@@ -77,229 +80,7 @@ export class ProjectDashboardComponent implements OnInit {
   ngOnInit(): void {
     this.loadProjects();
   }
-  /*
-  loadProjects(): void {
-    this.loadingProjects = true;
-    this.errorProjects = false;
-  
-    this.projectService.getProjects().pipe(
-      map(projects =>
-        projects.map(p => ({
-          ...p,
-          loadingReports: true,
-          errorReports: false,
-          isBalanced: false,
-          expanded: false, // for per-project details toggle
-          barChart: undefined,
-          pieChart: undefined,
-          balanceChart: undefined
-        }) as ProjectSummary)
-      ),
-      switchMap(projects => {
-        this.projects = projects;
-        if (projects.length === 0) return of([]);
-  
-        const reportObservables = projects.map(project =>
-          this.fetchProjectReports(project.name).pipe(
-            map(reports => ({ project, reports }) as ProjectReportResult),
-            catchError(err => {
-              console.error(`Report fetch error for ${project.name}`, err);
-              return of({ project, reports: null } as ProjectReportResult);
-            })
-          )
-        );
-  
-        return forkJoin(reportObservables);
-      })
-    ).subscribe(
-      (results: ProjectReportResult[]) => {
-        console.log(results);
-        this.loadingProjects = false;
-  
-        // Reset global totals
-        this.totalRevenue = 0;
-        this.totalExpenses = 0;
-        this.globalTotalDebit = 0;
-        this.globalTotalCredit = 0;
-  
-        // Loop through each project result
-        results.forEach(result => {
-          const projIndex = this.projects.findIndex(p => p.name === result.project.name);
-          if (projIndex === -1) return;
-  
-          const project = this.projects[projIndex];
-          project.loadingReports = false;
-  
-          if (!result.reports) {
-            project.errorReports = true;
-            return;
-          }
-  
-          const { incomeStatement, balanceSheet, trialBalance, availableCash } = result.reports;
-  
-          // Assign report data
-          project.incomeStatement = incomeStatement;
-          project.balanceSheet = balanceSheet;
-          project.trialBalance = trialBalance;
-          project.availableCash = availableCash ?? 0;
-  
-          // ===== Trial Balance Check =====
-          const totalDebit = trialBalance.reduce((sum, tb) => sum + tb.debit, 0);
-          const totalCredit = trialBalance.reduce((sum, tb) => sum + tb.credit, 0);
-          project.isBalanced = Math.abs(totalDebit - totalCredit) < 0.01;
-  
-          // Accumulate global totals
-          this.totalRevenue += incomeStatement.totalRevenue ?? 0;
-          this.totalExpenses += incomeStatement.totalExpense ?? 0;
-          this.globalTotalDebit += totalDebit;
-          this.globalTotalCredit += totalCredit;
-  
-          // ===== Labels =====
-          const revenueLabel = this.i18n.instant('REVENUE');
-          const expenseLabel = this.i18n.instant('EXPENSE');
-          const debitLabel = this.i18n.instant('DEBIT');
-          const creditLabel = this.i18n.instant('CREDIT');
-  
-          // ===== Project Charts =====
-          project.barChart = {
-            series: [
-              { name: revenueLabel, data: [incomeStatement.totalRevenue ?? 0] },
-              { name: expenseLabel, data: [incomeStatement.totalExpense ?? 0] }
-            ],
-            chart: {
-              type: 'bar',
-              height: 160,
-              animations: { enabled: true, easing: 'easeout', speed: 600 },
-              background: 'transparent',
-              toolbar: { show: false },
-              foreColor: '#ffffff'
-            },
-            colors: ['#3b82f6', '#ef4444'],
-            xaxis: { categories: [''], labels: { style: { colors: ['#ffffff'] } } },
-            yaxis: { labels: { style: { colors: ['#ffffff'] } } },
-            plotOptions: { bar: { horizontal: false, columnWidth: '55%' } },
-            dataLabels: { style: { colors: ['#ffffff'] } },
-            labels: [revenueLabel, expenseLabel],
-            title: { style: { color: '#ffffff' } },
-            legend: { labels: { colors: '#ffffff' } },
-            tooltip: { style: { fontSize: '14px' } }
-          };
-  
-          project.pieChart = {
-            series: [incomeStatement.totalRevenue ?? 0, incomeStatement.totalExpense ?? 0],
-            chart: {
-              type: 'pie',
-              height: 160,
-              animations: { enabled: true, easing: 'easeout', speed: 600 },
-              background: 'transparent',
-              toolbar: { show: false },
-              foreColor: '#ffffff'
-            },
-            colors: ['#3b82f6', '#ef4444'],
-            labels: [revenueLabel, expenseLabel],
-            dataLabels: { style: { colors: ['#ffffff'] } },
-            legend: { labels: { colors: '#ffffff' } },
-            title: { style: { color: '#ffffff' } },
-            tooltip: { style: { fontSize: '14px' } }
-          };
-  
-          project.balanceChart = {
-            series: [
-              { name: this.i18n.instant('AMOUNT') || 'Amount', data: [totalDebit, totalCredit] }
-            ],
-            chart: {
-              type: 'bar',
-              height: 140,
-              animations: { enabled: true, easing: 'easeout', speed: 600 },
-              background: 'transparent',
-              toolbar: { show: false },
-              foreColor: '#ffffff'
-            },
-            xaxis: { categories: [debitLabel, creditLabel], labels: { style: { colors: ['#ffffff'] } } },
-            yaxis: { labels: { style: { colors: ['#ffffff'] } } },
-            plotOptions: { bar: { horizontal: false, columnWidth: '55%' } },
-            dataLabels: { style: { colors: ['#ffffff'] } },
-            labels: [debitLabel, creditLabel],
-            title: { style: { color: '#ffffff' } },
-            legend: { labels: { colors: '#ffffff' } },
-            tooltip: { style: { fontSize: '14px' } }
-          };
-        });
-  
-        // ===== Global Charts Labels =====
-        const revenueLabel = this.i18n.instant('REVENUE');
-        const expenseLabel = this.i18n.instant('EXPENSE');
-        const totalRevenueLabel = this.i18n.instant('TOTAL_REVENUE');
-        const totalExpensesLabel = this.i18n.instant('TOTAL_EXPENSES');
-        const allProjectsLabel = this.i18n.instant('ALL_PROJECTS');
-  
-        // ===== Global Charts =====
-        this.globalBarChart = {
-          series: [
-            { name: revenueLabel, data: [this.totalRevenue] },
-            { name: expenseLabel, data: [this.totalExpenses] }
-          ],
-          chart: {
-            type: 'bar',
-            height: 220,
-            animations: { enabled: true, easing: 'easeout', speed: 700 },
-            background: 'transparent',
-            toolbar: { show: false },
-            foreColor: '#ffffff'
-          },
-          xaxis: { categories: [allProjectsLabel] },
-          plotOptions: { bar: { horizontal: false, columnWidth: '45%' } },
-          labels: [revenueLabel, expenseLabel]
-        };
-  
-        this.globalPieChart = {
-          series: [this.totalRevenue, this.totalExpenses],
-          chart: {
-            type: 'pie',
-            height: 240,
-            animations: { enabled: true, easing: 'easeout', speed: 700 },
-            background: 'transparent',
-            toolbar: { show: false },
-            foreColor: '#ffffff'
-          },
-          labels: [totalRevenueLabel, totalExpensesLabel],
-          dataLabels: { style: { colors: ['#ffffff'] } },
-          legend: { labels: { colors: '#ffffff' } },
-          title: { style: { color: '#ffffff' } },
-          tooltip: { style: { fontSize: '14px' } }
-        };
-  
-        this.globalTrendChart = {
-          series: [
-            { name: revenueLabel, data: results.map(r => r.reports?.incomeStatement?.totalRevenue ?? 0) },
-            { name: expenseLabel, data: results.map(r => r.reports?.incomeStatement?.totalExpense ?? 0) }
-          ],
-          chart: {
-            type: 'line',
-            height: 200,
-            animations: { enabled: true, easing: 'easeout', speed: 700 },
-            background: 'transparent',
-            toolbar: { show: false },
-            foreColor: '#ffffff'
-          },
-          xaxis: { categories: this.projects.map(p => p.name), labels: { style: { colors: ['#ffffff'] } } },
-          yaxis: { labels: { style: { colors: ['#ffffff'] } } },
-          dataLabels: { style: { colors: ['#ffffff'] } },
-          legend: { labels: { colors: '#ffffff' } },
-          title: { style: { color: '#ffffff' } },
-          tooltip: { style: { fontSize: '14px' } }
-        };
-  
-        // Compute net profit
-        this.totalNetProfit = this.totalRevenue - this.totalExpenses;
-      },
-      err => {
-        console.error('Error loading projects:', err);
-        this.loadingProjects = false;
-        this.errorProjects = true;
-      }
-    );
-  }*/
+
   loadProjects(): void {
     this.loadingProjects = true;
     this.errorProjects = false;
@@ -398,7 +179,7 @@ export class ProjectDashboardComponent implements OnInit {
               type: 'bar',
               height: 160,
               background: 'transparent',
-              toolbar: { show: true  },
+              toolbar: { show: true },
               foreColor: '#ffffff',
               animations: { enabled: true, easing: 'easeout', speed: 600 }
             },
@@ -578,83 +359,414 @@ export class ProjectDashboardComponent implements OnInit {
   goToStartHome(): void {
     this.router.navigate(['/start-home']);
   }
-
-
-
-
-
-  //=========================================Charts Styles==============================================================================/
-
-
-
-  /*
-    // ألوان موحدة تناسب الخلفية الداكنة
-   DARK_THEME_COLORS = ['#3b82f6', '#ef4444', '#facc15', '#10b981', '#8b5cf6'];
-  
-   CHART_TEXT_COLOR = '#ffffff';
-  
-   getBarChart(seriesData: any[], categories: string[]) {
-    return {
-      series: seriesData,
-      chart: {
-        type: 'bar',
-        height: 180,
-        background: 'transparent',
-        toolbar: { show: false },
-        foreColor: this.CHART_TEXT_COLOR,
-        animations: { enabled: true, easing: 'easeout', speed: 600 }
-      },
-      colors: this.DARK_THEME_COLORS,
-      xaxis: { categories, labels: { style: { colors: [this.CHART_TEXT_COLOR] } } },
-      yaxis: { labels: { style: { colors: [this.CHART_TEXT_COLOR] } } },
-      plotOptions: { bar: { horizontal: false, columnWidth: '50%' } },
-      dataLabels: { style: { colors: [this.CHART_TEXT_COLOR] } },
-      legend: { labels: { colors: this.CHART_TEXT_COLOR } },
-      tooltip: { style: { fontSize: '14px' } },
-      title: { style: { color: this.CHART_TEXT_COLOR } }
-    };
+  downloadGeneralBalance(projectName: string) {
+    this.homeService.getGeneralBalanceSheet(projectName)
+      .subscribe({
+        next: (data) => {
+          this.generalb = data;      // ← تخزين الداتا هنا
+          this.exportGeneralBalanceToExcel(projectName);  // ← ثم التصدير
+        },
+        error: (err) => {
+          console.error("خطأ أثناء تحميل الميزانية", err);
+        }
+      });
   }
-  
-   getPieChart(seriesData: number[], labels: string[]) {
-    return {
-      series: seriesData,
-      chart: {
-        type: 'pie',
-        height: 160,
-        background: 'transparent',
-        toolbar: { show: false },
-        foreColor: this.CHART_TEXT_COLOR,
-        animations: { enabled: true, easing: 'easeout', speed: 600 }
-      },
-      colors: this.DARK_THEME_COLORS,
-      labels,
-      dataLabels: { style: { colors: [this.CHART_TEXT_COLOR] } },
-      legend: { labels: { colors: this.CHART_TEXT_COLOR } },
-      tooltip: { style: { fontSize: '14px' } },
-      title: { style: { color: this.CHART_TEXT_COLOR } }
-    };
+
+  exportGeneralBalanceToExcel(projectName: string) {
+    if (!this.generalb) {
+      console.error("لا يوجد بيانات");
+      return;
+    }
+
+    const data = this.generalb;
+    const workbook = new ExcelJS.Workbook();
+
+    const sheet = workbook.addWorksheet('الميزانية العمومية', {
+      views: [{ rightToLeft: true }]
+    });
+
+    // Merge and add title
+    sheet.mergeCells('A1:H2');
+    const title = sheet.getCell('A1');
+    title.value = `الميزانية العمومية لمشروع ${projectName}`;
+    title.font = { size: 18, bold: true, color: { argb: 'FFFFFFFF' } };
+    title.alignment = { horizontal: 'center', vertical: 'middle' };
+    title.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF4CAF50' } };
+
+    sheet.addRow([]);
+
+    // Headers
+    const header = sheet.addRow([
+      'الأصول', '', '', '', 'الخصوم وحقوق الملكية', '', '', ''
+    ]);
+    header.eachCell(cell => {
+      cell.font = { bold: true, color: { argb: 'FFFFFFFF' } };
+      cell.fill = { type: 'pattern', pattern: 'solid', fgColor: { argb: 'FF1976D2' } };
+      cell.alignment = { horizontal: 'center' };
+    });
+
+    // Subheaders
+    const subHeader = sheet.addRow([
+      'البيان', '2023/2024', '2024/2025', 'الرصيد',
+      'البيان', '2023/2024', '2024/2025', 'الرصيد'
+    ]);
+    subHeader.eachCell(cell => {
+      cell.font = { bold: true };
+      cell.alignment = { horizontal: 'center' };
+    });
+
+    // Fill data row by row
+    const maxRows = Math.max(data.assets.length, data.liabilities.length);
+    for (let i = 0; i < maxRows; i++) {
+      const asset = data.assets[i];
+      const liability = data.liabilities[i];
+      sheet.addRow([
+        asset?.accountName || '',
+        asset?.totalDebit || 0,
+        asset?.totalCredit || 0,
+        asset?.finalBalance || 0,
+        liability?.accountName || '',
+        liability?.totalDebit || 0,
+        liability?.totalCredit || 0,
+        liability?.finalBalance || 0
+      ]);
+    }
+
+    // Add total row
+    const totalAssets = data.totalAssets;
+    const totalLiabilities = data.totalLiabilities + data.equity.netProfit;
+    sheet.addRow([
+      'إجمالي الأصول', '', '', totalAssets,
+      'إجمالي الخصوم وحقوق الملكية', '', '', totalLiabilities
+    ]);
+
+    // Format numbers
+    sheet.eachRow(row => {
+      row.eachCell((cell, colNumber) => {
+        if (colNumber >= 2 && colNumber <= 4 || colNumber >= 6 && colNumber <= 8) {
+          cell.numFmt = '#,##0.00';
+          cell.alignment = { horizontal: 'center' };
+        }
+      });
+    });
+
+    // Auto-width
+    sheet.columns.forEach(col => {
+      if (!col) return; // ensure col exists
+      let maxLength = 15;
+      col.eachCell?.({ includeEmpty: true }, cell => {  // optional chaining
+        if (cell.value) {
+          const len = cell.value.toString().length;
+          if (len > maxLength) maxLength = len + 5;
+        }
+      });
+      col.width = maxLength;
+    });
+
+
+    // Save
+    workbook.xlsx.writeBuffer().then(buffer => {
+      saveAs(new Blob([buffer]), `الميزانية العمومية - ${projectName}.xlsx`);
+    });
   }
-  
-   getLineChart(seriesData: any[], categories: string[]) {
-    return {
-      series: seriesData,
-      chart: {
-        type: 'line',
-        height: 200,
-        background: 'transparent',
-        toolbar: { show: false },
-        foreColor: this.CHART_TEXT_COLOR,
-        animations: { enabled: true, easing: 'easeout', speed: 700 }
-      },
-      xaxis: { categories, labels: { style: { colors: [this.CHART_TEXT_COLOR] } } },
-      yaxis: { labels: { style: { colors: [this.CHART_TEXT_COLOR] } } },
-      dataLabels: { style: { colors: [this.CHART_TEXT_COLOR] } },
-      legend: { labels: { colors: this.CHART_TEXT_COLOR } },
-      tooltip: { style: { fontSize: '14px' } },
-      title: { style: { color: this.CHART_TEXT_COLOR } }
-    };
-  }
-  */
+
+
+
+
 }
+//=========================================Charts Styles==============================================================================/
 
 
+
+/*
+  // ألوان موحدة تناسب الخلفية الداكنة
+ DARK_THEME_COLORS = ['#3b82f6', '#ef4444', '#facc15', '#10b981', '#8b5cf6'];
+ 
+ CHART_TEXT_COLOR = '#ffffff';
+ 
+ getBarChart(seriesData: any[], categories: string[]) {
+  return {
+    series: seriesData,
+    chart: {
+      type: 'bar',
+      height: 180,
+      background: 'transparent',
+      toolbar: { show: false },
+      foreColor: this.CHART_TEXT_COLOR,
+      animations: { enabled: true, easing: 'easeout', speed: 600 }
+    },
+    colors: this.DARK_THEME_COLORS,
+    xaxis: { categories, labels: { style: { colors: [this.CHART_TEXT_COLOR] } } },
+    yaxis: { labels: { style: { colors: [this.CHART_TEXT_COLOR] } } },
+    plotOptions: { bar: { horizontal: false, columnWidth: '50%' } },
+    dataLabels: { style: { colors: [this.CHART_TEXT_COLOR] } },
+    legend: { labels: { colors: this.CHART_TEXT_COLOR } },
+    tooltip: { style: { fontSize: '14px' } },
+    title: { style: { color: this.CHART_TEXT_COLOR } }
+  };
+}
+ 
+ getPieChart(seriesData: number[], labels: string[]) {
+  return {
+    series: seriesData,
+    chart: {
+      type: 'pie',
+      height: 160,
+      background: 'transparent',
+      toolbar: { show: false },
+      foreColor: this.CHART_TEXT_COLOR,
+      animations: { enabled: true, easing: 'easeout', speed: 600 }
+    },
+    colors: this.DARK_THEME_COLORS,
+    labels,
+    dataLabels: { style: { colors: [this.CHART_TEXT_COLOR] } },
+    legend: { labels: { colors: this.CHART_TEXT_COLOR } },
+    tooltip: { style: { fontSize: '14px' } },
+    title: { style: { color: this.CHART_TEXT_COLOR } }
+  };
+}
+ 
+ getLineChart(seriesData: any[], categories: string[]) {
+  return {
+    series: seriesData,
+    chart: {
+      type: 'line',
+      height: 200,
+      background: 'transparent',
+      toolbar: { show: false },
+      foreColor: this.CHART_TEXT_COLOR,
+      animations: { enabled: true, easing: 'easeout', speed: 700 }
+    },
+    xaxis: { categories, labels: { style: { colors: [this.CHART_TEXT_COLOR] } } },
+    yaxis: { labels: { style: { colors: [this.CHART_TEXT_COLOR] } } },
+    dataLabels: { style: { colors: [this.CHART_TEXT_COLOR] } },
+    legend: { labels: { colors: this.CHART_TEXT_COLOR } },
+    tooltip: { style: { fontSize: '14px' } },
+    title: { style: { color: this.CHART_TEXT_COLOR } }
+  };
+}
+*/
+
+/*
+loadProjects(): void {
+  this.loadingProjects = true;
+  this.errorProjects = false;
+ 
+  this.projectService.getProjects().pipe(
+    map(projects =>
+      projects.map(p => ({
+        ...p,
+        loadingReports: true,
+        errorReports: false,
+        isBalanced: false,
+        expanded: false, // for per-project details toggle
+        barChart: undefined,
+        pieChart: undefined,
+        balanceChart: undefined
+      }) as ProjectSummary)
+    ),
+    switchMap(projects => {
+      this.projects = projects;
+      if (projects.length === 0) return of([]);
+ 
+      const reportObservables = projects.map(project =>
+        this.fetchProjectReports(project.name).pipe(
+          map(reports => ({ project, reports }) as ProjectReportResult),
+          catchError(err => {
+            console.error(`Report fetch error for ${project.name}`, err);
+            return of({ project, reports: null } as ProjectReportResult);
+          })
+        )
+      );
+ 
+      return forkJoin(reportObservables);
+    })
+  ).subscribe(
+    (results: ProjectReportResult[]) => {
+      console.log(results);
+      this.loadingProjects = false;
+ 
+      // Reset global totals
+      this.totalRevenue = 0;
+      this.totalExpenses = 0;
+      this.globalTotalDebit = 0;
+      this.globalTotalCredit = 0;
+ 
+      // Loop through each project result
+      results.forEach(result => {
+        const projIndex = this.projects.findIndex(p => p.name === result.project.name);
+        if (projIndex === -1) return;
+ 
+        const project = this.projects[projIndex];
+        project.loadingReports = false;
+ 
+        if (!result.reports) {
+          project.errorReports = true;
+          return;
+        }
+ 
+        const { incomeStatement, balanceSheet, trialBalance, availableCash } = result.reports;
+ 
+        // Assign report data
+        project.incomeStatement = incomeStatement;
+        project.balanceSheet = balanceSheet;
+        project.trialBalance = trialBalance;
+        project.availableCash = availableCash ?? 0;
+ 
+        // ===== Trial Balance Check =====
+        const totalDebit = trialBalance.reduce((sum, tb) => sum + tb.debit, 0);
+        const totalCredit = trialBalance.reduce((sum, tb) => sum + tb.credit, 0);
+        project.isBalanced = Math.abs(totalDebit - totalCredit) < 0.01;
+ 
+        // Accumulate global totals
+        this.totalRevenue += incomeStatement.totalRevenue ?? 0;
+        this.totalExpenses += incomeStatement.totalExpense ?? 0;
+        this.globalTotalDebit += totalDebit;
+        this.globalTotalCredit += totalCredit;
+ 
+        // ===== Labels =====
+        const revenueLabel = this.i18n.instant('REVENUE');
+        const expenseLabel = this.i18n.instant('EXPENSE');
+        const debitLabel = this.i18n.instant('DEBIT');
+        const creditLabel = this.i18n.instant('CREDIT');
+ 
+        // ===== Project Charts =====
+        project.barChart = {
+          series: [
+            { name: revenueLabel, data: [incomeStatement.totalRevenue ?? 0] },
+            { name: expenseLabel, data: [incomeStatement.totalExpense ?? 0] }
+          ],
+          chart: {
+            type: 'bar',
+            height: 160,
+            animations: { enabled: true, easing: 'easeout', speed: 600 },
+            background: 'transparent',
+            toolbar: { show: false },
+            foreColor: '#ffffff'
+          },
+          colors: ['#3b82f6', '#ef4444'],
+          xaxis: { categories: [''], labels: { style: { colors: ['#ffffff'] } } },
+          yaxis: { labels: { style: { colors: ['#ffffff'] } } },
+          plotOptions: { bar: { horizontal: false, columnWidth: '55%' } },
+          dataLabels: { style: { colors: ['#ffffff'] } },
+          labels: [revenueLabel, expenseLabel],
+          title: { style: { color: '#ffffff' } },
+          legend: { labels: { colors: '#ffffff' } },
+          tooltip: { style: { fontSize: '14px' } }
+        };
+ 
+        project.pieChart = {
+          series: [incomeStatement.totalRevenue ?? 0, incomeStatement.totalExpense ?? 0],
+          chart: {
+            type: 'pie',
+            height: 160,
+            animations: { enabled: true, easing: 'easeout', speed: 600 },
+            background: 'transparent',
+            toolbar: { show: false },
+            foreColor: '#ffffff'
+          },
+          colors: ['#3b82f6', '#ef4444'],
+          labels: [revenueLabel, expenseLabel],
+          dataLabels: { style: { colors: ['#ffffff'] } },
+          legend: { labels: { colors: '#ffffff' } },
+          title: { style: { color: '#ffffff' } },
+          tooltip: { style: { fontSize: '14px' } }
+        };
+ 
+        project.balanceChart = {
+          series: [
+            { name: this.i18n.instant('AMOUNT') || 'Amount', data: [totalDebit, totalCredit] }
+          ],
+          chart: {
+            type: 'bar',
+            height: 140,
+            animations: { enabled: true, easing: 'easeout', speed: 600 },
+            background: 'transparent',
+            toolbar: { show: false },
+            foreColor: '#ffffff'
+          },
+          xaxis: { categories: [debitLabel, creditLabel], labels: { style: { colors: ['#ffffff'] } } },
+          yaxis: { labels: { style: { colors: ['#ffffff'] } } },
+          plotOptions: { bar: { horizontal: false, columnWidth: '55%' } },
+          dataLabels: { style: { colors: ['#ffffff'] } },
+          labels: [debitLabel, creditLabel],
+          title: { style: { color: '#ffffff' } },
+          legend: { labels: { colors: '#ffffff' } },
+          tooltip: { style: { fontSize: '14px' } }
+        };
+      });
+ 
+      // ===== Global Charts Labels =====
+      const revenueLabel = this.i18n.instant('REVENUE');
+      const expenseLabel = this.i18n.instant('EXPENSE');
+      const totalRevenueLabel = this.i18n.instant('TOTAL_REVENUE');
+      const totalExpensesLabel = this.i18n.instant('TOTAL_EXPENSES');
+      const allProjectsLabel = this.i18n.instant('ALL_PROJECTS');
+ 
+      // ===== Global Charts =====
+      this.globalBarChart = {
+        series: [
+          { name: revenueLabel, data: [this.totalRevenue] },
+          { name: expenseLabel, data: [this.totalExpenses] }
+        ],
+        chart: {
+          type: 'bar',
+          height: 220,
+          animations: { enabled: true, easing: 'easeout', speed: 700 },
+          background: 'transparent',
+          toolbar: { show: false },
+          foreColor: '#ffffff'
+        },
+        xaxis: { categories: [allProjectsLabel] },
+        plotOptions: { bar: { horizontal: false, columnWidth: '45%' } },
+        labels: [revenueLabel, expenseLabel]
+      };
+ 
+      this.globalPieChart = {
+        series: [this.totalRevenue, this.totalExpenses],
+        chart: {
+          type: 'pie',
+          height: 240,
+          animations: { enabled: true, easing: 'easeout', speed: 700 },
+          background: 'transparent',
+          toolbar: { show: false },
+          foreColor: '#ffffff'
+        },
+        labels: [totalRevenueLabel, totalExpensesLabel],
+        dataLabels: { style: { colors: ['#ffffff'] } },
+        legend: { labels: { colors: '#ffffff' } },
+        title: { style: { color: '#ffffff' } },
+        tooltip: { style: { fontSize: '14px' } }
+      };
+ 
+      this.globalTrendChart = {
+        series: [
+          { name: revenueLabel, data: results.map(r => r.reports?.incomeStatement?.totalRevenue ?? 0) },
+          { name: expenseLabel, data: results.map(r => r.reports?.incomeStatement?.totalExpense ?? 0) }
+        ],
+        chart: {
+          type: 'line',
+          height: 200,
+          animations: { enabled: true, easing: 'easeout', speed: 700 },
+          background: 'transparent',
+          toolbar: { show: false },
+          foreColor: '#ffffff'
+        },
+        xaxis: { categories: this.projects.map(p => p.name), labels: { style: { colors: ['#ffffff'] } } },
+        yaxis: { labels: { style: { colors: ['#ffffff'] } } },
+        dataLabels: { style: { colors: ['#ffffff'] } },
+        legend: { labels: { colors: '#ffffff' } },
+        title: { style: { color: '#ffffff' } },
+        tooltip: { style: { fontSize: '14px' } }
+      };
+ 
+      // Compute net profit
+      this.totalNetProfit = this.totalRevenue - this.totalExpenses;
+    },
+    err => {
+      console.error('Error loading projects:', err);
+      this.loadingProjects = false;
+      this.errorProjects = true;
+    }
+  );
+}*/
