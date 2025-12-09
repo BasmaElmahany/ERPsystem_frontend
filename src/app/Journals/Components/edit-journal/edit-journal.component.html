@@ -12,12 +12,8 @@
       <div class="form-row">
         <div class="form-group">
           <label for="entryNumber">{{ 'ENTRY_NUMBER' | translate | async }}</label>
-          <input
-            id="entryNumber"
-            type="text"
-            formControlName="entryNumber"
-            placeholder="{{ 'ENTRY_NUMBER_PLACEHOLDER' | translate | async }}"
-          />
+          <input id="entryNumber" type="text" formControlName="entryNumber"
+            placeholder="{{ 'ENTRY_NUMBER_PLACEHOLDER' | translate | async }}" />
         </div>
 
         <div class="form-group">
@@ -29,12 +25,21 @@
       <div class="form-row">
         <div class="form-group" style="grid-column: 1 / span 2;">
           <label for="description">{{ 'DESCRIPTION' | translate | async }}</label>
-          <textarea
-            id="description"
-            formControlName="description"
-            rows="3"
-            placeholder="{{ 'DESCRIPTION_PLACEHOLDER' | translate | async }}"
-          ></textarea>
+          <textarea id="description" formControlName="description" rows="3"
+            placeholder="{{ 'DESCRIPTION_PLACEHOLDER' | translate | async }}"></textarea>
+        </div>
+        <input type="file" (change)="onFileSelected($event)" accept="image/*,application/pdf"/>
+
+        <div *ngIf="existingFileUrl" class="existing-file">
+          <p>Existing File:</p>
+
+          <ng-container *ngIf="existingFileUrl.endsWith('.pdf'); else imageBlock">
+            <a [href]="existingFileUrl" target="_blank" class="pdf-link">📄 View PDF</a>
+          </ng-container>
+
+          <ng-template #imageBlock>
+            <img [src]="existingFileUrl" class="preview-image" />
+          </ng-template>
         </div>
       </div>
     </fieldset>
@@ -44,11 +49,7 @@
       <legend>{{ 'JOURNAL_LINES' | translate | async }}</legend>
 
       <div formArrayName="lines" class="lines-scroll">
-        <div
-          class="form-row line-row"
-          *ngFor="let line of lines.controls; let i = index"
-          [formGroupName]="i"
-        >
+        <div class="form-row line-row" *ngFor="let line of lines.controls; let i = index" [formGroupName]="i">
           <div class="form-group">
             <label>{{ 'ACCOUNT' | translate | async }}</label>
             <select formControlName="accountId">
@@ -71,20 +72,12 @@
 
           <div class="form-group">
             <label>{{ 'LINE_DESCRIPTION' | translate | async }}</label>
-            <input
-              type="text"
-              formControlName="description"
-              placeholder="{{ 'LINE_DESCRIPTION_PLACEHOLDER' | translate | async }}"
-            />
+            <input type="text" formControlName="description"
+              placeholder="{{ 'LINE_DESCRIPTION_PLACEHOLDER' | translate | async }}" />
           </div>
 
           <div class="form-group remove-btn">
-              <button
-              type="button"
-              class="reset-button"
-              (click)="removeLine(i)"
-              *ngIf="lines.length > 1"
-            >
+            <button type="button" class="reset-button" (click)="removeLine(i)" *ngIf="lines.length > 1">
               {{ 'REMOVE_LINE' | translate | async }}
             </button>
           </div>
@@ -108,11 +101,7 @@
       <button type="button" (click)="cancel()" class="reset-button">
         {{ 'CANCEL' | translate | async }}
       </button>
-      <button
-        type="submit"
-        [disabled]="JournalForm.invalid"
-        class="submit-button"
-      >
+      <button type="submit" [disabled]="JournalForm.invalid" class="submit-button">
         {{ 'SAVE_CHANGES' | translate | async }}
       </button>
     </div>

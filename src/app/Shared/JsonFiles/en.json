@@ -253,7 +253,9 @@
   "CONFIRM_DELETE_TITLE": "Confirm Delete",
   "CONFIRM_DELETE_BODY": "Are you sure you want to delete \"{{name}}\"? This account will be permanently removed.",
   "DELETE": "Delete",
-  "COGS" : "Cost Of Goods Sold"
+  "COGS" : "Cost Of Goods Sold",
+  "UPLOAD_PHOTO" : "Upload Photo",
+  "VIEW_FILE" : "View File"
   
   
 }

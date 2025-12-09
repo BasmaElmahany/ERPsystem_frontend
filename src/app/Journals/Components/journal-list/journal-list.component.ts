@@ -15,6 +15,8 @@ import { saveAs } from 'file-saver';
 import { MatPaginator } from '@angular/material/paginator';
 import { AccountList } from '../../../ChartOfAccounts/Models/ChartOfAccount';
 import { ChartOfAccountsService } from '../../../ChartOfAccounts/Services/chart-of-accounts.service';
+import { APIbaseUrl } from '../../../env';
+import { ImagePreviewModalComponent } from '../image-preview-modal/image-preview-modal.component';
 
 @Component({
   selector: 'app-journal-list',
@@ -28,7 +30,7 @@ export class JournalListComponent implements OnInit {
   paginatedJournals: JournalEntry[] = []; // ✅ فقط الصفحة الحالية
   accounts: AccountList[] = [];
 
-accountMap: { [id: number]: string } = {};
+  accountMap: { [id: number]: string } = {};
 
   searchTerm = ''; // ✅ search box model
   loading = false;
@@ -64,6 +66,7 @@ accountMap: { [id: number]: string } = {};
     this.loading = true;
     this.service.getAll(this.projectName).subscribe({
       next: (res) => {
+        console.log("Journals   :     " , res)
         this.journals = res;
         this.filteredJournals = [...res];
         this.updatePagination();
@@ -156,18 +159,32 @@ accountMap: { [id: number]: string } = {};
       });
 
       dialogRef.afterClosed().subscribe(result => {
-        if (result) {
-          this.service.update(this.projectName, journal.id, result).subscribe({
-            next: () => {
-              this.snackBar.open(this.i18n.instant('UPDATE_JOURNAL_SUCCESS'), this.i18n.instant('CLOSE'), { duration: 4000 });
-              this.loadJournals();
-            },
-            error: err => this.snackBar.open(this.i18n.instant('UPDATE_JOURNAL_FAIL'), this.i18n.instant('CLOSE'), { duration: 4000 })
-          });
-        }
+        if (!result) return;
+
+        const { id, formData } = result;  // ✅ extract correct fields
+
+        this.service.update(this.projectName, id, formData).subscribe({
+          next: () => {
+            this.snackBar.open(
+              this.i18n.instant('UPDATE_JOURNAL_SUCCESS'),
+              this.i18n.instant('CLOSE'),
+              { duration: 4000 }
+            );
+            this.loadJournals();
+          },
+          error: err => {
+            console.error(err);
+            this.snackBar.open(
+              this.i18n.instant('UPDATE_JOURNAL_FAIL'),
+              this.i18n.instant('CLOSE'),
+              { duration: 4000 }
+            );
+          }
+        });
       });
     });
   }
+
 
   openDeleteModal(journal: any) {
     const dialogRef = this.dialog.open(DeleteJournalComponent, {
@@ -179,7 +196,7 @@ accountMap: { [id: number]: string } = {};
     dialogRef.afterClosed().subscribe(confirm => {
       if (confirm) {
         this.service.delete(this.projectName, journal.id).subscribe({
-            next: () => {
+          next: () => {
             this.snackBar.open(this.i18n.instant('DELETE_JOURNAL_SUCCESS'), this.i18n.instant('CLOSE'), { duration: 4000 });
             this.loadJournals();
           },
@@ -199,7 +216,7 @@ accountMap: { [id: number]: string } = {};
     dialogRef.afterClosed().subscribe(confirm => {
       if (confirm) {
         this.service.post(this.projectName, journal.id).subscribe({
-            next: () => {
+          next: () => {
             this.snackBar.open(this.i18n.instant('POST_JOURNAL_SUCCESS'), this.i18n.instant('CLOSE'), { duration: 4000 });
             this.loadJournals();
           },
@@ -219,7 +236,7 @@ accountMap: { [id: number]: string } = {};
     dialogRef.afterClosed().subscribe(confirm => {
       if (confirm) {
         this.service.unpost(this.projectName, journal.id).subscribe({
-            next: () => {
+          next: () => {
             this.snackBar.open(this.i18n.instant('UNPOST_JOURNAL_SUCCESS'), this.i18n.instant('CLOSE'), { duration: 4000 });
             this.loadJournals();
           },
@@ -228,20 +245,20 @@ accountMap: { [id: number]: string } = {};
       }
     });
   }
-loadAccounts() {
-  this.accountService.getList(this.projectName).subscribe({
-    next: (res) => {
-      this.accounts = res;
-      this.accountMap = Object.fromEntries(
-        res.map(a => [a.id, a.accountName])
-        
-      );
-      console.log("Accounts from API:", res);
+  loadAccounts() {
+    this.accountService.getList(this.projectName).subscribe({
+      next: (res) => {
+        this.accounts = res;
+        this.accountMap = Object.fromEntries(
+          res.map(a => [a.id, a.accountName])
 
-    },
-    error: () => this.snackBar.open(this.i18n.instant('FAILED_LOAD_ACCOUNTS') || 'Failed to load accounts', this.i18n.instant('CLOSE'), { duration: 4000 })
-  });
-}
+        );
+        console.log("Accounts from API:", res);
+
+      },
+      error: () => this.snackBar.open(this.i18n.instant('FAILED_LOAD_ACCOUNTS') || 'Failed to load accounts', this.i18n.instant('CLOSE'), { duration: 4000 })
+    });
+  }
 
   exportToExcel(): void {
     const workbook = new ExcelJS.Workbook();
@@ -317,7 +334,7 @@ loadAccounts() {
         let totalCredit = 0;
 
         journal!.lines.forEach((line, idx) => {
-            line.accountName = this.accountMap[line.accountId] || "Account Not Found";
+          line.accountName = this.accountMap[line.accountId] || "Account Not Found";
           sheet.addRow([
             idx + 1,
             line.accountName,
@@ -377,5 +394,27 @@ loadAccounts() {
   openLines(journal: any) {
     this.router.navigate([`${this.projectName}/journals/${journal.id}/lines`]);
   }
+
+
+  openAttachment(journal: any) {
+    if (!journal.photoUrl) return;
+
+    const fileUrl = APIbaseUrl + journal.photoUrl;
+
+    const isPdf = fileUrl.toLowerCase().endsWith(".pdf");
+
+    if (isPdf) {
+      // PDF → Open in new tab
+      window.open(fileUrl, "_blank");
+    } else {
+      // Image → open in modal
+      this.dialog.open(ImagePreviewModalComponent, {
+        data: { url: fileUrl },
+        width: "600px",
+        panelClass: "image-preview-modal"
+      });
+    }
+  }
+
 
 }

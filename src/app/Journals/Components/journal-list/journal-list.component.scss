@@ -3,29 +3,31 @@
 .table-container {
   margin-top: 20px;
 }
+
 .create-button {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    background: $primary-color;
-    color: white;
-    border: none;
-    padding: 10px 20px;
-    border-radius: 8px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all $transition-smooth;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background: $primary-color;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 8px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all $transition-smooth;
 
-    &:hover {
-      background: lighten($primary-color, 5%);
-      transform: translateY(-2px);
-      box-shadow: 0 4px 12px rgba($primary-color, 0.3);
-    }
-
-    i {
-      font-size: 20px;
-    }
+  &:hover {
+    background: lighten($primary-color, 5%);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba($primary-color, 0.3);
   }
+
+  i {
+    font-size: 20px;
+  }
+}
+
 .table-header h2 {
   font-size: 1.6rem;
   background: linear-gradient(135deg, #00e676, #29b6f6);
@@ -36,6 +38,7 @@
 .status-badge {
   text-transform: capitalize;
 }
+
 /* Table Cells */
 .id-cell {
   font-weight: 600;
@@ -119,6 +122,25 @@
         transform: translateY(-2px);
       }
     }
+
+    &.view-button {
+      background: rgba(#29b6f6, 0.1);
+      color: #29b6f6;
+
+      &:hover {
+        background: rgba(#29b6f6, 0.2);
+        transform: translateY(-2px);
+      }
+    }
+
+    .action-button:disabled,
+    button[mat-icon-button]:disabled {
+      opacity: 0.4;
+      cursor: not-allowed !important;
+      transform: none !important;
+      pointer-events: none;
+      /* Prevent hover animations */
+    }
   }
 }
 
@@ -129,10 +151,12 @@
 
 .status-badge {
   text-transform: capitalize;
+
   &.status-active {
     background: rgba($success-color, 0.1);
     color: $success-color;
   }
+
   &.status-on-leave {
     background: rgba($warning-color, 0.1);
     color: $warning-color;
@@ -167,6 +191,7 @@
   align-items: center;
   gap: 12px;
 }
+
 .date-filters {
   display: flex;
   align-items: center;
@@ -203,6 +228,7 @@
     font-weight: 600;
   }
 }
+
 .export-button {
   display: flex;
   align-items: center;
@@ -226,6 +252,7 @@
     font-size: 20px;
   }
 }
+
 mat-paginator {
   background: rgba(255, 255, 255, 0.05);
   border-radius: 8px;
@@ -242,4 +269,6 @@ mat-paginator {
   ::ng-deep .mat-mdc-select-arrow {
     color: white;
   }
+
+
 }

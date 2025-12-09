@@ -112,7 +112,7 @@ legend {
 /* === Input styling improvements === */
 input[type="text"],
 input[type="number"],
-input[type="date"],
+input[type="date"],input[type="file"],
 textarea,
 select {
   width: 100%;
@@ -292,4 +292,67 @@ select {
   font-weight: 600;
   border-radius: 8px;
   text-align: center;
+}
+
+
+
+/* === Existing File Preview Container === */
+.existing-file {
+  background: rgba($card-hover-bg, 0.4);
+  border: 1px solid rgba($text-secondary, 0.2);
+  padding: 15px;
+  margin-top: 10px;
+  border-radius: 10px;
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  animation: fadeInScale 0.4s ease;
+  max-width: 250px;   /* 🔥 تصغير الحجم */
+}
+
+/* Title style */
+.existing-file-title {
+  color: $primary-light;
+  font-weight: 600;
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* === PDF Link Style === */
+.pdf-link {
+  display: inline-block;
+  padding: 8px 14px;
+  background: linear-gradient(135deg, $accent-warm, $accent-color);
+  color: white;
+  font-weight: 600;
+  border-radius: 8px;
+  text-decoration: none;
+  text-align: center;
+  font-size: 0.9rem;
+  transition: all 0.25s ease;
+
+  &:hover {
+    transform: translateY(-2px);
+    filter: brightness(1.15);
+    box-shadow: 0 4px 10px rgba($accent-color, 0.4);
+  }
+
+  &:active {
+    transform: scale(0.97);
+  }
+}
+
+/* === Thumbnail Image Styling === */
+.preview-image {
+  width: 120px;         /* 🔥 تصغير الحجم */
+  height: auto;
+  border-radius: 6px;
+  border: 1px solid rgba($text-secondary, 0.3);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.35);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+
+  &:hover {
+    transform: scale(1.05);
+    box-shadow: 0 6px 16px rgba(0, 0, 0, 0.5);
+  }
 }

@@ -1,0 +1,11 @@
+<div class="preview-container">
+
+  <div class="top-controls">
+    <button class="btn-icon" (click)="openFull()">🔍 Full Size</button>
+    <button class="btn-icon" (click)="printImage()">🖨 Print</button>
+    <button class="btn-icon close" (click)="dialogRef.close()">✕ Close</button>
+  </div>
+
+  <img [src]="data.url" class="preview-img" alt="attachment preview"/>
+  
+</div>

@@ -1,0 +1,39 @@
+.preview-container {
+  background: #1a1c1e;
+  padding: 20px;
+  border-radius: 12px;
+  text-align: center;
+}
+
+.top-controls {
+  display: flex;
+  justify-content: flex-end;
+  gap: 12px;
+  margin-bottom: 10px;
+}
+
+.btn-icon {
+  background: rgba(255,255,255,0.1);
+  border: none;
+  padding: 8px 12px;
+  border-radius: 6px;
+  color: #fff;
+  cursor: pointer;
+  font-size: 15px;
+  transition: 0.25s;
+
+  &:hover {
+    background: rgba(255,255,255,0.2);
+  }
+
+  &.close {
+    color: #ff4c4c;
+  }
+}
+
+.preview-img {
+  max-width: 100%;
+  max-height: 80vh;
+  border-radius: 10px;
+  box-shadow: 0 4px 22px rgba(0,0,0,0.4);
+}
