@@ -3,7 +3,7 @@ export interface JournalLine {
   debit: number;
   credit: number;
   description?: string;
-   // New mapped field
+  // New mapped field
   accountName?: string;
 }
 
@@ -14,13 +14,15 @@ export interface JournalEntry {
   description: string;
   posted: boolean;
   createdAt?: string;
+  photoUrl?: string;
 }
 
 export interface CreateJournalDto {
   entryNumber: string;
   date: string;
   description: string;
-  lines: JournalLine[];
+  PhotoUrl?: string;
+  LinesJson: string;
 }
 
 export interface JournalWithLines {

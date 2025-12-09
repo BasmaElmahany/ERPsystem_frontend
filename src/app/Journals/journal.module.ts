@@ -24,6 +24,7 @@ import { UnpostLedgerComponent } from './Components/unpost-ledger/unpost-ledger.
 import { MatPaginatorModule } from '@angular/material/paginator';
 import { JournalLinesComponent } from './Components/journal-lines/journal-lines.component';
 import { SharedTranslationsModule } from '../Shared/shared-translations.module';
+import { ImagePreviewModalComponent } from './Components/image-preview-modal/image-preview-modal.component';
 
 
 @NgModule({
@@ -34,7 +35,7 @@ import { SharedTranslationsModule } from '../Shared/shared-translations.module';
  EditJournalComponent,
  PostLedgerComponent,
  UnpostLedgerComponent,
- JournalLinesComponent
+ JournalLinesComponent,ImagePreviewModalComponent
   ],
   imports: [
     CommonModule,

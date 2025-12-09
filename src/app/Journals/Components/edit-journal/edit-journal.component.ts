@@ -5,6 +5,7 @@ import { MatSnackBar } from '@angular/material/snack-bar';
 import { I18nService } from '../../../Shared/Services/i18n.service';
 import { AccountList } from '../../../ChartOfAccounts/Models/ChartOfAccount';
 import { ChartOfAccountsService } from '../../../ChartOfAccounts/Services/chart-of-accounts.service';
+import { APIbaseUrl, baseUrl } from '../../../env';
 
 
 @Component({
@@ -17,7 +18,9 @@ export class EditJournalComponent implements OnInit {
   projectName = '';
   journalId = 0;
   accounts: AccountList[] = [];
+  selectedFile: File | null = null;   // 🔥 same as Create
 
+  existingFileUrl: string | null = null; // Optional: show existing file
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<EditJournalComponent>,
@@ -33,6 +36,8 @@ export class EditJournalComponent implements OnInit {
 
     this.projectName = projectName;
     this.journalId = entry?.id ?? 0;
+    this.existingFileUrl = entry?.photoUrl ? APIbaseUrl + entry.photoUrl
+      : null;
 
     // ✅ Initialize the reactive form
     this.JournalForm = this.fb.group({
@@ -95,8 +100,30 @@ export class EditJournalComponent implements OnInit {
       });
     }
   }
+  // =============================
+  // FILE UPLOAD (PDF + IMAGE)
+  // =============================
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
 
-  save(): void {
+    const allowed = ["image/png", "image/jpeg", "image/jpg", "application/pdf"];
+
+    if (!allowed.includes(file.type)) {
+      this.snackBar.open("Only JPG, PNG, or PDF allowed", "Close", {
+        duration: 3000,
+        panelClass: ['snackbar-error']
+      });
+      return;
+    }
+
+    this.selectedFile = file;
+  }
+
+  // =============================
+  // SAVE 
+  // =============================
+  save() {
     if (this.JournalForm.invalid) {
       this.snackBar.open(this.i18n.instant('FILL_REQUIRED_FIELDS'), this.i18n.instant('CLOSE'), {
         duration: 3000,
@@ -114,7 +141,31 @@ export class EditJournalComponent implements OnInit {
       return;
     }
 
-    this.dialogRef.close(this.JournalForm.value);
+    const formData = new FormData();
+    const value = this.JournalForm.value;
+
+    formData.append("entryNumber", value.entryNumber);
+    formData.append("date", value.date);
+    formData.append("description", value.description);
+
+    // Optional file
+    if (this.selectedFile) {
+      formData.append("photo", this.selectedFile);
+    }
+
+    // Convert lines  
+    const cleanLines = value.lines.map((l: any) => ({
+      accountId: Number(l.accountId),
+      debit: Number(l.debit),
+      credit: Number(l.credit),
+      description: l.description || ""
+    }));
+
+    formData.append("LinesJson", JSON.stringify(cleanLines));
+    console.log("CLEAN LINES BEFORE JSON:", cleanLines);
+    console.log("FORMDATA CHECK:");
+    formData.forEach((v, k) => console.log(k, v));
+    this.dialogRef.close({ id: this.journalId, formData });
   }
 
   cancel(): void {

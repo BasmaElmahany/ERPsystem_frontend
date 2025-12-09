@@ -3,8 +3,8 @@
         <h2>{{ 'JOURNAL_ENTRIES' | translate | async }}</h2>
         <div class="header-actions">
             <!-- 🔍 Search -->
-            <input type="text" placeholder="{{ 'SEARCH_JOURNALS_PLACEHOLDER' | translate | async }}" [(ngModel)]="searchTerm" (input)="applySearch()"
-                class="search-input" />
+            <input type="text" placeholder="{{ 'SEARCH_JOURNALS_PLACEHOLDER' | translate | async }}"
+                [(ngModel)]="searchTerm" (input)="applySearch()" class="search-input" />
 
             <!-- 🗓 Date Range Filters -->
             <div class="date-filters">
@@ -60,7 +60,7 @@
                         </span>
                     </td>
                     <td class="actions-cell">
-                        <button class="action-button edit-button" (click)="openEditModal(j)">
+                        <button class="action-button edit-button"   (click)="!j.posted && openEditModal(j)" [disabled]="j.posted">
                             <i class="material-icons">edit</i>
                         </button>
 
@@ -73,11 +73,16 @@
                             <i class="material-icons">undo</i>
                             {{ 'UNPOST' | translate | async }}
                         </button>
+                        <button class="action-button view-button" *ngIf="j.photoUrl" (click)="openAttachment(j)">
+                            <i class="material-icons">attach_file</i>
+                            {{ 'VIEW_FILE' | translate | async }}
+                        </button>
+
                         <button class="action-button" (click)="openLines(j)">
                             <i class="material-icons">visibility</i>
                             {{ 'VIEW' | translate | async }}
                         </button>
-                        <button mat-icon-button color="warn" (click)="openDeleteModal(j)">
+                        <button mat-icon-button color="warn"   (click)="!j.posted && openDeleteModal(j)" [disabled]="j.posted">
                             <mat-icon>delete</mat-icon>
                         </button>
                     </td>
@@ -92,7 +97,8 @@
     </div>
 
     <div class="table-footer">
-        <p>{{ 'SHOWING_JOURNALS' | translate:{count: journals.length, projectName: (projectName | titlecase)} | async }}</p>
+        <p>{{ 'SHOWING_JOURNALS' | translate:{count: journals.length, projectName: (projectName | titlecase)} | async }}
+        </p>
     </div>
 </div>
 

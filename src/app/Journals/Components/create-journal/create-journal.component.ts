@@ -17,15 +17,15 @@ export class CreateJournalComponent implements OnInit {
   JournalForm: FormGroup;
   projectName = '';
   accounts: AccountList[] = [];
-
+ selectedFile: File | null = null;  // 🔥 updated name
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<CreateJournalComponent>,
     @Inject(MAT_DIALOG_DATA) public data: any,
     private journalService: JournalService,
     private chartService: ChartOfAccountsService,
-      private snackBar: MatSnackBar,
-      private i18n: I18nService
+    private snackBar: MatSnackBar,
+    private i18n: I18nService
   ) {
     this.projectName = data.projectName;
 
@@ -77,38 +77,75 @@ export class CreateJournalComponent implements OnInit {
     return this.lines.controls.reduce((sum, c) => sum + (c.get('credit')?.value || 0), 0);
   }
 
+ 
   save(): void {
-    if (this.JournalForm.valid) {
-      if (this.totalDebit !== this.totalCredit) { // 🟡 Show styled snackbar instead of alert
+    if (this.JournalForm.invalid) {
       this.snackBar.open(
-        this.i18n.instant('DEBITS_CREDITS_MUST_EQUAL'),
+        this.i18n.instant('FILL_REQUIRED_FIELDS'),
         this.i18n.instant('CLOSE'),
-        {
-          duration: 5000,
-          horizontalPosition: 'center',
-          verticalPosition: 'top',
-          panelClass: ['snackbar-warning']
-        }
+        { duration: 4000, panelClass: ['snackbar-error'] }
       );
       return;
     }
 
-    this.dialogRef.close(this.JournalForm.value);
-  } else {
-    this.snackBar.open(
-      this.i18n.instant('FILL_REQUIRED_FIELDS'),
-      this.i18n.instant('CLOSE'),
-      {
-        duration: 4000,
-        horizontalPosition: 'center',
-        verticalPosition: 'top',
-        panelClass: ['snackbar-error']
-      }
-    );
+    if (this.totalDebit !== this.totalCredit) {
+      this.snackBar.open(
+        this.i18n.instant('DEBITS_CREDITS_MUST_EQUAL'),
+        this.i18n.instant('CLOSE'),
+        { duration: 5000, panelClass: ['snackbar-warning'] }
+      );
+      return;
+    }
+
+    const formData = new FormData();
+    const value = this.JournalForm.value;
+
+    formData.append('entryNumber', value.entryNumber);
+    formData.append('date', value.date);
+    formData.append('description', value.description);
+
+    // 🔥 NEW: Accept image OR PDF
+    if (this.selectedFile) {
+      formData.append('photo', this.selectedFile);
+    }
+
+    // Convert lines to correct numeric format
+    const cleanLines = value.lines.map((line: any) => ({
+      accountId: Number(line.accountId),
+      debit: Number(line.debit),
+      credit: Number(line.credit),
+      description: line.description || ""
+    }));
+
+    formData.append('LinesJson', JSON.stringify(cleanLines));
+
+    console.log("CLEAN LINES BEFORE JSON:", cleanLines);
+    console.log("FORMDATA CHECK:");
+    formData.forEach((v, k) => console.log(k, v));
+
+    this.dialogRef.close(formData);
   }
-  }
+
+
 
   cancel(): void {
     this.dialogRef.close();
+  }
+   // 🔥 Updated to accept PDF + Images
+  onFileSelected(event: any) {
+    const file = event.target.files[0];
+    if (!file) return;
+
+    // Optional: Validate types on the frontend
+    const allowedTypes = ["image/png", "image/jpeg", "image/jpg", "application/pdf"];
+    if (!allowedTypes.includes(file.type)) {
+      this.snackBar.open("Only JPG, PNG, or PDF allowed", "Close", {
+        duration: 3000,
+        panelClass: ['snackbar-error']
+      });
+      return;
+    }
+
+    this.selectedFile = file;
   }
 }
