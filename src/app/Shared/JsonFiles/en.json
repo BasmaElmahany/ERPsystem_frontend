@@ -1,7 +1,7 @@
 {
   "APP_NAME": "System",
-  "ALL_PROJECTS" : "All Projects",
-  "Logo" : "Finance",
+  "ALL_PROJECTS": "All Projects",
+  "Logo": "Finance",
   "LOGOUT": "Logout",
   "DASHBOARD_OVERVIEW": "Dashboard Overview",
   "MENU_DASHBOARD": "Dashboard",
@@ -27,7 +27,6 @@
   "TIME_HOUR_AGO": "hour ago",
   "TIME_HOURS_AGO": "hours ago",
   "TIME_YESTERDAY": "Yesterday",
-
   "EMPLOYEE_DIRECTORY": "Employee Directory",
   "EMPLOYEE_COUNT": "{{count}} Employees",
   "TABLE_HEADER_ID": "ID",
@@ -40,8 +39,8 @@
   "STATUS_ON_LEAVE": "On Leave",
   "STATUS_TERMINATED": "Terminated",
   "TABLE_FOOTER_RECORDS": "Displaying {{count}} records.",
-  "AVAILABLE_CASH":"Available Cash",
-  "CASH_CAN_BE_USED_NOW" :"Cash can be used now",
+  "AVAILABLE_CASH": "Available Cash",
+  "CASH_CAN_BE_USED_NOW": "Cash can be used now",
   "NAV_GET_STARTED": "Get Started",
   "HERO_BADGE": "✨ Next Generation ERP",
   "HERO_TITLE": "Financial Excellence",
@@ -60,8 +59,7 @@
   "CTA_TITLE": "Ready to Transform Your Finance?",
   "CTA_SUBTITLE": "Join thousands of companies using our ERP system to streamline operations",
   "CTA_START_JOURNEY": "Start Your Journey",
-  "FOOTER_COPY": "© 2025 ERP/Finance Dashboard. All rights reserved."
-  ,
+  "FOOTER_COPY": "© 2025 ERP/Finance Dashboard. All rights reserved.",
   "JOURNAL_ENTRIES": "Journal Entries",
   "SEARCH_JOURNALS_PLACEHOLDER": "🔍 Search journals...",
   "NEW_JOURNAL": "New Journal",
@@ -114,7 +112,6 @@
   "FAILED_FETCH_JOURNAL_LINES": "Failed to fetch journal lines",
   "JOURNAL_LINES": "Journal Lines",
   "ACCOUNT": "Account",
-
   "GENERAL_LEDGER": "General Ledger",
   "TAB_CHARTS_SUMMARY": "Charts Summary",
   "SEARCH_LEDGER_PLACEHOLDER": "🔍 Search ledger...",
@@ -125,7 +122,6 @@
   "BALANCE": "Balance",
   "SHOWING_LEDGER": "Showing {{count}} ledger entries from {{projectName}} project",
   "LOADING_LEDGER": "Loading ledger entries...",
-
   "PROJECTS_DIRECTORY": "Projects Directory",
   "PROJECTS_COUNT": "{{count}} Projects",
   "NEW_PROJECT": "New Project",
@@ -137,8 +133,7 @@
   "ACCOUNTS": "Accounts",
   "JOURNALS": "Journals",
   "LEDGER": "Ledger",
-  "SHOWING_PROJECTS": "Showing {{count}} projects"
-  ,
+  "SHOWING_PROJECTS": "Showing {{count}} projects",
   "CREATE_PROJECT_TITLE": "Create New Project",
   "CREATE_PROJECT_DESC": "Fill in the details below to create a new project.",
   "EDIT_PROJECT": "Edit Project",
@@ -154,16 +149,14 @@
   "CANCEL": "Cancel",
   "CREATE_PROJECT": "Create",
   "UPDATE_PROJECT": "Update",
-  "CREATE_PROJECT_BTN": "Create Project"
-  ,
+  "CREATE_PROJECT_BTN": "Create Project",
   "PROJECT_CREATE_FAIL": "Failed to create project: {{status}} {{msg}}",
   "CLOSE": "Close",
   "PROJECT_DELETE_SUCCESS": "Project \"{{name}}\" deleted successfully.",
   "PROJECT_DELETE_FAIL": "Failed to delete project: {{msg}}",
   "PROJECT_DELETE_SERVER_ERROR": "Server error: Could not delete project",
   "PROJECT_UPDATE_SUCCESS": "Project updated successfully",
-  "PROJECT_UPDATE_FAIL": "Failed to update project: {{msg}}"
-  ,
+  "PROJECT_UPDATE_FAIL": "Failed to update project: {{msg}}",
   "DASHBOARD_WELCOME": "Welcome to your Dashboard",
   "DASHBOARD_SUBTITLE": "Overview of your projects and financial summaries",
   "LOADING_PROJECTS_SUMMARY": "Loading project summaries...",
@@ -248,8 +241,7 @@
   "ACCOUNT_UPDATE_SUCCESS": "Account updated successfully",
   "ACCOUNT_UPDATE_FAIL": "Failed to update account",
   "ACCOUNT_DELETE_SUCCESS": "Account \"{{name}}\" deleted successfully.",
-  "ACCOUNT_DELETE_FAIL": "Failed to delete Account: {{msg}}"
-  ,
+  "ACCOUNT_DELETE_FAIL": "Failed to delete Account: {{msg}}",
   "CONFIRM_DELETE_TITLE": "Confirm Delete",
   "CONFIRM_DELETE_BODY": "Are you sure you want to delete \"{{name}}\"? This account will be permanently removed.",
   "DELETE": "Delete",
@@ -258,4 +250,7 @@
   "VIEW_FILE" : "View File"
   
   
+}
+  "COGS": "Cost Of Goods Sold",
+  "Dev_rev": "Diversified revenue"
 }
