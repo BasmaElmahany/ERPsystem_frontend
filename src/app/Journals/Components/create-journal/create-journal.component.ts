@@ -17,7 +17,9 @@ export class CreateJournalComponent implements OnInit {
   JournalForm: FormGroup;
   projectName = '';
   accounts: AccountList[] = [];
- selectedFile: File | null = null;  // 🔥 updated name
+  selectedFile: File | null = null;  // 🔥 updated name
+  today = new Date().toISOString().split('T')[0];
+
   constructor(
     private fb: FormBuilder,
     private dialogRef: MatDialogRef<CreateJournalComponent>,
@@ -77,7 +79,7 @@ export class CreateJournalComponent implements OnInit {
     return this.lines.controls.reduce((sum, c) => sum + (c.get('credit')?.value || 0), 0);
   }
 
- 
+
   save(): void {
     if (this.JournalForm.invalid) {
       this.snackBar.open(
@@ -131,7 +133,7 @@ export class CreateJournalComponent implements OnInit {
   cancel(): void {
     this.dialogRef.close();
   }
-   // 🔥 Updated to accept PDF + Images
+  // 🔥 Updated to accept PDF + Images
   onFileSelected(event: any) {
     const file = event.target.files[0];
     if (!file) return;
@@ -148,4 +150,5 @@ export class CreateJournalComponent implements OnInit {
 
     this.selectedFile = file;
   }
+
 }
