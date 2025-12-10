@@ -222,3 +222,12 @@ export type ApexBarChartOptions = {
 };
 
 
+export interface BalanceAccount {
+  id?: number;
+  accountName: string;
+  accountType: string;
+  totalDebit?: number;
+  totalCredit?: number;
+  finalBalance: number;
+}
+

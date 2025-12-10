@@ -248,7 +248,9 @@
   "COGS" : "Cost Of Goods Sold",
   "UPLOAD_PHOTO" : "Upload Photo",
   "VIEW_FILE" : "View File",
-  "Dev_rev": "Diversified revenue"
+  "Dev_rev": "Diversified revenue",
+  "GENERAL-BALANCE" : "Export General Balance",
+  "GENERAL_BALANCE_ALL_PROJECTS" : "ُExport General Balance All Projects"
   
 }
  

@@ -4,6 +4,9 @@
     <button class="lang-toggle" (click)="toggleLanguage()">
       {{ (currentLang$ | async) === 'en' ? 'عربي' : 'EN' }}
     </button>
+    <button class="theme-toggle" (click)="toggleTheme()">
+      {{ isDarkMode ? '☀️ Light' : '🌙 Dark' }}
+    </button>
     <div class="logo" role="button" tabindex="0" (click)="goToStartHome()" (keydown.enter)="goToStartHome()">
       <div class="logo-icon">ERP</div>
       <span class="logo-text">{{ 'Logo' | translate | async }}</span>
@@ -54,6 +57,10 @@
             <p class="muted">{{ 'GLOBAL_SUMMARY' | translate | async }}</p>
           </div>
         </div>
+        <button class="export-btn" (click)="exportAllProjectsGeneralBalanceToExcel()">
+          <span class="export-icon">📊</span>
+          <span class="export-text">{{ 'GENERAL_BALANCE_ALL_PROJECTS' | translate | async }}</span>
+        </button>
       </div>
     </section>
 
@@ -95,20 +102,22 @@
           <div class="card-head" (click)="toggleProject(project)">
             <div class="left">
               <div class="card-icon"></div>
-              <div>
+
+              <div class="project-info">
                 <h3 class="project-name">{{ project.name }}</h3>
 
-
-                <p class="muted small">{{ 'NET_PROFIT' | translate | async }}:
+                <p class="muted small">
+                  {{ 'NET_PROFIT' | translate | async }}:
                   <span [class.positive]="getNetProfit(project) >= 0" [class.negative]="getNetProfit(project) < 0">
                     {{ getNetProfit(project) | currency:'EGP':'symbol':'1.2-2' }}
                   </span>
                 </p>
               </div>
-              <button (click)="downloadGeneralBalance(project.name)">
-                تصدير الميزانية العامة
-              </button>
 
+              <button class="export-btn" (click)="downloadGeneralBalance(project.name)">
+                <span class="export-icon">📊</span>
+                <span class="export-text">{{ 'GENERAL-BALANCE' | translate | async }}</span>
+              </button>
             </div>
 
             <div class="right">
@@ -116,14 +125,18 @@
                 <span *ngIf="project.loadingReports">{{ 'LOADING' | translate | async }}</span>
                 <span *ngIf="project.errorReports" class="negative">{{ 'ERROR' | translate | async }}</span>
                 <span *ngIf="!project.loadingReports && !project.errorReports">
-                  {{ 'BALANCED_LABEL' | translate | async }}: <strong [class.positive]="project.isBalanced"
-                    [class.negative]="!project.isBalanced">{{
-                    project.isBalanced ? ( 'YES' | translate | async ) : ( 'NO' | translate | async ) }}</strong>
+                  {{ 'BALANCED_LABEL' | translate | async }}:
+                  <strong [class.positive]="project.isBalanced" [class.negative]="!project.isBalanced">
+                    {{ project.isBalanced ? ( 'YES' | translate | async ) : ( 'NO' | translate | async ) }}
+                  </strong>
                 </span>
               </p>
-              <button class="toggle-btn">{{ project.expanded ? ( 'HIDE' | translate | async ) : ( 'DETAILS' | translate
-                | async ) }}</button>
+
+              <button class="toggle-btn">
+                {{ project.expanded ? ( 'HIDE' | translate | async ) : ( 'DETAILS' | translate | async ) }}
+              </button>
             </div>
+
           </div>
 
           <div class="card-body" [class.expanded]="project.expanded">
@@ -235,6 +248,7 @@
         </div>
       </div>
     </section>
+
   </div>
 
 </div>

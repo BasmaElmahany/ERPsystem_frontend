@@ -27,7 +27,9 @@ nav {
   gap: 0.5rem;
 }
 
-.logo { cursor: pointer; }
+.logo {
+  cursor: pointer;
+}
 
 .logo-icon {
   width: 2rem;
@@ -61,18 +63,37 @@ nav {
   position: relative;
 }
 
-.nav-links a:hover { color: #22c55e; }
-
-@media (min-width: 768px) {
-  .nav-links { display: flex; }
+.nav-links a:hover {
+  color: #22c55e;
 }
 
-.btn { padding: 0.6rem 1rem; border-radius: 0.45rem; border: none; cursor: pointer; font-weight: 600; }
-.btn-primary { background: linear-gradient(90deg, #22c55e, #3b82f6); color: #fff; }
-.btn-secondary { background: transparent; border: 1px solid rgba(255,255,255,0.12); color: #fff; }
+@media (min-width: 768px) {
+  .nav-links {
+    display: flex;
+  }
+}
+
+.btn {
+  padding: 0.6rem 1rem;
+  border-radius: 0.45rem;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+}
+
+.btn-primary {
+  background: linear-gradient(90deg, #22c55e, #3b82f6);
+  color: #fff;
+}
+
+.btn-secondary {
+  background: transparent;
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
 
 .lang-toggle {
-  background: linear-gradient(135deg, rgba(34,197,94,0.08), rgba(41,182,246,0.05));
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.08), rgba(41, 182, 246, 0.05));
   border: 1px solid #16a34a;
   color: #16a34a;
   padding: 8px 12px;
@@ -82,12 +103,19 @@ nav {
   font-size: 0.85rem;
   transition: transform 0.28s ease, box-shadow 0.28s ease;
 }
-.lang-toggle:hover { transform: translateY(-2px); box-shadow: 0 8px 18px rgba(22,163,74,0.12); }
+
+.lang-toggle:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 8px 18px rgba(22, 163, 74, 0.12);
+}
 
 /* add top spacing so fixed navbar doesn't cover header */
-.dashboard-container { padding-top: 5.25rem; }
+.dashboard-container {
+  padding-top: 5.25rem;
+}
 
-html, body {
+html,
+body {
   margin: 0;
   padding: 0;
   background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
@@ -100,19 +128,22 @@ html, body {
 }
 
 .home {
- max-height: 100vh;  // make full page scrollable
+  max-height: 100vh; // make full page scrollable
   overflow-y: auto;
-  padding: 20px; /* horizontal scroll if table is wider than container */
+  padding: 20px;
+  /* horizontal scroll if table is wider than container */
   /* Remove min-height: 100% to allow content to dictate height */
 }
 
 .dashboard-container {
-  min-height: auto; /* Ensure content dictates height */
+  min-height: auto;
+  /* Ensure content dictates height */
   display: flex;
   flex-direction: column;
   padding: 30px;
   /* Remove min-height: 100% to allow content to dictate height */
 }
+
 /* =========================
    HEADER
 ========================= */
@@ -149,7 +180,8 @@ html, body {
 .global-charts-grid {
   display: grid;
   gap: 18px;
-  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); /* Adjusted for charts only */
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  /* Adjusted for charts only */
   align-items: start;
   margin-bottom: 30px;
 }
@@ -163,24 +195,30 @@ html, body {
 .projects-grid {
   /* max-height: 400px; - REMOVED */
   /* overflow-y: auto; - REMOVED */
-  padding-right: 0; /* Removed padding for scrollbar */
-  scrollbar-width: auto; /* Reset scrollbar settings */
+  padding-right: 0;
+  /* Removed padding for scrollbar */
+  scrollbar-width: auto;
+  /* Reset scrollbar settings */
 }
 
 .global-charts::-webkit-scrollbar,
 .projects-grid::-webkit-scrollbar {
-  width: auto; /* Reset scrollbar settings */
+  width: auto;
+  /* Reset scrollbar settings */
 }
 
 .global-charts::-webkit-scrollbar-thumb,
 .projects-grid::-webkit-scrollbar-thumb {
-  background: auto; /* Reset scrollbar settings */
-  border-radius: auto; /* Reset scrollbar settings */
+  background: auto;
+  /* Reset scrollbar settings */
+  border-radius: auto;
+  /* Reset scrollbar settings */
 }
 
 .global-charts::-webkit-scrollbar-track,
 .projects-grid::-webkit-scrollbar-track {
-  background: auto; /* Reset scrollbar settings */
+  background: auto;
+  /* Reset scrollbar settings */
 }
 
 /* =========================
@@ -196,7 +234,8 @@ html, body {
 
 .summary-cards {
   /* Removed grid layout as it's now handled by summary-cards-container */
-  display: contents; /* Allows children to participate in the parent grid */
+  display: contents;
+  /* Allows children to participate in the parent grid */
 }
 
 .card {
@@ -228,17 +267,29 @@ html, body {
   font-size: 0.9rem;
 }
 
-.revenue-card .amount { color: #7ee08a; }
-.expense-card .amount { color: #ff8b8b; }
-.net-card.positive .amount { color: #7ee08a; }
-.net-card.negative .amount { color: #ff8b8b; }
+.revenue-card .amount {
+  color: #7ee08a;
+}
+
+.expense-card .amount {
+  color: #ff8b8b;
+}
+
+.net-card.positive .amount {
+  color: #7ee08a;
+}
+
+.net-card.negative .amount {
+  color: #ff8b8b;
+}
 
 /* =========================
    GLOBAL CHARTS GRID
 ========================= */
 .global-charts {
   display: grid;
-  grid-template-columns: 1fr; /* Force vertical stacking for charts */
+  grid-template-columns: 1fr;
+  /* Force vertical stacking for charts */
   gap: 12px;
 }
 
@@ -261,46 +312,156 @@ html, body {
   overflow: hidden;
 }
 
+/* ==========================================
+   PROJECT CARD HEADER — ENHANCED DESIGN
+========================================== */
+/* ==========================================
+   PROJECT CARD HEADER — FULL REDESIGN
+========================================== */
+
 .card-head {
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 14px;
+  padding: 18px 20px;
   cursor: pointer;
-  background: linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0.01));
+
+  background: linear-gradient(180deg, rgba(255, 255, 255, 0.05), rgba(255, 255, 255, 0.02));
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+
+  border-radius: 12px 12px 0 0;
 }
 
+/* LEFT SIDE */
 .card-head .left {
   display: flex;
-  gap: 12px;
   align-items: center;
+  gap: 18px;
+  flex: 1;
 }
 
+/* Icon */
 .card-icon {
-  width: 48px;
-  height: 48px;
-  background: rgba(255, 255, 255, 0.03);
-  border-radius: 8px;
+  width: 52px;
+  height: 52px;
+  background: rgba(255, 255, 255, 0.05);
+  border-radius: 10px;
+  box-shadow: inset 0 0 6px rgba(255, 255, 255, 0.07);
 }
 
+/* Project title + profit */
+.project-info {
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+/* Big clear project name */
 .project-name {
   margin: 0;
-  font-size: 1.05rem;
-  color: #eaf6ff;
+  font-size: 1.3rem;
+  font-weight: 800;
+  letter-spacing: 0.3px;
+  color: #ffffff;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.35);
 }
 
+/* Profit label */
 .muted.small {
-  color: #9fb2c8;
+  color: #b9cce2;
+  font-size: 0.95rem;
   margin: 0;
 }
 
+/* Positive / negative values */
+.positive {
+  color: #7ee08a !important;
+  font-weight: 800;
+}
+
+.negative {
+  color: #ff8b8b !important;
+  font-weight: 800;
+}
+
+/* EXPORT BUTTON (Left) */
+.export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+
+  padding: 10px 16px;
+  border-radius: 10px;
+
+  background: linear-gradient(135deg, #22c55e, #3b82f6);
+  color: #fff;
+  font-weight: 700;
+  font-size: 0.95rem;
+
+  border: none;
+  cursor: pointer;
+  white-space: nowrap;
+
+  box-shadow: 0 5px 18px rgba(0, 0, 0, 0.35);
+  transition: all 0.3s ease;
+}
+
+.export-btn:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 30px rgba(34, 197, 94, 0.35);
+}
+
+.export-btn:active {
+  transform: scale(0.97);
+}
+
+.export-icon {
+  font-size: 1.3rem;
+}
+
+/* ==========================================
+   RIGHT SIDE (STATUS + BUTTON)
+========================================== */
+
+.card-head .right {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 6px;
+  min-width: 160px;
+}
+
+/* Status label */
+.card-head .right p {
+  margin: 0;
+  font-size: 0.95rem;
+  color: #d5e4f1;
+}
+
+/* DETAILS toggle button */
 .toggle-btn {
   border: none;
-  background: rgba(255, 255, 255, 0.03);
-  color: #cfe9ff;
-  padding: 6px 10px;
+  padding: 7px 12px;
   border-radius: 8px;
+
+  background: rgba(255, 255, 255, 0.06);
+  color: #eaf6ff;
+
+  font-size: 0.9rem;
+  cursor: pointer;
+
+  transition: all 0.25s ease;
 }
+
+.toggle-btn:hover {
+  background: rgba(255, 255, 255, 0.12);
+  transform: translateY(-2px);
+}
+
+.toggle-btn:active {
+  transform: scale(0.98);
+}
+
 
 /* =========================
    CARD BODY COLLAPSE/EXPAND
@@ -365,7 +526,7 @@ html, body {
   table-layout: fixed;
   position: sticky;
   top: 0;
-  background: rgba(0,0,0,1);
+  background: rgba(0, 0, 0, 1);
   z-index: 10;
 }
 
@@ -383,7 +544,7 @@ html, body {
 .trial-balance-table th,
 .trial-balance-table td {
   padding: 8px 10px;
-  border-bottom: 1px solid rgba(255, 255, 255,1);
+  border-bottom: 1px solid rgba(255, 255, 255, 1);
   text-align: left;
 }
 
@@ -452,8 +613,13 @@ html, body {
   border: 1px solid rgba(0, 123, 255, 0.12);
 }
 
-.left-pan { left: 0; }
-.right-pan { right: 0; }
+.left-pan {
+  left: 0;
+}
+
+.right-pan {
+  right: 0;
+}
 
 .pan-label {
   color: #cfe9ff;
@@ -466,30 +632,78 @@ html, body {
   font-weight: 700;
 }
 
-.value-debit { color: #7fb4ff; }
-.value-credit { color: #7ee08a; }
+.value-debit {
+  color: #7fb4ff;
+}
+
+.value-credit {
+  color: #7ee08a;
+}
 
 /* =========================
    HELPERS
 ========================= */
-.positive { color: #7ee08a; font-weight: 700; }
-.negative { color: #ff8b8b; font-weight: 700; }
-.muted { color: #9fb2c8; }
+.positive {
+  color: #7ee08a;
+  font-weight: 700;
+}
+
+.negative {
+  color: #ff8b8b;
+  font-weight: 700;
+}
+
+.muted {
+  color: #9fb2c8;
+}
 
 /* =========================
    RESPONSIVE
 ========================= */
 @media (max-width: 768px) {
   .dashboard-container {
-  min-height: auto; /* Ensure content dictates height */ padding: 20px; }
-  .page-title { font-size: 2rem; }
-  .section-title { font-size: 1.5rem; }
-  .summary-cards-container { grid-template-columns: 1fr; } /* Stack cards on mobile */
-  .global-charts-grid { grid-template-columns: 1fr; } /* Stack charts on mobile */
-  .global-charts { grid-template-columns: 1fr; } /* Stack inner charts on mobile */
-  .balance-scale { width: 100%; height: 120px; }
-  .scale-pan { width: 45%; height: 60px; top: 40px; }
-  .pan-value { font-size: 1.2rem; }
+    min-height: auto;
+    /* Ensure content dictates height */
+    padding: 20px;
+  }
+
+  .page-title {
+    font-size: 2rem;
+  }
+
+  .section-title {
+    font-size: 1.5rem;
+  }
+
+  .summary-cards-container {
+    grid-template-columns: 1fr;
+  }
+
+  /* Stack cards on mobile */
+  .global-charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  /* Stack charts on mobile */
+  .global-charts {
+    grid-template-columns: 1fr;
+  }
+
+  /* Stack inner charts on mobile */
+  .balance-scale {
+    width: 100%;
+    height: 120px;
+  }
+
+  .scale-pan {
+    width: 45%;
+    height: 60px;
+    top: 40px;
+  }
+
+  .pan-value {
+    font-size: 1.2rem;
+  }
 }
 
 /* =========================
@@ -517,7 +731,7 @@ html, body {
   width: 52px;
   height: 52px;
   border-radius: 12px;
-  background: linear-gradient(135deg, rgba(34,197,94,0.35), rgba(59,130,246,0.30));
+  background: linear-gradient(135deg, rgba(34, 197, 94, 0.35), rgba(59, 130, 246, 0.30));
   display: flex;
   align-items: center;
   justify-content: center;
@@ -547,4 +761,59 @@ html, body {
 /* RTL Support */
 .rtl .cashflow-card {
   direction: rtl;
+}
+
+/* =============================
+   EXPORT BALANCE BUTTON (New)
+============================= */
+.export-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 10px;
+  padding: 12px 18px;
+
+  background: linear-gradient(135deg, #22c55e, #3b82f6);
+  color: #ffffff;
+
+  font-size: 1rem;
+  font-weight: 700;
+  border-radius: 10px;
+  border: none;
+  cursor: pointer;
+
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.35);
+  transition: all 0.3s ease;
+
+  letter-spacing: 0.3px;
+}
+
+.export-btn:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 12px 28px rgba(34, 197, 94, 0.35);
+  background: linear-gradient(135deg, #16a34a, #2563eb);
+}
+
+.export-btn:active {
+  transform: scale(0.97);
+}
+
+.export-icon {
+  font-size: 1.4rem;
+  line-height: 1;
+}
+
+.export-text {
+  font-weight: 800;
+}
+
+.theme-toggle {
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  font-size: 0.85rem;
+  transition: 0.3s ease;
+}
+.theme-toggle:hover {
+  transform: translateY(-2px);
 }

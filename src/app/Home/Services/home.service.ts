@@ -73,12 +73,13 @@ export class HomeService {
   getGeneralBalanceSheet(project: string): Observable<any> {
     const encodedProject = encodeURIComponent(project);
 
-    return this.http.get<{ generalb: any }>(
+    return this.http.get<any>(
       `${baseUrl}/${encodedProject}/reports/GeneralBalanceSheet`,
       { headers: this.getHeaders() }
     ).pipe(
-      map(response => response.generalb)
+      map(response => response.generalb)   // الآن يرجّع step1, step2, balanceSheet كما هي
     );
   }
+
 
 }
