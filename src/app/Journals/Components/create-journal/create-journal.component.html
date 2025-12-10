@@ -17,7 +17,7 @@
 
         <div class="form-group">
           <label for="date">{{ 'DATE' | translate | async }}</label>
-          <input id="date" type="date" formControlName="date" />
+          <input id="date" type="date" formControlName="date" [max]="today" />
         </div>
       </div>
 

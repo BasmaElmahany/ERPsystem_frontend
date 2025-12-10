@@ -14,7 +14,7 @@ export interface JournalEntry {
   description: string;
   posted: boolean;
   createdAt?: string;
-  photoUrl?: string;
+  photoUrl?: string;   // <-- MUST MATCH EXACTLY
 }
 
 export interface CreateJournalDto {

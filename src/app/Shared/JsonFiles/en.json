@@ -247,10 +247,9 @@
   "DELETE": "Delete",
   "COGS" : "Cost Of Goods Sold",
   "UPLOAD_PHOTO" : "Upload Photo",
-  "VIEW_FILE" : "View File"
-  
-  
-}
-  "COGS": "Cost Of Goods Sold",
+  "VIEW_FILE" : "View File",
   "Dev_rev": "Diversified revenue"
+  
 }
+ 
+
